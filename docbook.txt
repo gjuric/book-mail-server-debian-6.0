@@ -1,0 +1,11 @@
+Create HTML:
+
+- single page
+xsltproc --stringparam  html.stylesheet 'docbook.css' --xinclude -o html/index.html  $XSL/xhtml/onechunk.xsl book.xml
+
+- chunked
+xsltproc --stringparam  html.stylesheet 'docbook.css' --xinclude -o html/index.html  $XSL/xhtml/chunk.xsl book.xml
+
+Create PDF:
+
+./fop -c conf/fop.xconf -xml ../../mail-server-book/en/book.xml -xsl ../docbook-xsl-1.75.0/fo/docbook.xsl -param body.font.family Times-Roman -param title.font.family Times-Roman -pdf book.pdf

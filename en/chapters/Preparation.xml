@@ -59,7 +59,7 @@
          your drive (or unmount the image in your virtualisation software) and reboot your computer.</para>
 
       <para>When your computer boots up you can log in with the root user account and update
-           the packages in your system running:</para>
+           the packages in your system by running:</para>
 
      <programlisting>
 apt-get update
@@ -80,7 +80,7 @@ apt-get upgrade
       <para>To stay on top of the game we will use <emphasis>etckeeper</emphasis>.</para>
       
       <para>Etckeeper is an application that uses version control systems like git, Bazaar or Mercurial
-         to track changes made to the <computeroutput>/etc</computeroutput> folder.</para>
+         to track changes made to the <filename class="directory">/etc</filename> folder.</para>
          
 <programlisting>
 apt-get install etckeeper
@@ -90,9 +90,9 @@ apt-get install etckeeper
          all of the changes before a new package is installed as well as to auto commit changes
          on a daily bases.</para>
          
-      <para>Since i do now want to forget to describe changes I mage to the files in /etc I
-         usaully disable automatic commits. Edit
-         <computeroutput>/etc/ectkeeper/etckeeper.conf</computeroutput> and uncomment out these two
+      <para>Since i do now want to forget to describe changes I mage to the files in 
+         <filename class="directory">/etc</filename> I usaully disable automatic commits. Edit
+         <filename>/etc/ectkeeper/etckeeper.conf</filename> and uncomment out these two
          lines:</para>
 
 <programlisting>
@@ -114,7 +114,7 @@ git config --global user.email you@example.com
 etckeeper commit "Changed etckeeper settings to disable auto commits"
 </programlisting>
 
-     <para>To view the change log navigate to the <computeroutput>/etc</computeroutput> folder and run:</para>
+     <para>To view the change log navigate to the <filename class="directory">/etc</filename> folder and run:</para>
 
 <programlisting>
 git log
@@ -154,26 +154,30 @@ apt-get install openssh-server nano dnsutils bsd-mailx telnet
       <para>Enter ifconfig at the prompt and copy the output somewhere so you have access to network
           information you got from a DHCP server.</para>
 
-      <para>Open up /etc/network/interfaces with nano and replace</para>
+      <para>Open up <filename>/etc/network/interfaces</filename> with nano and replace</para>
 
 <programlisting>
-          auto eth0
-          iface eth0 inet dhcp
+auto eth0
+iface eth0 inet dhcp
 </programlisting>
     
       <para>with</para>
 
 <programlisting>
-          iface eth0 inet static
-                address YOUR-IP
-                netmask YOUR-NETMASK
-                network YOUR-NETWORK
-                broadcast YOUR-BROADCAST
-                gateway YOUR-GATEWAY
-                # dns-* options are implemented by the resolvconf package, if installed
-                dns-nameservers YOUR-DNS-SERVERS-SEPARATED-BY-SPACE
-                dns-search YOUR-DOMAIN
+iface eth0 inet static
+    address YOUR-IP
+    netmask YOUR-NETMASK
+    network YOUR-NETWORK
+    broadcast YOUR-BROADCAST
+    gateway YOUR-GATEWAY
+    # dns-* options are implemented by the resolvconf package, if installed
+    dns-nameservers YOUR-DNS-SERVERS-SEPARATED-BY-SPACE
+    dns-search YOUR-DOMAIN
 </programlisting>
+
+
+      <para>If you are using another interface for the connection replace <computeroutput>eth0</computeroutput>
+        with the interface you are using.</para>
 
       <para>Reboot your server, check that your internet connection is working (try to ping google.com
           or some other host) and if everything is ok you can remove dhcp3-* packages from your system.</para>
@@ -197,7 +201,7 @@ apt-get install ntp
 </programlisting>
 
       <para>If your data center or VPS provider offers an NTP service use their NTP server. Open up
-          /etc/ntp.conf with nano and replace:</para>
+          <filename>/etc/ntp.conf</filename> with nano and replace:</para>
 
 <programlisting>
 server 0.debian.pool.ntp.org iburst dynamic
@@ -238,9 +242,9 @@ morcic.RI.CARNe 161.53.1.2       2 u   58   64    3   11.796   26.527   7.751
       <para>After a while the reach column should have values greather that 0. Which means
           that the NTP servers we are pooling for time information are reachable.</para>
     
-     <para>If your clock was way of from the current time NTP will not sync your servers time. In
+     <caution><para>If your clock was way of from the current time NTP will not sync your servers time. In
          that case stop the NTP daemon. Set the time and date manually (or you can install and use
-         the ntpdate utility) and run the NTP daemon again.</para>
+         the ntpdate utility) and run the NTP daemon again.</para></caution>
 
   </section>
 </chapter>
