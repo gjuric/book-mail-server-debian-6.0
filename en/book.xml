@@ -1,0 +1,53 @@
+<?xml version='1.0'?>
+<book xmlns="http://docbook.org/ns/docbook"
+      xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0">
+
+      <info>
+          <title>Building a mail server on Debian 6.0 (Squeeze)</title>
+          <author>
+              <personname>
+                <firstname>Goran</firstname>
+                <surname>Jurić</surname>
+              </personname>
+              <email>gog@gogs.info</email>
+          </author>
+          <copyright>
+              <year>2010</year>
+              <holder>Goran Jurić</holder>
+          </copyright>
+      </info>
+      <preface>
+          <title>Foreword</title>
+          <para>
+              The internet is full of information on how to do just about anything. But this vast amount of
+              information makes it hard to find and glue all of the pieces to fit together.
+          </para>
+          <para>
+              The goal of this manual is to provide you with enough knowledge to feel confident in installing
+              and maintaing your own mail server. Of course manuals like this already exist but during my search
+              for knowledge I always felt like they were either not updated in a while or they just skip over
+              some of the most interesting parts assuming you know what they are talking about.
+          </para> 
+          <para>
+              I will do my best to explain why and not just how.
+          </para>
+          <para>
+              This manual does not even come close to explaining the intricacies of a Postfix mail server. If
+              you want to know more you really should read "The Book of Postfix: State-of-the-Art Message
+              Transport" by Ralf Hildebrandt and Patrick Koetter.
+          </para>
+      </preface>
+
+    <xi:include href="chapters/Introduction.xml"/>
+    <xi:include href="chapters/Preparation.xml"/>
+    <xi:include href="chapters/Todo.xml"/>
+    
+    <!--
+    Introduction
+      - why Postfix (qmail toaster)
+      - why Debian
+    Installation
+     
+    
+    -->
+</book>

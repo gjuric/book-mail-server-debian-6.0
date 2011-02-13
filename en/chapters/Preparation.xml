@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="preparation"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:mml="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Preparation</title>
+  
+  <section xml:id="preparation.debian-installation">
+      <title>Debian installation</title>
+      
+      <para>Download Debian 6.0 (32/64-bit PC Network installer) from <uri
+        xlink:href="http://www.debian.org/" xlink:type="simple"> www.debian.org</uri> and burn
+        the image to a compact disc, or mount it as a CD image in your virtualisation software.</para>
+
+      <para>Boot your computer and select Install (or Install 64 if you want the 64-bit version). 
+         Choose your Language, Country and Keymap. If your computer is not connected to a network
+         with <acronym>DHCP</acronym> you will be prompted to enter network connection parameter
+         manually. After configuring your network and <acronym>DNS</acronym> server you will be
+         asked for a hostname, in our case, the hostname is <systemitem class="systemname">
+         atlantis</systemitem> and our domain name is <systemitem class="domainname">example.com
+         </systemitem>.</para>
+
+      <para>When prompted to select Debian mirror the selected choice is usually the best one.
+         If you are not using <acronym>HTTP</acronym> proxy on your internet connection, or don't
+         know what HTTP proxy is, just leave this field blank.</para>
+
+      <para>When prompted to partition the disk for are Debian install, choose
+         <computeroutput>Guided - use entire disk. Install all files in one partition</computeroutput>.</para>
+
+      <para>Grab a cup of coffee and wait until installation finishes fetching packages from the
+         internet and installs the base system.</para>
+
+      <para>Enter your root password. This is a password for root user who has all the privileges 
+         on the system, so choose one carefully. After that, you have to create a new user for
+         the system.</para>
+
+      <para>You will be asked if you want to participate in the Debians popularity contest which
+         collects information about most used packages. Feel free to answer whatever you like, by
+         choosing Yes you are helping Debian community find the most used packages in the distribution.
+         Help them out, it doesn't cost a thing.</para>
+
+      <para>When prompted to select collections of software packages deselect everything, including
+         the <computeroutput>Standard system utilities</computeroutput> We just need to install the
+         base system because we will add all needed packages when and if we need them.</para>
+
+      <para>I strongly believe that you should install the minimum required number of packages
+         needed for the system to operate. You will not have to update and upgrade packages that
+         you do not even use. And knowing which package provides certain utilities is a fun
+         exercise in getting to know your system a little better.</para> 
+
+      <para>Since Debian will be the only system on our machine you must install GRUB on to the
+         master boot record when prompted.</para>
+
+      <para>Your Debian system is almost ready to go. When asked, remove the installation media from
+         your drive (or unmount the image in your virtualisation software) and reboot your computer.</para>
+
+      <para>When your computer boots up you can log in with the root user account and update
+           the packages in your by system running:</para>
+
+     <programlisting>
+        apt-get update
+        apt-get upgrade
+     </programlisting>
+
+      <para>And that's it. Your new Debian system is installed and ready for configuration.</para>
+  </section>
+
+  <section xml:id="preparation.essentials">
+      <title>Essential software</title>
+
+  </section>
+
+  <section xml:id="preparation.ntp">
+      <title>NTP - time synchronization</title>
+
+  </section>
+</chapter>
