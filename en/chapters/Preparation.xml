@@ -176,8 +176,8 @@ iface eth0 inet static
 </programlisting>
 
 
-      <para>If you are using another interface for the connection replace <computeroutput>eth0</computeroutput>
-        with the interface you are using.</para>
+      <caution><para>If you are using another interface for the connection replace <computeroutput>eth0</computeroutput>
+        with the interface you are using.</para></caution>
 
       <para>Reboot your server, check that your internet connection is working (try to ping google.com
           or some other host) and if everything is ok you can remove dhcp3-* packages from your system.</para>
