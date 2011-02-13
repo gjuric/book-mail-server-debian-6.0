@@ -20,15 +20,15 @@
          Choose your Language, Country and Keymap. If your computer is not connected to a network
          with <acronym>DHCP</acronym> you will be prompted to enter network connection parameter
          manually. After configuring your network and <acronym>DNS</acronym> server you will be
-         asked for a hostname, in our case, the hostname is <systemitem class="systemname">
-         atlantis</systemitem> and our domain name is <systemitem class="domainname">example.com
+         asked for a hostname, in our case, the hostname is <systemitem class="systemname">atlantis</systemitem>
+         and our domain name is <systemitem class="domainname">example.com
          </systemitem>.</para>
 
       <para>When prompted to select Debian mirror the selected choice is usually the best one.
          If you are not using <acronym>HTTP</acronym> proxy on your internet connection, or don't
          know what HTTP proxy is, just leave this field blank.</para>
 
-      <para>When prompted to partition the disk for are Debian install, choose
+      <para>When prompted to partition the disk for a Debian install, choose
          <computeroutput>Guided - use entire disk. Install all files in one partition</computeroutput>.</para>
 
       <para>Grab a cup of coffee and wait until installation finishes fetching packages from the
@@ -83,7 +83,7 @@ apt-get upgrade
          to track changes made to the <computeroutput>/etc</computeroutput> folder.</para>
          
 <programlisting>
-    apt-get install etckeeper
+apt-get install etckeeper
 </programlisting>
 
       <para>Etckeeper in Debian uses git for tracking changes and is set to automatically commit
@@ -126,11 +126,10 @@ git log
 
   </section>
 
-
   <section xml:id="preparation.essentials">
       <title>Essential software</title>
       
-      <para>First, we are going to install some software that we will use later in the manual</para>
+      <para>First, we are going to install some software that we will use later in the manual.</para>
       
       <programlisting>
 apt-get install openssh-server nano dnsutils bsd-mailx telnet
@@ -145,8 +144,103 @@ apt-get install openssh-server nano dnsutils bsd-mailx telnet
       </itemizedlist>
   </section>
 
+  <section xml:id="preparation.static-ip">
+      <title>Setting a static IP address</title>
+
+      <para>If you didn't enter the IP address during the installation of the server, you probably
+          got an address from the DHCP server. Since servers IP address should not be changed you will
+          have to set a static IP address for your sever.</para>
+
+      <para>Enter ifconfig at the prompt and copy the output somewhere so you have access to network
+          information you got from a DHCP server.</para>
+
+      <para>Open up /etc/network/interfaces with nano and replace</para>
+
+<programlisting>
+          auto eth0
+          iface eth0 inet dhcp
+</programlisting>
+    
+      <para>with</para>
+
+<programlisting>
+          iface eth0 inet static
+                address YOUR-IP
+                netmask YOUR-NETMASK
+                network YOUR-NETWORK
+                broadcast YOUR-BROADCAST
+                gateway YOUR-GATEWAY
+                # dns-* options are implemented by the resolvconf package, if installed
+                dns-nameservers YOUR-DNS-SERVERS-SEPARATED-BY-SPACE
+                dns-search YOUR-DOMAIN
+</programlisting>
+
+      <para>Reboot your server, check that your internet connection is working (try to ping google.com
+          or some other host) and if everything is ok you can remove dhcp3-* packages from your system.</para>
+
+<programlisting>
+apt-get --purge remove dhcp3-common dhcp3-client
+</programlisting>
+
+      <para>Note that option –purge removes configuration files of the packages we are removing. If
+          you do not use –purge they will be left on your system.</para>
+  </section>
+
   <section xml:id="preparation.ntp">
       <title>NTP - time synchronization</title>
+      
+      <para>To make sure our servers time is always up to date we are going to install ntp package
+          which enables our server to use NTP protocol for syncing your servers clock.</para>
+
+<programlisting>
+apt-get install ntp
+</programlisting>
+
+      <para>If your data center or VPS provider offers an NTP service use their NTP server. Open up
+          /etc/ntp.conf with nano and replace:</para>
+
+<programlisting>
+server 0.debian.pool.ntp.org iburst dynamic
+server 1.debian.pool.ntp.org iburst dynamic
+server 2.debian.pool.ntp.org iburst dynamic
+server 3.debian.pool.ntp.org iburst dynamic
+</programlisting>
+
+      <para>with</para>
+
+<programlisting>
+server ADDRESS-OF-NTP-SERVER-YOU-WANT-TO-USE
+</programlisting>
+
+      <para>You should have at least two servers in the ntp.conf.</para>
+
+      <para>After saving the changes you have to restart the NTP service by running</para>
+
+<programlisting>
+invoke-rc.d ntp restart
+</programlisting>
+
+      <para>Note: invoke-rc.d is Debians shortcut to /etc/init.d/. You can run
+          <computeroutput>/etc/init.d/ntp restart</computeroutput> as well.</para>
+
+      <para>You can examine if the NTP server is working as expected if you run the ntpq -p command:</para>
+
+<screen>
+example:~# ntpq -p
+
+    remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+zg1.ntp.CARNet. 161.53.1.2       2 u   58   64    3    7.157  106.619   4.158
+zg2.ntp.CARNet. 161.53.1.2       2 u   57   64    3    7.677   25.934   4.792
+morcic.RI.CARNe 161.53.1.2       2 u   58   64    3   11.796   26.527   7.751
+</screen>
+
+      <para>After a while the reach column should have values greather that 0. Which means
+          that the NTP servers we are pooling for time information are reachable.</para>
+    
+     <para>If your clock was way of from the current time NTP will not sync your servers time. In
+         that case stop the NTP daemon. Set the time and date manually (or you can install and use
+         the ntpdate utility) and run the NTP daemon again.</para>
 
   </section>
 </chapter>

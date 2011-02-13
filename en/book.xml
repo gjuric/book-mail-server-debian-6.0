@@ -42,12 +42,4 @@
     <xi:include href="chapters/Preparation.xml"/>
     <xi:include href="chapters/Todo.xml"/>
     
-    <!--
-    Introduction
-      - why Postfix (qmail toaster)
-      - why Debian
-    Installation
-     
-    
-    -->
 </book>

@@ -45,14 +45,14 @@
         by the author. Not to mention that the number of software packages provided through the
         official repositories does not even come close to Debians.</para>
         
-      <para>Software in the stable Debian distribution may be older than the one provided in Ubuntu
-        distribution, but I have more trust in Debian. Your milage may vary.</para>
+      <para>Software in the stable Debian distribution may be older than the one provided in Ubuntu,
+          but I have more trust in Debian. Your milage may vary.</para>
   </section>
 
   <section xml:id="introduction.software-used">
       <title>Sofware used</title>
 
-      <para>Here is a short list of application we are going to use to build a mail server.</para>
+      <para>Here is a short list of applications we are going to use to build a mail server.</para>
 
       <itemizedlist>
         <listitem>
@@ -62,7 +62,7 @@
         </listitem>
         <listitem>
           <para>
-              Courier - as an IMAP/POP3 server
+              Courier - an IMAP/POP3 server
           </para>
         </listitem>
         <listitem>
@@ -72,7 +72,7 @@
         </listitem>
         <listitem>
           <para>
-              ClamAV - for checking email for viruses
+              ClamAV - antivirus
           </para>
         </listitem>
         <listitem>
