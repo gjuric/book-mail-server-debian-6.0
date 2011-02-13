@@ -59,19 +59,90 @@
          your drive (or unmount the image in your virtualisation software) and reboot your computer.</para>
 
       <para>When your computer boots up you can log in with the root user account and update
-           the packages in your by system running:</para>
+           the packages in your system running:</para>
 
      <programlisting>
-        apt-get update
-        apt-get upgrade
+apt-get update
+apt-get upgrade
      </programlisting>
 
       <para>And that's it. Your new Debian system is installed and ready for configuration.</para>
   </section>
 
+
+  <section xml:id="preparation.tracking-changes">
+      <title>Tracking configuration changes</title>
+      
+      <para>During the course of this manual, we will edit a lot of configuration files and install
+         many application packages and sometimes it is really hard to remember what we did and why
+         after a couple of months have passed.</para>
+         
+      <para>To stay on top of the game we will use <emphasis>etckeeper</emphasis>.</para>
+      
+      <para>Etckeeper is an application that uses version control systems like git, Bazaar or Mercurial
+         to track changes made to the <computeroutput>/etc</computeroutput> folder.</para>
+         
+<programlisting>
+    apt-get install etckeeper
+</programlisting>
+
+      <para>Etckeeper in Debian uses git for tracking changes and is set to automatically commit
+         all of the changes before a new package is installed as well as to auto commit changes
+         on a daily bases.</para>
+         
+      <para>Since i do now want to forget to describe changes I mage to the files in /etc I
+         usaully disable automatic commits. Edit
+         <computeroutput>/etc/ectkeeper/etckeeper.conf</computeroutput> and uncomment out these two
+         lines:</para>
+
+<programlisting>
+AVOID_DAILY_AUTOCOMMITS=1
+AVOID_COMMIT_BEFORE_INSTALL=1
+</programlisting>
+
+      <para>Set name and email git will use for the commit log by running this two commands at
+          the shell:</para>
+      
+<programlisting>
+git config --global user.name "Your Name"
+git config --global user.email you@example.com
+</programlisting>
+
+      <para>It is time for our first commit</para>
+      
+<programlisting>
+etckeeper commit "Changed etckeeper settings to disable auto commits"
+</programlisting>
+
+     <para>To view the change log navigate to the <computeroutput>/etc</computeroutput> folder and run:</para>
+
+<programlisting>
+git log
+</programlisting>
+
+     <para>You can learn more about git and etckeeper at the projects homepage. Just remember to
+         commit your changes after the each change you make or you will not be able to install 
+         packages because etckeeper will complain that there are uncommitted changes in the folder.</para>
+
+  </section>
+
+
   <section xml:id="preparation.essentials">
       <title>Essential software</title>
+      
+      <para>First, we are going to install some software that we will use later in the manual</para>
+      
+      <programlisting>
+apt-get install openssh-server nano dnsutils bsd-mailx telnet
+      </programlisting>
 
+      <itemizedlist>
+        <listitem>SSH server will allow us to connect remotely to the server.</listitem>
+        <listitem>Nano is a text editor. More user friendly than vi.</listitem>
+        <listitem>We will use wget to fetch stuff from the internet.</listitem>
+        <listitem>dnsutils package will allow us to troubleshoot possible DNS problems on our system.</listitem>
+        <listitem>Telnet and bsd-mailx will be used later for troubleshooting our setup.</listitem>
+      </itemizedlist>
   </section>
 
   <section xml:id="preparation.ntp">

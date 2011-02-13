@@ -98,4 +98,10 @@
       </itemizedlist>
   </section>
 
+  <section xml:id="introduction.required-knowledge">
+      <title>Required knowledge</title>
+      
+      <para>This is not a beginners guide to Unix. You should know your away around a unix
+         shell and familiarize yourself with Debians package management <emphasis>apt</emphasis>.</para>
+  </section>
 </chapter>
