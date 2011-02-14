@@ -8,163 +8,175 @@
          xmlns:html="http://www.w3.org/1999/xhtml"
          xmlns:db="http://docbook.org/ns/docbook">
   <title>Preparation</title>
-  
+
   <section xml:id="preparation.debian-installation">
-      <title>Debian installation</title>
-      
-      <para>Download Debian 6.0 (32/64-bit PC Network installer) from <uri
-        xlink:href="http://www.debian.org/" xlink:type="simple"> www.debian.org</uri> and burn
-        the image to a compact disc, or mount it as a CD image in your virtualisation software.</para>
+    <title>Debian installation</title>
 
-      <para>Boot your computer and select Install (or Install 64 if you want the 64-bit version). 
-         Choose your Language, Country and Keymap. If your computer is not connected to a network
-         with <acronym>DHCP</acronym> you will be prompted to enter network connection parameter
-         manually. After configuring your network and <acronym>DNS</acronym> server you will be
-         asked for a hostname, in our case, the hostname is <systemitem class="systemname">atlantis</systemitem>
-         and our domain name is <systemitem class="domainname">example.com
-         </systemitem>.</para>
+    <para>Download Debian 6.0 (32/64-bit PC Network installer) from <uri
+    xlink:href="http://www.debian.org/" xlink:type="simple">
+    www.debian.org</uri> and burn the image to a compact disc, or mount it as
+    a CD image in your virtualisation software.</para>
 
-      <para>When prompted to select Debian mirror the selected choice is usually the best one.
-         If you are not using <acronym>HTTP</acronym> proxy on your internet connection, or don't
-         know what HTTP proxy is, just leave this field blank.</para>
+    <para>Boot your computer and select Install (or Install 64 if you want the
+    64-bit version). Choose your Language, Country and Keymap. If your
+    computer is not connected to a network with <acronym>DHCP</acronym> you
+    will be prompted to enter network connection parameter manually. After
+    configuring your network and <acronym>DNS</acronym> server you will be
+    asked for a hostname, in our case, the hostname is <systemitem
+    class="systemname">atlantis</systemitem> and our domain name is
+    <systemitem class="domainname">example.com </systemitem>.</para>
 
-      <para>When prompted to partition the disk for a Debian install, choose
-         <computeroutput>Guided - use entire disk. Install all files in one partition</computeroutput>.</para>
+    <para>When prompted to select Debian mirror the selected choice is usually
+    the best one. If you are not using <acronym>HTTP</acronym> proxy on your
+    internet connection, or don't know what HTTP proxy is, just leave this
+    field blank.</para>
 
-      <para>Grab a cup of coffee and wait until installation finishes fetching packages from the
-         internet and installs the base system.</para>
+    <para>When prompted to partition the disk for a Debian install, choose
+    <computeroutput>Guided - use entire disk. Install all files in one
+    partition</computeroutput>.</para>
 
-      <para>Enter your root password. This is a password for root user who has all the privileges 
-         on the system, so choose one carefully. After that, you have to create a new user for
-         the system.</para>
+    <para>Grab a cup of coffee and wait until installation finishes fetching
+    packages from the internet and installs the base system.</para>
 
-      <para>You will be asked if you want to participate in the Debians popularity contest which
-         collects information about most used packages. Feel free to answer whatever you like, by
-         choosing Yes you are helping Debian community find the most used packages in the distribution.
-         Help them out, it doesn't cost a thing.</para>
+    <para>Enter your root password. This is a password for root user who has
+    all the privileges on the system, so choose one carefully. After that, you
+    have to create a new user for the system.</para>
 
-      <para>When prompted to select collections of software packages deselect everything, including
-         the <computeroutput>Standard system utilities</computeroutput> We just need to install the
-         base system because we will add all needed packages when and if we need them.</para>
+    <para>You will be asked if you want to participate in the Debians
+    popularity contest which collects information about most used packages.
+    Feel free to answer whatever you like, by choosing Yes you are helping
+    Debian community find the most used packages in the distribution. Help
+    them out, it doesn't cost a thing.</para>
 
-      <para>I strongly believe that you should install the minimum required number of packages
-         needed for the system to operate. You will not have to update and upgrade packages that
-         you do not even use. And knowing which package provides certain utilities is a fun
-         exercise in getting to know your system a little better.</para> 
+    <para>When prompted to select collections of software packages deselect
+    everything, including the <computeroutput>Standard system
+    utilities</computeroutput> We just need to install the base system because
+    we will add all needed packages when and if we need them.</para>
 
-      <para>Since Debian will be the only system on our machine you must install GRUB on to the
-         master boot record when prompted.</para>
+    <para>I strongly believe that you should install the minimum required
+    number of packages needed for the system to operate. You will not have to
+    update and upgrade packages that you do not even use. And knowing which
+    package provides certain utilities is a fun exercise in getting to know
+    your system a little better.</para>
 
-      <para>Your Debian system is almost ready to go. When asked, remove the installation media from
-         your drive (or unmount the image in your virtualisation software) and reboot your computer.</para>
+    <para>Since Debian will be the only system on our machine you must install
+    GRUB on to the master boot record when prompted.</para>
 
-      <para>When your computer boots up you can log in with the root user account and update
-           the packages in your system by running:</para>
+    <para>Your Debian system is almost ready to go. When asked, remove the
+    installation media from your drive (or unmount the image in your
+    virtualisation software) and reboot your computer.</para>
 
-     <programlisting>
-apt-get update
-apt-get upgrade
-     </programlisting>
+    <para>When your computer boots up you can log in with the root user
+    account and update the packages in your system by running:</para>
 
-      <para>And that's it. Your new Debian system is installed and ready for configuration.</para>
+    <programlisting>apt-get update
+apt-get upgrade</programlisting>
+
+    <para>And that's it. Your new Debian system is installed and ready for
+    configuration.</para>
   </section>
 
-
   <section xml:id="preparation.tracking-changes">
-      <title>Tracking configuration changes</title>
-      
-      <para>During the course of this manual, we will edit a lot of configuration files and install
-         many application packages and sometimes it is really hard to remember what we did and why
-         after a couple of months have passed.</para>
-         
-      <para>To stay on top of the game we will use <emphasis>etckeeper</emphasis>.</para>
-      
-      <para>Etckeeper is an application that uses version control systems like git, Bazaar or Mercurial
-         to track changes made to the <filename class="directory">/etc</filename> folder.</para>
-         
-<programlisting>
-apt-get install etckeeper
-</programlisting>
+    <title>Tracking configuration changes</title>
 
-      <para>Etckeeper in Debian uses git for tracking changes and is set to automatically commit
-         all of the changes before a new package is installed as well as to auto commit changes
-         on a daily bases.</para>
-         
-      <para>Since i do now want to forget to describe changes I mage to the files in 
-         <filename class="directory">/etc</filename> I usaully disable automatic commits. Edit
-         <filename>/etc/ectkeeper/etckeeper.conf</filename> and uncomment out these two
-         lines:</para>
+    <para>During the course of this manual, we will edit a lot of
+    configuration files and install many application packages and sometimes it
+    is really hard to remember what we did and why after a couple of months
+    have passed.</para>
 
-<programlisting>
-AVOID_DAILY_AUTOCOMMITS=1
-AVOID_COMMIT_BEFORE_INSTALL=1
-</programlisting>
+    <para>To stay on top of the game we will use
+    <application>etckeeper</application>.</para>
 
-      <para>Set name and email git will use for the commit log by running this two commands at
-          the shell:</para>
-      
-<programlisting>
-git config --global user.name "Your Name"
-git config --global user.email you@example.com
-</programlisting>
+    <para>Etckeeper is an application that uses version control systems like
+    git, Bazaar or Mercurial to track changes made to the <filename
+    class="directory">/etc</filename> folder.</para>
 
-      <para>It is time for our first commit</para>
-      
-<programlisting>
-etckeeper commit "Changed etckeeper settings to disable auto commits"
-</programlisting>
+    <programlisting>apt-get install etckeeper</programlisting>
 
-     <para>To view the change log navigate to the <filename class="directory">/etc</filename> folder and run:</para>
+    <para>Etckeeper in Debian uses git for tracking changes and is set to
+    automatically commit all of the changes before a new package is installed
+    as well as to auto commit changes on a daily bases.</para>
 
-<programlisting>
-git log
-</programlisting>
+    <para>Since i do now want to forget to describe changes I mage to the
+    files in <filename class="directory">/etc</filename> I usaully disable
+    automatic commits. Edit <filename>/etc/ectkeeper/etckeeper.conf</filename>
+    and uncomment out these two lines:</para>
 
-     <para>You can learn more about git and etckeeper at the projects homepage. Just remember to
-         commit your changes after the each change you make or you will not be able to install 
-         packages because etckeeper will complain that there are uncommitted changes in the folder.</para>
+    <programlisting>AVOID_DAILY_AUTOCOMMITS=1
+AVOID_COMMIT_BEFORE_INSTALL=1</programlisting>
 
+    <para>Set name and email git will use for the commit log by running this
+    two commands at the shell:</para>
+
+    <programlisting>git config --global user.name "Your Name"
+git config --global user.email you@example.com</programlisting>
+
+    <para>It is time for our first commit</para>
+
+    <programlisting>etckeeper commit "Changed etckeeper settings to disable auto commits"</programlisting>
+
+    <para>To view the change log navigate to the <filename
+    class="directory">/etc</filename> folder and run:</para>
+
+    <programlisting>git log</programlisting>
+
+    <para>You can learn more about git and etckeeper at the projects homepage.
+    Just remember to commit your changes after the each change you make or you
+    will not be able to install packages because etckeeper will complain that
+    there are uncommitted changes in the folder.</para>
   </section>
 
   <section xml:id="preparation.essentials">
-      <title>Essential software</title>
-      
-      <para>First, we are going to install some software that we will use later in the manual.</para>
-      
-      <programlisting>
-apt-get install openssh-server nano dnsutils bsd-mailx telnet
-      </programlisting>
+    <title>Essential software</title>
 
-      <itemizedlist>
-        <listitem>SSH server will allow us to connect remotely to the server.</listitem>
-        <listitem>Nano is a text editor. More user friendly than vi.</listitem>
-        <listitem>We will use wget to fetch stuff from the internet.</listitem>
-        <listitem>dnsutils package will allow us to troubleshoot possible DNS problems on our system.</listitem>
-        <listitem>Telnet and bsd-mailx will be used later for troubleshooting our setup.</listitem>
-      </itemizedlist>
+    <para>First, we are going to install some software that we will use later
+    in the manual.</para>
+
+    <programlisting>apt-get install openssh-server nano dnsutils bsd-mailx telnet </programlisting>
+
+    <itemizedlist>
+      <listitem>
+        SSH server will allow us to connect remotely to the server.
+      </listitem>
+
+      <listitem>
+        Nano is a text editor. More user friendly than vi.
+      </listitem>
+
+      <listitem>
+        We will use wget to fetch stuff from the internet.
+      </listitem>
+
+      <listitem>
+        dnsutils package will allow us to troubleshoot possible DNS problems on our system.
+      </listitem>
+
+      <listitem>
+        Telnet and bsd-mailx will be used later for troubleshooting our setup.
+      </listitem>
+    </itemizedlist>
   </section>
 
   <section xml:id="preparation.static-ip">
-      <title>Setting a static IP address</title>
+    <title>Setting a static IP address</title>
 
-      <para>If you didn't enter the IP address during the installation of the server, you probably
-          got an address from the DHCP server. Since servers IP address should not be changed you will
-          have to set a static IP address for your sever.</para>
+    <para>If you didn't enter the IP address during the installation of the
+    server, you probably got an address from the DHCP server. Since servers IP
+    address should not be changed you will have to set a static IP address for
+    your sever.</para>
 
-      <para>Enter ifconfig at the prompt and copy the output somewhere so you have access to network
-          information you got from a DHCP server.</para>
+    <para>Enter ifconfig at the prompt and copy the output somewhere so you
+    have access to network information you got from a DHCP server.</para>
 
-      <para>Open up <filename>/etc/network/interfaces</filename> with nano and replace</para>
+    <para>Open up <filename>/etc/network/interfaces</filename> with nano and
+    replace</para>
 
-<programlisting>
-auto eth0
-iface eth0 inet dhcp
-</programlisting>
-    
-      <para>with</para>
+    <programlisting>auto eth0
+iface eth0 inet dhcp</programlisting>
 
-<programlisting>
-iface eth0 inet static
+    <para>with</para>
+
+    <programlisting>iface eth0 inet static
     address YOUR-IP
     netmask YOUR-NETMASK
     network YOUR-NETWORK
@@ -172,79 +184,78 @@ iface eth0 inet static
     gateway YOUR-GATEWAY
     # dns-* options are implemented by the resolvconf package, if installed
     dns-nameservers YOUR-DNS-SERVERS-SEPARATED-BY-SPACE
-    dns-search YOUR-DOMAIN
-</programlisting>
+    dns-search YOUR-DOMAIN</programlisting>
 
+    <caution>
+      <para>If you are using another interface for the connection replace
+      <computeroutput>eth0</computeroutput> with the interface you are
+      using.</para>
+    </caution>
 
-      <caution><para>If you are using another interface for the connection replace <computeroutput>eth0</computeroutput>
-        with the interface you are using.</para></caution>
+    <para>Reboot your server, check that your internet connection is working
+    (try to ping google.com or some other host) and if everything is ok you
+    can remove dhcp3-* packages from your system.</para>
 
-      <para>Reboot your server, check that your internet connection is working (try to ping google.com
-          or some other host) and if everything is ok you can remove dhcp3-* packages from your system.</para>
+    <programlisting>
+apt-get --purge remove dhcp3-common dhcp3-client</programlisting>
 
-<programlisting>
-apt-get --purge remove dhcp3-common dhcp3-client
-</programlisting>
-
-      <para>Note that option –purge removes configuration files of the packages we are removing. If
-          you do not use –purge they will be left on your system.</para>
+    <para>Note that option –purge removes configuration files of the packages
+    we are removing. If you do not use –purge they will be left on your
+    system.</para>
   </section>
 
   <section xml:id="preparation.ntp">
-      <title>NTP - time synchronization</title>
-      
-      <para>To make sure our servers time is always up to date we are going to install ntp package
-          which enables our server to use NTP protocol for syncing your servers clock.</para>
+    <title>NTP - time synchronization</title>
 
-<programlisting>
-apt-get install ntp
-</programlisting>
+    <para>To make sure our servers time is always up to date we are going to
+    install ntp package which enables our server to use NTP protocol for
+    syncing your servers clock.</para>
 
-      <para>If your data center or VPS provider offers an NTP service use their NTP server. Open up
-          <filename>/etc/ntp.conf</filename> with nano and replace:</para>
+    <programlisting>apt-get install ntp</programlisting>
 
-<programlisting>
-server 0.debian.pool.ntp.org iburst dynamic
+    <para>If your data center or VPS provider offers an NTP service use their
+    NTP server. Open up <filename>/etc/ntp.conf</filename> with nano and
+    replace:</para>
+
+    <programlisting>server 0.debian.pool.ntp.org iburst dynamic
 server 1.debian.pool.ntp.org iburst dynamic
 server 2.debian.pool.ntp.org iburst dynamic
-server 3.debian.pool.ntp.org iburst dynamic
-</programlisting>
+server 3.debian.pool.ntp.org iburst dynamic</programlisting>
 
-      <para>with</para>
+    <para>with</para>
 
-<programlisting>
-server ADDRESS-OF-NTP-SERVER-YOU-WANT-TO-USE
-</programlisting>
+    <programlisting>server ADDRESS-OF-NTP-SERVER-YOU-WANT-TO-USE</programlisting>
 
-      <para>You should have at least two servers in the ntp.conf.</para>
+    <para>You should have at least two servers in the ntp.conf.</para>
 
-      <para>After saving the changes you have to restart the NTP service by running</para>
+    <para>After saving the changes you have to restart the NTP service by
+    running</para>
 
-<programlisting>
-invoke-rc.d ntp restart
-</programlisting>
+    <programlisting>invoke-rc.d ntp restart</programlisting>
 
-      <para>Note: invoke-rc.d is Debians shortcut to /etc/init.d/. You can run
-          <computeroutput>/etc/init.d/ntp restart</computeroutput> as well.</para>
+    <para>Note: invoke-rc.d is Debians shortcut to /etc/init.d/. You can run
+    <computeroutput>/etc/init.d/ntp restart</computeroutput> as well.</para>
 
-      <para>You can examine if the NTP server is working as expected if you run the ntpq -p command:</para>
+    <para>You can examine if the NTP server is working as expected if you run
+    the ntpq -p command:</para>
 
-<screen>
-example:~# ntpq -p
+    <screen>example:~# ntpq -p
 
     remote           refid      st t when poll reach   delay   offset  jitter
 ==============================================================================
 zg1.ntp.CARNet. 161.53.1.2       2 u   58   64    3    7.157  106.619   4.158
 zg2.ntp.CARNet. 161.53.1.2       2 u   57   64    3    7.677   25.934   4.792
-morcic.RI.CARNe 161.53.1.2       2 u   58   64    3   11.796   26.527   7.751
-</screen>
+morcic.RI.CARNe 161.53.1.2       2 u   58   64    3   11.796   26.527   7.751</screen>
 
-      <para>After a while the reach column should have values greather that 0. Which means
-          that the NTP servers we are pooling for time information are reachable.</para>
-    
-     <caution><para>If your clock was way of from the current time NTP will not sync your servers time. In
-         that case stop the NTP daemon. Set the time and date manually (or you can install and use
-         the ntpdate utility) and run the NTP daemon again.</para></caution>
+    <para>After a while the reach column should have values greather that 0.
+    Which means that the NTP servers we are pooling for time information are
+    reachable.</para>
 
+    <caution>
+      <para>If your clock was way of from the current time NTP will not sync
+      your servers time. In that case stop the NTP daemon. Set the time and
+      date manually (or you can install and use the ntpdate utility) and run
+      the NTP daemon again.</para>
+    </caution>
   </section>
 </chapter>

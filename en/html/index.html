@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Building a mail server on Debian 6.0 (Squeeze)</title><link rel="stylesheet" href="docbook.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.0" /><link rel="home" href="#id36881495" title="Building a mail server on Debian 6.0 (Squeeze)" /><link rel="next" href="#id36881556" title="Foreword" /></head><body><div class="book" title="Building a mail server on Debian 6.0 (Squeeze)"><div class="titlepage"><div><div><h1 class="title"><a id="id36881495"></a>Building a mail server on Debian 6.0 (Squeeze)</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Goran</span> <span class="surname">Jurić</span></h3><code class="email">&lt;<a class="email" href="mailto:gog@gogs.info">gog@gogs.info</a>&gt;</code></div></div><div><p class="copyright">Copyright © 2010 Goran Jurić</p></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="preface"><a href="#id36881556">Foreword</a></span></dt><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#introduction.why.postfix">Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">Required knowledge</a></span></dt></dl></dd><dt><span class="chapter"><a href="#preparation">2. Preparation</a></span></dt><dd><dl><dt><span class="section"><a href="#preparation.debian-installation">Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">NTP - time synchronization</a></span></dt></dl></dd><dt><span class="chapter"><a href="#todo">3. TODO</a></span></dt></dl></div>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Building a mail server on Debian 6.0 (Squeeze)</title><link rel="stylesheet" href="docbook.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.0" /><link rel="home" href="#id36881502" title="Building a mail server on Debian 6.0 (Squeeze)" /><link rel="next" href="#id36881563" title="Foreword" /></head><body><div class="book" title="Building a mail server on Debian 6.0 (Squeeze)"><div class="titlepage"><div><div><h1 class="title"><a id="id36881502"></a>Building a mail server on Debian 6.0 (Squeeze)</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Goran</span> <span class="surname">Jurić</span></h3><code class="email">&lt;<a class="email" href="mailto:gog@gogs.info">gog@gogs.info</a>&gt;</code></div></div><div><p class="copyright">Copyright © 2010 Goran Jurić</p></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="preface"><a href="#id36881563">Foreword</a></span></dt><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#introduction.why.postfix">1.1. Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">1.2. Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">1.3. Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">1.4. Required knowledge</a></span></dt></dl></dd><dt><span class="chapter"><a href="#preparation">2. Preparation</a></span></dt><dd><dl><dt><span class="section"><a href="#preparation.debian-installation">2.1. Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">2.2. Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">2.3. Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">2.4. Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">2.5. NTP - time synchronization</a></span></dt></dl></dd><dt><span class="chapter"><a href="#todo">3. TODO</a></span></dt></dl></div>
 
       
-      <div class="preface" title="Foreword"><div class="titlepage"><div><div><h2 class="title"><a id="id36881556"></a>Foreword</h2></div></div></div>
+      <div class="preface" title="Foreword"><div class="titlepage"><div><div><h2 class="title"><a id="id36881563"></a>Foreword</h2></div></div></div>
           
           <p>
               The internet is full of information on how to do just about anything. But this vast amount of
@@ -25,248 +25,245 @@
           </p>
       </div>
 
-    <div class="chapter" title="Chapter 1. Introduction"><div class="titlepage"><div><div><h2 class="title"><a id="introduction"></a>Chapter 1. Introduction</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#introduction.why.postfix">Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">Required knowledge</a></span></dt></dl></div>
+    <div class="chapter" title="Chapter 1. Introduction"><div class="titlepage"><div><div><h2 class="title"><a id="introduction"></a>Chapter 1. Introduction</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#introduction.why.postfix">1.1. Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">1.2. Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">1.3. Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">1.4. Required knowledge</a></span></dt></dl></div>
   
-  
-  <div class="section" title="Why Postfix"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="introduction.why.postfix"></a>Why Postfix</h2></div></div></div>
-      
-      
-      <p>Most of you know that there are a number of different distributions and mail transfer
-        agents that could be used to build an equally capable mail server.</p>
 
-      <p>The only other mail server I had experience working on is build on CentOS and it is
-        called <code class="uri"><a class="uri" href="http://www.qmailtoaster.com/" target="_top">Qmail
-        Toaster</a></code>. Qmail Toaster has a lot of strengths. It is a ready made software
-        library which you can install and the installer will take care of setting up a bunch
-        of different programs and utilities that are needed for a mail server.</p>
+  <div class="section" title="1.1. Why Postfix"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="introduction.why.postfix"></a>1.1. Why Postfix</h2></div></div></div>
+    
 
-      <p>On the other hand, from what I have seen, it has it's share of quirks and the biggest
-        one for me is that it uses Qmail. Qmail is not a bad MTA (Mail Transfer Agent) but it
-        is not being actively developed for years and a lot of the functionality is provided
-        through patches.</p>
+    <p>Most of you know that there are a number of different distributions
+    and mail transfer agents that could be used to build an equally capable
+    mail server.</p>
 
-      <p>Postfix is on the other hand an actively developed project and all of the requirements
-        a modern mail server could have are either present in Postfix itself or they can be
-        provided through other applications.</p>
+    <p>The only other mail server I had experience working on is build on
+    CentOS and it is called <code class="uri"><a class="uri" href="http://www.qmailtoaster.com/" target="_top">Qmail Toaster</a></code>. Qmail Toaster has a lot of
+    strengths. It is a ready made software library which you can install and
+    the installer will take care of setting up a bunch of different programs
+    and utilities that are needed for a mail server.</p>
+
+    <p>On the other hand, from what I have seen, it has it's share of
+    quirks and the biggest one for me is that it uses Qmail. Qmail is not a
+    bad MTA (Mail Transfer Agent) but it is not being actively developed for
+    years and a lot of the functionality is provided through patches.</p>
+
+    <p>Postfix is on the other hand an actively developed project and all
+    of the requirements a modern mail server could have are either present in
+    Postfix itself or they can be provided through other applications.</p>
   </div>
 
-  <div class="section" title="Why Debian"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="introduction.why.debian"></a>Why Debian</h2></div></div></div>
-      
+  <div class="section" title="1.2. Why Debian"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="introduction.why.debian"></a>1.2. Why Debian</h2></div></div></div>
+    
 
-      <p>Debian 3.0 (woody) is the first distribution I installed on a server and since than I
-        fell in live with it. Debian was at the time the distribution with most packages provided
-        in their repositories. Some of you maybe like to compile their own software, but for me
-        software provided through distributions package management was always easier to maintain
-        and upgrade and not to mention stable.</p>
-        
-      <p>CentOS is also a nice distribution, but the version of Postfix shipped with the current
-        release of Centos (5.6 at the time of writing) is ancient and is not really even supported
-        by the author. Not to mention that the number of software packages provided through the
-        official repositories does not even come close to Debians.</p>
-        
-      <p>Software in the stable Debian distribution may be older than the one provided in Ubuntu,
-          but I have more trust in Debian. Your milage may vary.</p>
+    <p>Debian 3.0 (woody) is the first distribution I installed on a server
+    and since than I fell in live with it. Debian was at the time the
+    distribution with most packages provided in their repositories. Some of
+    you maybe like to compile their own software, but for me software provided
+    through distributions package management was always easier to maintain and
+    upgrade and not to mention stable.</p>
+
+    <p>CentOS is also a nice distribution, but the version of Postfix
+    shipped with the current release of Centos (5.6 at the time of writing) is
+    ancient and is not really even supported by the author. Not to mention
+    that the number of software packages provided through the official
+    repositories does not even come close to Debians.</p>
+
+    <p>Software in the stable Debian distribution may be older than the one
+    provided in Ubuntu, but I have more trust in Debian. Your milage may
+    vary.</p>
   </div>
 
-  <div class="section" title="Sofware used"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="introduction.software-used"></a>Sofware used</h2></div></div></div>
-      
+  <div class="section" title="1.3. Sofware used"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="introduction.software-used"></a>1.3. Sofware used</h2></div></div></div>
+    
 
-      <p>Here is a short list of applications we are going to use to build a mail server.</p>
+    <p>Here is a short list of applications we are going to use to build a
+    mail server.</p>
 
-      <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-          <p>
-              Postfix - Mail Transfer Agent
-          </p>
-        </li><li class="listitem">
-          <p>
-              Courier - an IMAP/POP3 server
-          </p>
-        </li><li class="listitem">
-          <p>
-              SpamAssassin - for filtering spam messages
-          </p>
-        </li><li class="listitem">
-          <p>
-              ClamAV - antivirus
-          </p>
-        </li><li class="listitem">
-          <p>
-              Amavisd-new - a glue that glues Postfix with SpamAssassin and ClamAV
-          </p>
-        </li><li class="listitem">
-          <p>
-              Sqlgrey - for greylisting emails
-          </p>
-        </li><li class="listitem">
-          <p>
-              MySQL - for storing information about users, domains and settings
-          </p>
-        </li><li class="listitem">
-          <p>
-              Maildrop - for delivering mails to users mailboxes
-          </p>
-        </li></ul></div>
+    <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+        <p>Postfix - Mail Transfer Agent</p>
+      </li><li class="listitem">
+        <p>Courier - an IMAP/POP3 server</p>
+      </li><li class="listitem">
+        <p>SpamAssassin - for filtering spam messages</p>
+      </li><li class="listitem">
+        <p>ClamAV - antivirus</p>
+      </li><li class="listitem">
+        <p>Amavisd-new - a glue that glues Postfix with SpamAssassin and
+        ClamAV</p>
+      </li><li class="listitem">
+        <p>Sqlgrey - for greylisting emails</p>
+      </li><li class="listitem">
+        <p>MySQL - for storing information about users, domains and
+        settings</p>
+      </li><li class="listitem">
+        <p>Maildrop - for delivering mails to users mailboxes</p>
+      </li></ul></div>
   </div>
 
-  <div class="section" title="Required knowledge"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="introduction.required-knowledge"></a>Required knowledge</h2></div></div></div>
-      
-      
-      <p>This is not a beginners guide to Unix. You should know your away around a unix
-         shell and familiarize yourself with Debians package management <span class="emphasis"><em>apt</em></span>.</p>
+  <div class="section" title="1.4. Required knowledge"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="introduction.required-knowledge"></a>1.4. Required knowledge</h2></div></div></div>
+    
+
+    <p>This is not a beginners guide to Unix. You should know your away
+    around a unix shell and familiarize yourself with Debians package
+    management <span class="emphasis"><em>apt</em></span>.</p>
   </div>
 </div>
-    <div class="chapter" title="Chapter 2. Preparation"><div class="titlepage"><div><div><h2 class="title"><a id="preparation"></a>Chapter 2. Preparation</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#preparation.debian-installation">Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">NTP - time synchronization</a></span></dt></dl></div>
+    <div class="chapter" title="Chapter 2. Preparation"><div class="titlepage"><div><div><h2 class="title"><a id="preparation"></a>Chapter 2. Preparation</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#preparation.debian-installation">2.1. Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">2.2. Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">2.3. Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">2.4. Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">2.5. NTP - time synchronization</a></span></dt></dl></div>
   
-  
-  <div class="section" title="Debian installation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="preparation.debian-installation"></a>Debian installation</h2></div></div></div>
-      
-      
-      <p>Download Debian 6.0 (32/64-bit PC Network installer) from <code class="uri"><a class="uri" href="http://www.debian.org/" target="_top"> www.debian.org</a></code> and burn
-        the image to a compact disc, or mount it as a CD image in your virtualisation software.</p>
 
-      <p>Boot your computer and select Install (or Install 64 if you want the 64-bit version). 
-         Choose your Language, Country and Keymap. If your computer is not connected to a network
-         with <acronym class="acronym">DHCP</acronym> you will be prompted to enter network connection parameter
-         manually. After configuring your network and <acronym class="acronym">DNS</acronym> server you will be
-         asked for a hostname, in our case, the hostname is <code class="systemitem">atlantis</code>
-         and our domain name is <code class="systemitem">example.com
-         </code>.</p>
-
-      <p>When prompted to select Debian mirror the selected choice is usually the best one.
-         If you are not using <acronym class="acronym">HTTP</acronym> proxy on your internet connection, or don't
-         know what HTTP proxy is, just leave this field blank.</p>
-
-      <p>When prompted to partition the disk for a Debian install, choose
-         <code class="computeroutput">Guided - use entire disk. Install all files in one partition</code>.</p>
-
-      <p>Grab a cup of coffee and wait until installation finishes fetching packages from the
-         internet and installs the base system.</p>
-
-      <p>Enter your root password. This is a password for root user who has all the privileges 
-         on the system, so choose one carefully. After that, you have to create a new user for
-         the system.</p>
-
-      <p>You will be asked if you want to participate in the Debians popularity contest which
-         collects information about most used packages. Feel free to answer whatever you like, by
-         choosing Yes you are helping Debian community find the most used packages in the distribution.
-         Help them out, it doesn't cost a thing.</p>
-
-      <p>When prompted to select collections of software packages deselect everything, including
-         the <code class="computeroutput">Standard system utilities</code> We just need to install the
-         base system because we will add all needed packages when and if we need them.</p>
-
-      <p>I strongly believe that you should install the minimum required number of packages
-         needed for the system to operate. You will not have to update and upgrade packages that
-         you do not even use. And knowing which package provides certain utilities is a fun
-         exercise in getting to know your system a little better.</p> 
-
-      <p>Since Debian will be the only system on our machine you must install GRUB on to the
-         master boot record when prompted.</p>
-
-      <p>Your Debian system is almost ready to go. When asked, remove the installation media from
-         your drive (or unmount the image in your virtualisation software) and reboot your computer.</p>
-
-      <p>When your computer boots up you can log in with the root user account and update
-           the packages in your system by running:</p>
-
-     <pre class="programlisting">
-apt-get update
-apt-get upgrade
-     </pre>
-
-      <p>And that's it. Your new Debian system is installed and ready for configuration.</p>
-  </div>
-
-
-  <div class="section" title="Tracking configuration changes"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="preparation.tracking-changes"></a>Tracking configuration changes</h2></div></div></div>
-      
-      
-      <p>During the course of this manual, we will edit a lot of configuration files and install
-         many application packages and sometimes it is really hard to remember what we did and why
-         after a couple of months have passed.</p>
-         
-      <p>To stay on top of the game we will use <span class="emphasis"><em>etckeeper</em></span>.</p>
-      
-      <p>Etckeeper is an application that uses version control systems like git, Bazaar or Mercurial
-         to track changes made to the <code class="filename">/etc</code> folder.</p>
-         
-<pre class="programlisting">
-apt-get install etckeeper
-</pre>
-
-      <p>Etckeeper in Debian uses git for tracking changes and is set to automatically commit
-         all of the changes before a new package is installed as well as to auto commit changes
-         on a daily bases.</p>
-         
-      <p>Since i do now want to forget to describe changes I mage to the files in 
-         <code class="filename">/etc</code> I usaully disable automatic commits. Edit
-         <code class="filename">/etc/ectkeeper/etckeeper.conf</code> and uncomment out these two
-         lines:</p>
-
-<pre class="programlisting">
-AVOID_DAILY_AUTOCOMMITS=1
-AVOID_COMMIT_BEFORE_INSTALL=1
-</pre>
-
-      <p>Set name and email git will use for the commit log by running this two commands at
-          the shell:</p>
-      
-<pre class="programlisting">
-git config --global user.name "Your Name"
-git config --global user.email you@example.com
-</pre>
-
-      <p>It is time for our first commit</p>
-      
-<pre class="programlisting">
-etckeeper commit "Changed etckeeper settings to disable auto commits"
-</pre>
-
-     <p>To view the change log navigate to the <code class="filename">/etc</code> folder and run:</p>
-
-<pre class="programlisting">
-git log
-</pre>
-
-     <p>You can learn more about git and etckeeper at the projects homepage. Just remember to
-         commit your changes after the each change you make or you will not be able to install 
-         packages because etckeeper will complain that there are uncommitted changes in the folder.</p>
-
-  </div>
-
-  <div class="section" title="Essential software"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="preparation.essentials"></a>Essential software</h2></div></div></div>
-      
-      
-      <p>First, we are going to install some software that we will use later in the manual.</p>
-      
-      <pre class="programlisting">
-apt-get install openssh-server nano dnsutils bsd-mailx telnet
-      </pre>
-
-      <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">SSH server will allow us to connect remotely to the server.</li><li class="listitem">Nano is a text editor. More user friendly than vi.</li><li class="listitem">We will use wget to fetch stuff from the internet.</li><li class="listitem">dnsutils package will allow us to troubleshoot possible DNS problems on our system.</li><li class="listitem">Telnet and bsd-mailx will be used later for troubleshooting our setup.</li></ul></div>
-  </div>
-
-  <div class="section" title="Setting a static IP address"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="preparation.static-ip"></a>Setting a static IP address</h2></div></div></div>
-      
-
-      <p>If you didn't enter the IP address during the installation of the server, you probably
-          got an address from the DHCP server. Since servers IP address should not be changed you will
-          have to set a static IP address for your sever.</p>
-
-      <p>Enter ifconfig at the prompt and copy the output somewhere so you have access to network
-          information you got from a DHCP server.</p>
-
-      <p>Open up <code class="filename">/etc/network/interfaces</code> with nano and replace</p>
-
-<pre class="programlisting">
-auto eth0
-iface eth0 inet dhcp
-</pre>
+  <div class="section" title="2.1. Debian installation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="preparation.debian-installation"></a>2.1. Debian installation</h2></div></div></div>
     
-      <p>with</p>
 
-<pre class="programlisting">
-iface eth0 inet static
+    <p>Download Debian 6.0 (32/64-bit PC Network installer) from <code class="uri"><a class="uri" href="http://www.debian.org/" target="_top">
+    www.debian.org</a></code> and burn the image to a compact disc, or mount it as
+    a CD image in your virtualisation software.</p>
+
+    <p>Boot your computer and select Install (or Install 64 if you want the
+    64-bit version). Choose your Language, Country and Keymap. If your
+    computer is not connected to a network with <acronym class="acronym">DHCP</acronym> you
+    will be prompted to enter network connection parameter manually. After
+    configuring your network and <acronym class="acronym">DNS</acronym> server you will be
+    asked for a hostname, in our case, the hostname is <code class="systemitem">atlantis</code> and our domain name is
+    <code class="systemitem">example.com </code>.</p>
+
+    <p>When prompted to select Debian mirror the selected choice is usually
+    the best one. If you are not using <acronym class="acronym">HTTP</acronym> proxy on your
+    internet connection, or don't know what HTTP proxy is, just leave this
+    field blank.</p>
+
+    <p>When prompted to partition the disk for a Debian install, choose
+    <code class="computeroutput">Guided - use entire disk. Install all files in one
+    partition</code>.</p>
+
+    <p>Grab a cup of coffee and wait until installation finishes fetching
+    packages from the internet and installs the base system.</p>
+
+    <p>Enter your root password. This is a password for root user who has
+    all the privileges on the system, so choose one carefully. After that, you
+    have to create a new user for the system.</p>
+
+    <p>You will be asked if you want to participate in the Debians
+    popularity contest which collects information about most used packages.
+    Feel free to answer whatever you like, by choosing Yes you are helping
+    Debian community find the most used packages in the distribution. Help
+    them out, it doesn't cost a thing.</p>
+
+    <p>When prompted to select collections of software packages deselect
+    everything, including the <code class="computeroutput">Standard system
+    utilities</code> We just need to install the base system because
+    we will add all needed packages when and if we need them.</p>
+
+    <p>I strongly believe that you should install the minimum required
+    number of packages needed for the system to operate. You will not have to
+    update and upgrade packages that you do not even use. And knowing which
+    package provides certain utilities is a fun exercise in getting to know
+    your system a little better.</p>
+
+    <p>Since Debian will be the only system on our machine you must install
+    GRUB on to the master boot record when prompted.</p>
+
+    <p>Your Debian system is almost ready to go. When asked, remove the
+    installation media from your drive (or unmount the image in your
+    virtualisation software) and reboot your computer.</p>
+
+    <p>When your computer boots up you can log in with the root user
+    account and update the packages in your system by running:</p>
+
+    <pre class="programlisting">apt-get update
+apt-get upgrade</pre>
+
+    <p>And that's it. Your new Debian system is installed and ready for
+    configuration.</p>
+  </div>
+
+  <div class="section" title="2.2. Tracking configuration changes"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="preparation.tracking-changes"></a>2.2. Tracking configuration changes</h2></div></div></div>
+    
+
+    <p>During the course of this manual, we will edit a lot of
+    configuration files and install many application packages and sometimes it
+    is really hard to remember what we did and why after a couple of months
+    have passed.</p>
+
+    <p>To stay on top of the game we will use
+    <span class="application">etckeeper</span>.</p>
+
+    <p>Etckeeper is an application that uses version control systems like
+    git, Bazaar or Mercurial to track changes made to the <code class="filename">/etc</code> folder.</p>
+
+    <pre class="programlisting">apt-get install etckeeper</pre>
+
+    <p>Etckeeper in Debian uses git for tracking changes and is set to
+    automatically commit all of the changes before a new package is installed
+    as well as to auto commit changes on a daily bases.</p>
+
+    <p>Since i do now want to forget to describe changes I mage to the
+    files in <code class="filename">/etc</code> I usaully disable
+    automatic commits. Edit <code class="filename">/etc/ectkeeper/etckeeper.conf</code>
+    and uncomment out these two lines:</p>
+
+    <pre class="programlisting">AVOID_DAILY_AUTOCOMMITS=1
+AVOID_COMMIT_BEFORE_INSTALL=1</pre>
+
+    <p>Set name and email git will use for the commit log by running this
+    two commands at the shell:</p>
+
+    <pre class="programlisting">git config --global user.name "Your Name"
+git config --global user.email you@example.com</pre>
+
+    <p>It is time for our first commit</p>
+
+    <pre class="programlisting">etckeeper commit "Changed etckeeper settings to disable auto commits"</pre>
+
+    <p>To view the change log navigate to the <code class="filename">/etc</code> folder and run:</p>
+
+    <pre class="programlisting">git log</pre>
+
+    <p>You can learn more about git and etckeeper at the projects homepage.
+    Just remember to commit your changes after the each change you make or you
+    will not be able to install packages because etckeeper will complain that
+    there are uncommitted changes in the folder.</p>
+  </div>
+
+  <div class="section" title="2.3. Essential software"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="preparation.essentials"></a>2.3. Essential software</h2></div></div></div>
+    
+
+    <p>First, we are going to install some software that we will use later
+    in the manual.</p>
+
+    <pre class="programlisting">apt-get install openssh-server nano dnsutils bsd-mailx telnet </pre>
+
+    <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+        SSH server will allow us to connect remotely to the server.
+      </li><li class="listitem">
+        Nano is a text editor. More user friendly than vi.
+      </li><li class="listitem">
+        We will use wget to fetch stuff from the internet.
+      </li><li class="listitem">
+        dnsutils package will allow us to troubleshoot possible DNS problems on our system.
+      </li><li class="listitem">
+        Telnet and bsd-mailx will be used later for troubleshooting our setup.
+      </li></ul></div>
+  </div>
+
+  <div class="section" title="2.4. Setting a static IP address"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="preparation.static-ip"></a>2.4. Setting a static IP address</h2></div></div></div>
+    
+
+    <p>If you didn't enter the IP address during the installation of the
+    server, you probably got an address from the DHCP server. Since servers IP
+    address should not be changed you will have to set a static IP address for
+    your sever.</p>
+
+    <p>Enter ifconfig at the prompt and copy the output somewhere so you
+    have access to network information you got from a DHCP server.</p>
+
+    <p>Open up <code class="filename">/etc/network/interfaces</code> with nano and
+    replace</p>
+
+    <pre class="programlisting">auto eth0
+iface eth0 inet dhcp</pre>
+
+    <p>with</p>
+
+    <pre class="programlisting">iface eth0 inet static
     address YOUR-IP
     netmask YOUR-NETMASK
     network YOUR-NETWORK
@@ -274,80 +271,79 @@ iface eth0 inet static
     gateway YOUR-GATEWAY
     # dns-* options are implemented by the resolvconf package, if installed
     dns-nameservers YOUR-DNS-SERVERS-SEPARATED-BY-SPACE
-    dns-search YOUR-DOMAIN
-</pre>
+    dns-search YOUR-DOMAIN</pre>
 
+    <div class="caution" title="Caution" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Caution</h3>
+      <p>If you are using another interface for the connection replace
+      <code class="computeroutput">eth0</code> with the interface you are
+      using.</p>
+    </div>
 
-      <div class="caution" title="Caution" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Caution</h3><p>If you are using another interface for the connection replace <code class="computeroutput">eth0</code>
-        with the interface you are using.</p></div>
+    <p>Reboot your server, check that your internet connection is working
+    (try to ping google.com or some other host) and if everything is ok you
+    can remove dhcp3-* packages from your system.</p>
 
-      <p>Reboot your server, check that your internet connection is working (try to ping google.com
-          or some other host) and if everything is ok you can remove dhcp3-* packages from your system.</p>
+    <pre class="programlisting">
+apt-get --purge remove dhcp3-common dhcp3-client</pre>
 
-<pre class="programlisting">
-apt-get --purge remove dhcp3-common dhcp3-client
-</pre>
-
-      <p>Note that option –purge removes configuration files of the packages we are removing. If
-          you do not use –purge they will be left on your system.</p>
+    <p>Note that option –purge removes configuration files of the packages
+    we are removing. If you do not use –purge they will be left on your
+    system.</p>
   </div>
 
-  <div class="section" title="NTP - time synchronization"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="preparation.ntp"></a>NTP - time synchronization</h2></div></div></div>
-      
-      
-      <p>To make sure our servers time is always up to date we are going to install ntp package
-          which enables our server to use NTP protocol for syncing your servers clock.</p>
+  <div class="section" title="2.5. NTP - time synchronization"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="preparation.ntp"></a>2.5. NTP - time synchronization</h2></div></div></div>
+    
 
-<pre class="programlisting">
-apt-get install ntp
-</pre>
+    <p>To make sure our servers time is always up to date we are going to
+    install ntp package which enables our server to use NTP protocol for
+    syncing your servers clock.</p>
 
-      <p>If your data center or VPS provider offers an NTP service use their NTP server. Open up
-          <code class="filename">/etc/ntp.conf</code> with nano and replace:</p>
+    <pre class="programlisting">apt-get install ntp</pre>
 
-<pre class="programlisting">
-server 0.debian.pool.ntp.org iburst dynamic
+    <p>If your data center or VPS provider offers an NTP service use their
+    NTP server. Open up <code class="filename">/etc/ntp.conf</code> with nano and
+    replace:</p>
+
+    <pre class="programlisting">server 0.debian.pool.ntp.org iburst dynamic
 server 1.debian.pool.ntp.org iburst dynamic
 server 2.debian.pool.ntp.org iburst dynamic
-server 3.debian.pool.ntp.org iburst dynamic
-</pre>
+server 3.debian.pool.ntp.org iburst dynamic</pre>
 
-      <p>with</p>
+    <p>with</p>
 
-<pre class="programlisting">
-server ADDRESS-OF-NTP-SERVER-YOU-WANT-TO-USE
-</pre>
+    <pre class="programlisting">server ADDRESS-OF-NTP-SERVER-YOU-WANT-TO-USE</pre>
 
-      <p>You should have at least two servers in the ntp.conf.</p>
+    <p>You should have at least two servers in the ntp.conf.</p>
 
-      <p>After saving the changes you have to restart the NTP service by running</p>
+    <p>After saving the changes you have to restart the NTP service by
+    running</p>
 
-<pre class="programlisting">
-invoke-rc.d ntp restart
-</pre>
+    <pre class="programlisting">invoke-rc.d ntp restart</pre>
 
-      <p>Note: invoke-rc.d is Debians shortcut to /etc/init.d/. You can run
-          <code class="computeroutput">/etc/init.d/ntp restart</code> as well.</p>
+    <p>Note: invoke-rc.d is Debians shortcut to /etc/init.d/. You can run
+    <code class="computeroutput">/etc/init.d/ntp restart</code> as well.</p>
 
-      <p>You can examine if the NTP server is working as expected if you run the ntpq -p command:</p>
+    <p>You can examine if the NTP server is working as expected if you run
+    the ntpq -p command:</p>
 
-<pre class="screen">
-example:~# ntpq -p
+    <pre class="screen">example:~# ntpq -p
 
     remote           refid      st t when poll reach   delay   offset  jitter
 ==============================================================================
 zg1.ntp.CARNet. 161.53.1.2       2 u   58   64    3    7.157  106.619   4.158
 zg2.ntp.CARNet. 161.53.1.2       2 u   57   64    3    7.677   25.934   4.792
-morcic.RI.CARNe 161.53.1.2       2 u   58   64    3   11.796   26.527   7.751
-</pre>
+morcic.RI.CARNe 161.53.1.2       2 u   58   64    3   11.796   26.527   7.751</pre>
 
-      <p>After a while the reach column should have values greather that 0. Which means
-          that the NTP servers we are pooling for time information are reachable.</p>
-    
-     <div class="caution" title="Caution" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Caution</h3><p>If your clock was way of from the current time NTP will not sync your servers time. In
-         that case stop the NTP daemon. Set the time and date manually (or you can install and use
-         the ntpdate utility) and run the NTP daemon again.</p></div>
+    <p>After a while the reach column should have values greather that 0.
+    Which means that the NTP servers we are pooling for time information are
+    reachable.</p>
 
+    <div class="caution" title="Caution" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Caution</h3>
+      <p>If your clock was way of from the current time NTP will not sync
+      your servers time. In that case stop the NTP daemon. Set the time and
+      date manually (or you can install and use the ntpdate utility) and run
+      the NTP daemon again.</p>
+    </div>
   </div>
 </div>
     <div class="chapter" title="Chapter 3. TODO"><div class="titlepage"><div><div><h2 class="title"><a id="todo"></a>Chapter 3. TODO</h2></div></div></div>

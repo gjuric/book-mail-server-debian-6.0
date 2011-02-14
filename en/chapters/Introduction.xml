@@ -8,100 +8,100 @@
          xmlns:html="http://www.w3.org/1999/xhtml"
          xmlns:db="http://docbook.org/ns/docbook">
   <title>Introduction</title>
-  
+
   <section xml:id="introduction.why.postfix">
-      <title>Why Postfix</title>
-      
-      <para>Most of you know that there are a number of different distributions and mail transfer
-        agents that could be used to build an equally capable mail server.</para>
+    <title>Why Postfix</title>
 
-      <para>The only other mail server I had experience working on is build on CentOS and it is
-        called <uri xlink:href="http://www.qmailtoaster.com/" xlink:type="simple">Qmail
-        Toaster</uri>. Qmail Toaster has a lot of strengths. It is a ready made software
-        library which you can install and the installer will take care of setting up a bunch
-        of different programs and utilities that are needed for a mail server.</para>
+    <para>Most of you know that there are a number of different distributions
+    and mail transfer agents that could be used to build an equally capable
+    mail server.</para>
 
-      <para>On the other hand, from what I have seen, it has it's share of quirks and the biggest
-        one for me is that it uses Qmail. Qmail is not a bad MTA (Mail Transfer Agent) but it
-        is not being actively developed for years and a lot of the functionality is provided
-        through patches.</para>
+    <para>The only other mail server I had experience working on is build on
+    CentOS and it is called <uri xlink:href="http://www.qmailtoaster.com/"
+    xlink:type="simple">Qmail Toaster</uri>. Qmail Toaster has a lot of
+    strengths. It is a ready made software library which you can install and
+    the installer will take care of setting up a bunch of different programs
+    and utilities that are needed for a mail server.</para>
 
-      <para>Postfix is on the other hand an actively developed project and all of the requirements
-        a modern mail server could have are either present in Postfix itself or they can be
-        provided through other applications.</para>
+    <para>On the other hand, from what I have seen, it has it's share of
+    quirks and the biggest one for me is that it uses Qmail. Qmail is not a
+    bad MTA (Mail Transfer Agent) but it is not being actively developed for
+    years and a lot of the functionality is provided through patches.</para>
+
+    <para>Postfix is on the other hand an actively developed project and all
+    of the requirements a modern mail server could have are either present in
+    Postfix itself or they can be provided through other applications.</para>
   </section>
 
   <section xml:id="introduction.why.debian">
-      <title>Why Debian</title>
+    <title>Why Debian</title>
 
-      <para>Debian 3.0 (woody) is the first distribution I installed on a server and since than I
-        fell in live with it. Debian was at the time the distribution with most packages provided
-        in their repositories. Some of you maybe like to compile their own software, but for me
-        software provided through distributions package management was always easier to maintain
-        and upgrade and not to mention stable.</para>
-        
-      <para>CentOS is also a nice distribution, but the version of Postfix shipped with the current
-        release of Centos (5.6 at the time of writing) is ancient and is not really even supported
-        by the author. Not to mention that the number of software packages provided through the
-        official repositories does not even come close to Debians.</para>
-        
-      <para>Software in the stable Debian distribution may be older than the one provided in Ubuntu,
-          but I have more trust in Debian. Your milage may vary.</para>
+    <para>Debian 3.0 (woody) is the first distribution I installed on a server
+    and since than I fell in live with it. Debian was at the time the
+    distribution with most packages provided in their repositories. Some of
+    you maybe like to compile their own software, but for me software provided
+    through distributions package management was always easier to maintain and
+    upgrade and not to mention stable.</para>
+
+    <para>CentOS is also a nice distribution, but the version of Postfix
+    shipped with the current release of Centos (5.6 at the time of writing) is
+    ancient and is not really even supported by the author. Not to mention
+    that the number of software packages provided through the official
+    repositories does not even come close to Debians.</para>
+
+    <para>Software in the stable Debian distribution may be older than the one
+    provided in Ubuntu, but I have more trust in Debian. Your milage may
+    vary.</para>
   </section>
 
   <section xml:id="introduction.software-used">
-      <title>Sofware used</title>
+    <title>Sofware used</title>
 
-      <para>Here is a short list of applications we are going to use to build a mail server.</para>
+    <para>Here is a short list of applications we are going to use to build a
+    mail server.</para>
 
-      <itemizedlist>
-        <listitem>
-          <para>
-              Postfix - Mail Transfer Agent
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              Courier - an IMAP/POP3 server
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              SpamAssassin - for filtering spam messages
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              ClamAV - antivirus
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              Amavisd-new - a glue that glues Postfix with SpamAssassin and ClamAV
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              Sqlgrey - for greylisting emails
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              MySQL - for storing information about users, domains and settings
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              Maildrop - for delivering mails to users mailboxes
-          </para>
-        </listitem>
-      </itemizedlist>
+    <itemizedlist>
+      <listitem>
+        <para>Postfix - Mail Transfer Agent</para>
+      </listitem>
+
+      <listitem>
+        <para>Courier - an IMAP/POP3 server</para>
+      </listitem>
+
+      <listitem>
+        <para>SpamAssassin - for filtering spam messages</para>
+      </listitem>
+
+      <listitem>
+        <para>ClamAV - antivirus</para>
+      </listitem>
+
+      <listitem>
+        <para>Amavisd-new - a glue that glues Postfix with SpamAssassin and
+        ClamAV</para>
+      </listitem>
+
+      <listitem>
+        <para>Sqlgrey - for greylisting emails</para>
+      </listitem>
+
+      <listitem>
+        <para>MySQL - for storing information about users, domains and
+        settings</para>
+      </listitem>
+
+      <listitem>
+        <para>Maildrop - for delivering mails to users mailboxes</para>
+      </listitem>
+    </itemizedlist>
   </section>
 
   <section xml:id="introduction.required-knowledge">
-      <title>Required knowledge</title>
-      
-      <para>This is not a beginners guide to Unix. You should know your away around a unix
-         shell and familiarize yourself with Debians package management <emphasis>apt</emphasis>.</para>
+    <title>Required knowledge</title>
+
+    <para>This is not a beginners guide to Unix. You should know your away
+    around a unix shell and familiarize yourself with Debians package
+    management <emphasis>apt</emphasis>.</para>
   </section>
 </chapter>

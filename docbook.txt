@@ -6,6 +6,10 @@ xsltproc --stringparam  html.stylesheet 'docbook.css' --xinclude -o html/index.h
 - chunked
 xsltproc --stringparam  html.stylesheet 'docbook.css' --xinclude -o html/index.html  $XSL/xhtml/chunk.xsl book.xml
 
+- add numbers to sections
+--stringparam section.autolabel 1
+--stringparam section.label.includes.component.label 1
+
 Create PDF:
 
 ./fop -c conf/fop.xconf -xml ../../mail-server-book/en/book.xml -xsl ../docbook-xsl-1.75.0/fo/docbook.xsl -param body.font.family Times-Roman -param title.font.family Times-Roman -pdf book.pdf
