@@ -31,5 +31,10 @@
               DNS caching
           </para>
         </listitem>
+        <listitem>
+          <para>
+              Disabling IPv6
+          </para>
+        </listitem>
       </itemizedlist>
 </chapter>

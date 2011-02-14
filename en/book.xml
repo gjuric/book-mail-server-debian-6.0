@@ -13,17 +13,10 @@
     <author>
       <personname><firstname>Goran</firstname>
       <surname>Jurić</surname></personname>
-
-      <email>gog@gogs.info</email>
-
-      <personblurb>
-        <para>Something about me...</para>
-      </personblurb>
     </author>
 
     <copyright>
       <year>2010</year>
-
       <holder>Goran Jurić</holder>
     </copyright>
   </info>

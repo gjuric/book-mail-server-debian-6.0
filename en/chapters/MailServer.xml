@@ -188,7 +188,7 @@ Cc:</screen>
 
       <programlisting>atlantis:~# <command>cat</command> /dev/null &gt; /etc/postfix/main.cf</programlisting>
 
-      <para>Now copy and paste these line, but make sure to replace
+      <para>Now copy and paste these lines, but make sure to replace
       <emphasis>myhostname = atlantis.example.com</emphasis> with your
       hostname.</para>
 
@@ -257,8 +257,40 @@ inet_interfaces = all</screen>
       have gone wrong.</para>
     </section>
 
-    <section>
+    <section xml:id="postfix.virtual-users">
       <title>Virtual users and domains</title>
+
+      <para>Our current setup can only receive mail for for users that exist
+      on our server (root, the one that you created druing the installation
+      and other system users). As you can see this is not quite helpfull as we
+      could only server one domain and all the users that have email addresses
+      on that domain would have to be created on the server.</para>
+
+      <para>To avoid all this we are going to use virtual domains and users.
+      That means that we are going to create a couple of databases where we
+      will store all the domains and users that we will be receiving mail
+      for.</para>
+
+      <para>First, we are going to create a system user which will have
+      persmissions to read and write emails to the system as well as the
+      directory for storing all of the mail.</para>
+
+      <para>User will be called <systemitem
+      class="username">vmail</systemitem> and will have a group with ID 5000
+      on the system.</para>
+
+      <programlisting><command>groupadd</command> -g 5000 vmail
+<command>useradd</command> -s /usr/sbin/nologin -g vmail -u 5000 vmail -d /home/vmail -m</programlisting>
+
+      <para>The extra parameters for the <command>useradd</command> command
+      tell the system that this user will not be able to log on to the system,
+      that he belongs to group 5000 and that it's home folder is <filename
+      class="directory">/home/vmail</filename>. This is the folder where all
+      of the received messages will be stored.</para>
+    </section>
+
+    <section xml:id="postfix.mysql">
+      <title>MySQL</title>
 
       <para></para>
     </section>
