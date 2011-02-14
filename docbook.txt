@@ -9,3 +9,8 @@ xsltproc --stringparam  html.stylesheet 'docbook.css' --xinclude -o html/index.h
 Create PDF:
 
 ./fop -c conf/fop.xconf -xml ../../mail-server-book/en/book.xml -xsl ../docbook-xsl-1.75.0/fo/docbook.xsl -param body.font.family Times-Roman -param title.font.family Times-Roman -pdf book.pdf
+
+Two step processing:
+
+xsltproc --xinclude -o mybook.fo docbook.xsl mybook.xml
+fop -fo mybook.fo -pdf mybook.pdf
