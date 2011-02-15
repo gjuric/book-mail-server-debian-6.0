@@ -194,10 +194,10 @@ iface eth0 inet dhcp</programlisting>
 
     <para>Reboot your server, check that your internet connection is working
     (try to ping google.com or some other host) and if everything is ok you
-    can remove dhcp3-* packages from your system.</para>
+    can remove packages that provide DHCP from your system.</para>
 
     <programlisting>
-apt-get --purge remove dhcp3-common dhcp3-client</programlisting>
+apt-get --purge remove isc-dhcp-client isc-dhcp-common</programlisting>
 
     <para>Note that option –purge removes configuration files of the packages
     we are removing. If you do not use –purge they will be left on your

@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Building a mail server on Debian 6.0 (Squeeze)</title><link rel="stylesheet" href="docbook.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.0" /><link rel="home" href="#id36882014" title="Building a mail server on Debian 6.0 (Squeeze)" /><link rel="next" href="#id36881993" title="Foreword" /></head><body><div class="book" title="Building a mail server on Debian 6.0 (Squeeze)"><div class="titlepage"><div><div><h1 class="title"><a id="id36882014"></a>Building a mail server on Debian 6.0 (Squeeze)</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Goran</span> <span class="surname">Jurić</span></h3></div></div><div><p class="copyright">Copyright © 2010 Goran Jurić</p></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="preface"><a href="#id36881993">Foreword</a></span></dt><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#introduction.why.postfix">1.1. Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">1.2. Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">1.3. Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">1.4. Required knowledge</a></span></dt></dl></dd><dt><span class="chapter"><a href="#preparation">2. Preparation</a></span></dt><dd><dl><dt><span class="section"><a href="#preparation.debian-installation">2.1. Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">2.2. Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">2.3. Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">2.4. Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">2.5. NTP - time synchronization</a></span></dt></dl></dd><dt><span class="chapter"><a href="#mail-server">3. Mail server</a></span></dt><dd><dl><dt><span class="section"><a href="#mail-server.dns">3.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">3.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">3.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#id36883025">3.2.2. Virtual users and domains</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#todo">4. TODO</a></span></dt></dl></div>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Building a mail server on Debian 6.0 (Squeeze)</title><link rel="stylesheet" href="docbook.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.0" /><link rel="home" href="#id36882107" title="Building a mail server on Debian 6.0 (Squeeze)" /><link rel="next" href="#id36882054" title="Foreword" /></head><body><div class="book" title="Building a mail server on Debian 6.0 (Squeeze)"><div class="titlepage"><div><div><h1 class="title"><a id="id36882107"></a>Building a mail server on Debian 6.0 (Squeeze)</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Goran</span> <span class="surname">Jurić</span></h3></div></div><div><p class="releaseinfo">
+      This is version 0.0.1 of Building a mail server on Debian.
+    </p></div><div><p class="copyright">Copyright © 2010 Goran Jurić</p></div><div><div class="legalnotice" title="Legal Notices"><a id="id36882086"></a>
+      <p class="legalnotice-title"><b>Legal Notices</b></p>
+
+      <p>Permission is granted to copy, distribute and/or modify this
+      document under the terms of the GNU Free Documentation
+      License (GFDL), Version 1.1 or any later version published
+      by the Free Software Foundation with no Invariant Sections,
+      no Front-Cover Texts, and no Back-Cover Texts.  You can find
+      a copy of the GFDL at this
+      <a class="link" href="http://www.gnu.org/copyleft/fdl.html" target="_top">link</a>.
+      </p>
+    </div></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="preface"><a href="#id36882054">Foreword</a></span></dt><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#introduction.why.postfix">1.1. Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">1.2. Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">1.3. Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">1.4. Required knowledge</a></span></dt></dl></dd><dt><span class="chapter"><a href="#preparation">2. Preparation</a></span></dt><dd><dl><dt><span class="section"><a href="#preparation.debian-installation">2.1. Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">2.2. Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">2.3. Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">2.4. Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">2.5. NTP - time synchronization</a></span></dt></dl></dd><dt><span class="chapter"><a href="#mail-server">3. Mail server</a></span></dt><dd><dl><dt><span class="section"><a href="#mail-server.dns">3.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">3.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">3.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">3.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">3.2.3. MySQL</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#todo">4. TODO</a></span></dt></dl></div>
   
 
-  <div class="preface" title="Foreword"><div class="titlepage"><div><div><h2 class="title"><a id="id36881993"></a>Foreword</h2></div></div></div>
+  <div class="preface" title="Foreword"><div class="titlepage"><div><div><h2 class="title"><a id="id36882054"></a>Foreword</h2></div></div></div>
     
 
     <p>The internet is full of information on how to do just about
@@ -282,10 +295,10 @@ iface eth0 inet dhcp</pre>
 
     <p>Reboot your server, check that your internet connection is working
     (try to ping google.com or some other host) and if everything is ok you
-    can remove dhcp3-* packages from your system.</p>
+    can remove packages that provide DHCP from your system.</p>
 
     <pre class="programlisting">
-apt-get --purge remove dhcp3-common dhcp3-client</pre>
+apt-get --purge remove isc-dhcp-client isc-dhcp-common</pre>
 
     <p>Note that option –purge removes configuration files of the packages
     we are removing. If you do not use –purge they will be left on your
@@ -348,7 +361,7 @@ morcic.RI.CARNe 161.53.1.2       2 u   58   64    3   11.796   26.527   7.751</p
   </div>
 </div>
 
-  <div class="chapter" title="Chapter 3. Mail server"><div class="titlepage"><div><div><h2 class="title"><a id="mail-server"></a>Chapter 3. Mail server</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#mail-server.dns">3.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">3.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">3.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#id36883025">3.2.2. Virtual users and domains</a></span></dt></dl></dd></dl></div>
+  <div class="chapter" title="Chapter 3. Mail server"><div class="titlepage"><div><div><h2 class="title"><a id="mail-server"></a>Chapter 3. Mail server</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#mail-server.dns">3.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">3.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">3.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">3.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">3.2.3. MySQL</a></span></dt></dl></dd></dl></div>
   
 
   <p>We are going to install <span class="application">Postfix</span> as our MTA
@@ -518,7 +531,7 @@ Cc:</pre>
 
       <pre class="programlisting">atlantis:~# <span class="command"><strong>cat</strong></span> /dev/null &gt; /etc/postfix/main.cf</pre>
 
-      <p>Now copy and paste these line, but make sure to replace
+      <p>Now copy and paste these lines, but make sure to replace
       <span class="emphasis"><em>myhostname = atlantis.example.com</em></span> with your
       hostname.</p>
 
@@ -586,7 +599,37 @@ inet_interfaces = all</pre>
       have gone wrong.</p>
     </div>
 
-    <div class="section" title="3.2.2. Virtual users and domains"><div class="titlepage"><div><div><h3 class="title"><a id="id36883025"></a>3.2.2. Virtual users and domains</h3></div></div></div>
+    <div class="section" title="3.2.2. Virtual users and domains"><div class="titlepage"><div><div><h3 class="title"><a id="postfix.virtual-users"></a>3.2.2. Virtual users and domains</h3></div></div></div>
+      
+
+      <p>Our current setup can only receive mail for for users that exist
+      on our server (root, the one that you created druing the installation
+      and other system users). As you can see this is not quite helpfull as we
+      could only server one domain and all the users that have email addresses
+      on that domain would have to be created on the server.</p>
+
+      <p>To avoid all this we are going to use virtual domains and users.
+      That means that we are going to create a couple of databases where we
+      will store all the domains and users that we will be receiving mail
+      for.</p>
+
+      <p>First, we are going to create a system user which will have
+      persmissions to read and write emails to the system as well as the
+      directory for storing all of the mail.</p>
+
+      <p>User will be called <code class="systemitem">vmail</code> and will have a group with ID 5000
+      on the system.</p>
+
+      <pre class="programlisting"><span class="command"><strong>groupadd</strong></span> -g 5000 vmail
+<span class="command"><strong>useradd</strong></span> -s /usr/sbin/nologin -g vmail -u 5000 vmail -d /home/vmail -m</pre>
+
+      <p>The extra parameters for the <span class="command"><strong>useradd</strong></span> command
+      tell the system that this user will not be able to log on to the system,
+      that he belongs to group 5000 and that it's home folder is <code class="filename">/home/vmail</code>. This is the folder where all
+      of the received messages will be stored.</p>
+    </div>
+
+    <div class="section" title="3.2.3. MySQL"><div class="titlepage"><div><div><h3 class="title"><a id="postfix.mysql"></a>3.2.3. MySQL</h3></div></div></div>
       
 
       <p></p>
@@ -613,6 +656,10 @@ inet_interfaces = all</pre>
         </li><li class="listitem">
           <p>
               DNS caching
+          </p>
+        </li><li class="listitem">
+          <p>
+              Disabling IPv6
           </p>
         </li></ul></div>
 </div>
