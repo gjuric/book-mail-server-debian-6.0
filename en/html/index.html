@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Building a mail server on Debian 6.0 (Squeeze)</title><link rel="stylesheet" href="docbook.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.0" /><link rel="home" href="#id36882107" title="Building a mail server on Debian 6.0 (Squeeze)" /><link rel="next" href="#id36882054" title="Foreword" /></head><body><div class="book" title="Building a mail server on Debian 6.0 (Squeeze)"><div class="titlepage"><div><div><h1 class="title"><a id="id36882107"></a>Building a mail server on Debian 6.0 (Squeeze)</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Goran</span> <span class="surname">Jurić</span></h3></div></div><div><p class="releaseinfo">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Building a mail server on Debian 6.0 (Squeeze)</title><link rel="stylesheet" href="docbook.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.0" /><link rel="home" href="#id36882611" title="Building a mail server on Debian 6.0 (Squeeze)" /><link rel="next" href="#id36882558" title="Foreword" /></head><body><div class="book" title="Building a mail server on Debian 6.0 (Squeeze)"><div class="titlepage"><div><div><h1 class="title"><a id="id36882611"></a>Building a mail server on Debian 6.0 (Squeeze)</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Goran</span> <span class="surname">Jurić</span></h3></div></div><div><p class="releaseinfo">
       This is version 0.0.1 of Building a mail server on Debian.
-    </p></div><div><p class="copyright">Copyright © 2010 Goran Jurić</p></div><div><div class="legalnotice" title="Legal Notices"><a id="id36882086"></a>
+    </p></div><div><p class="copyright">Copyright © 2010 Goran Jurić</p></div><div><div class="legalnotice" title="Legal Notices"><a id="id36882590"></a>
       <p class="legalnotice-title"><b>Legal Notices</b></p>
 
       <p>Permission is granted to copy, distribute and/or modify this
@@ -13,10 +13,10 @@
       a copy of the GFDL at this
       <a class="link" href="http://www.gnu.org/copyleft/fdl.html" target="_top">link</a>.
       </p>
-    </div></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="preface"><a href="#id36882054">Foreword</a></span></dt><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#introduction.why.postfix">1.1. Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">1.2. Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">1.3. Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">1.4. Required knowledge</a></span></dt></dl></dd><dt><span class="chapter"><a href="#preparation">2. Preparation</a></span></dt><dd><dl><dt><span class="section"><a href="#preparation.debian-installation">2.1. Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">2.2. Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">2.3. Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">2.4. Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">2.5. NTP - time synchronization</a></span></dt></dl></dd><dt><span class="chapter"><a href="#mail-server">3. Mail server</a></span></dt><dd><dl><dt><span class="section"><a href="#mail-server.dns">3.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">3.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">3.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">3.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">3.2.3. MySQL</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#todo">4. TODO</a></span></dt></dl></div>
+    </div></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="preface"><a href="#id36882558">Foreword</a></span></dt><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#introduction.why.postfix">1.1. Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">1.2. Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">1.3. Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">1.4. Required knowledge</a></span></dt></dl></dd><dt><span class="chapter"><a href="#preparation">2. Preparation</a></span></dt><dd><dl><dt><span class="section"><a href="#preparation.debian-installation">2.1. Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">2.2. Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">2.3. Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">2.4. Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">2.5. NTP - time synchronization</a></span></dt></dl></dd><dt><span class="chapter"><a href="#mail-server">3. Mail server</a></span></dt><dd><dl><dt><span class="section"><a href="#mail-server.dns">3.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">3.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">3.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">3.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">3.2.3. MySQL</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#security">4. Security</a></span></dt><dd><dl><dt><span class="section"><a href="#id36884012">4.1. Firewall</a></span></dt><dt><span class="section"><a href="#id36884181">4.2. Intrusion detection</a></span></dt></dl></dd><dt><span class="chapter"><a href="#todo">5. TODO</a></span></dt></dl></div>
   
 
-  <div class="preface" title="Foreword"><div class="titlepage"><div><div><h2 class="title"><a id="id36882054"></a>Foreword</h2></div></div></div>
+  <div class="preface" title="Foreword"><div class="titlepage"><div><div><h2 class="title"><a id="id36882558"></a>Foreword</h2></div></div></div>
     
 
     <p>The internet is full of information on how to do just about
@@ -637,7 +637,378 @@ inet_interfaces = all</pre>
   </div>
 </div>
 
-  <div class="chapter" title="Chapter 4. TODO"><div class="titlepage"><div><div><h2 class="title"><a id="todo"></a>Chapter 4. TODO</h2></div></div></div>
+  <div class="chapter" title="Chapter 4. Security"><div class="titlepage"><div><div><h2 class="title"><a id="security"></a>Chapter 4. Security</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#id36884012">4.1. Firewall</a></span></dt><dt><span class="section"><a href="#id36884181">4.2. Intrusion detection</a></span></dt></dl></div>
+  
+
+  <p>For securing our Debian box, we are going to use a firewall and an
+  intrusion detection system called <span class="application">OSSEC</span>.</p>
+
+  <p>We are also going to create server certificates which we will later
+  use to secure communication coming to and from our server (emails,
+  passwords, ...).</p>
+
+  <div class="section" title="4.1. Firewall"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id36884012"></a>4.1. Firewall</h2></div></div></div>
+    
+
+    <p>We are going to secure our web server using iptables as a firewall.
+    To make sure that are firewall rules are not lost when we reboot the
+    server we are also going to install a package called
+    <span class="application">iptables-persistent</span>.</p>
+
+    <pre class="programlisting">apt-get install iptables iptables-persistent</pre>
+
+    <p>If you check iptables rules with iptables -L you should see a clean
+    chain list:</p>
+
+    <pre class="screen"><code class="prompt">example:~#</code> <span class="command"><strong>iptables -L
+</strong></span>Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination</pre>
+
+    <p>To help us set up iptables rules we are going to use a modified
+    version of a firewall script that is used for setting up QmailToaster on
+    CentOS, the script looks like this:</p>
+
+    <pre class="programlisting">#!/bin/sh
+#
+# Fedora Core 2
+# Nick Hemmesch &lt;nick@ndhsoft.com&gt;
+# June 2, 2004
+#
+# Customised for Debian/Ubuntu by Goran Juric, April 14, 2009.
+ 
+## Set your IP address
+MYIP="YOUR-IP-ADDRESS"
+#ROUTER="IP-ADDRESS-THAT-BYPASSES-FIREWALL-RULES"
+#
+## Flush rules &amp; reset counters
+iptables -F
+iptables -X
+#
+## Set policies
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT DROP
+#
+## Drop all incoming fragments
+iptables -A INPUT -i eth0 -f -j DROP
+#
+## Drop outside packets with local addresses - anti-spoofing measure
+iptables -A INPUT -s $MYIP -i ! lo -j DROP
+iptables -A INPUT -s 127.0.0.0/8 -i ! lo -j DROP
+iptables -A INPUT -s 10.0.0.0/8 -i ! lo -j DROP
+iptables -A INPUT -s 192.168.0.0/16 -i ! lo -j DROP
+iptables -A INPUT -s 224.0.0.0/4 -i ! lo -j DROP
+iptables -A INPUT -s 0.0.0.0/8 -i ! lo -j DROP
+iptables -A INPUT -s 255.255.255.255 -i ! lo -j DROP
+iptables -A INPUT -s 169.254.0.0/16 -i ! lo -j DROP
+iptables -A INPUT -s 221.240.102 -i ! lo -j DROP
+iptables -A INPUT -s 203.215.94.193 -i ! lo -j DROP
+iptables -A INPUT -s 218.71.137.68 -i ! lo -j DROP
+#
+## Pass all locally-originating packets
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+#
+## Accept ICMP ping echo requests
+## (this allows other people to ping your machine, among other things),
+iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+#
+## Accept all traffic from a specific machine with IP specified in the ROUTER variable
+# Traffic coming from the company router (address of the clients behind NAT)
+<span class="emphasis"><em>#iptables -A INPUT -p tcp -m tcp --syn -s $ROUTER -j ACCEPT</em></span>
+#
+## Accept traffic on port p from a specific machine with IP x.x.x.x
+## replace p with the desired port number, and replace x.x.x.x with
+## the desired IP, then uncomment the line.
+#iptables -A INPUT -p tcp -m tcp --syn -s x.x.x.x --dport p -j ACCEPT
+#
+## Accept ftp-data and ftp (ports 20 &amp; 21)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 20 -j ACCEPT
+#iptables -A INPUT -p tcp -m tcp --syn --dport 21 -j ACCEPT
+#
+## Accept ssh (port 22)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 22 -j ACCEPT
+#
+## Accept telnet (port 23)
+##iptables -A INPUT -p tcp -m tcp --syn --dport 23 -j ACCEPT
+#
+## Accept smtp (port 25 | 587)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 25 -j ACCEPT
+#iptables -A INPUT -p tcp -m tcp --syn --dport 587 -j ACCEPT
+#
+## Accept dns (port 53)
+#iptables -A INPUT -p udp -m udp -s 0/0 --dport 53 -d 0/0 -j ACCEPT
+#iptables -A INPUT -p tcp -m tcp -s 0/0 --dport 53 -d 0/0 -j ACCEPT
+#
+## Accept http (port 80)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 80 -j ACCEPT
+#
+## Accept Subversion (port 3690)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 3690 -j ACCEPT
+#
+## Accept pop3 (port 110)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 110 -j ACCEPT
+#
+## Accept pop3s (port 995)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 995 -j ACCEPT
+#
+## Accept inbound identd (port 113)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 113 -j ACCEPT
+## or you can reject and send back a TCP RST packet instead
+#iptables -A INPUT -p tcp -m tcp --dport 113 -j REJECT --reject-with tcp-reset
+#
+## Accept imap (port 143)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 143 -j ACCEPT
+## Accept imaps (port 993)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 993 -j ACCEPT
+#
+## Accept https (port 443)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 443 -j ACCEPT
+#
+## Accept smtps (port 465)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 465 -j ACCEPT
+## Accept msp (port 587)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 587 -j ACCEPT
+#
+## Accept SpamAssassin (port 783)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 783 -j ACCEPT
+#
+## Accept imaps (port 993)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 993 -j ACCEPT
+#
+## Accept pop3s (port 995)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 995 -j ACCEPT
+#
+## Accept mysql (port 3306)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 3306 -j ACCEPT
+#
+## Allow inbound established and related outside communication
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+#
+## Drop outside initiated connections
+iptables -A INPUT -m state --state NEW -j REJECT
+#
+## Allow all outbound tcp, udp, icmp traffic with state
+iptables -A OUTPUT -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+ 
+## Save rules
+#
+#service iptables save#
+iptables-save &gt; /etc/iptables/rules
+#
+echo ""
+echo "Check your rules - iptables -L -n and move the iptables.rules to appropriate place"
+echo ""</pre>
+
+    <p>There are a couple of things that you have to modify in this
+    script.</p>
+
+    <p>First, and the most important one, is the <code class="varname">MYIP</code>
+    variable that you should set to the IP address of your server.</p>
+
+    <p>If you are always accessing the server from the same IP addres you
+    can set that IP address to the variable called <code class="varname">ROUTER</code>
+    and uncomment the line where this variable is defined as well as the line
+    containing <code class="computeroutput">iptables -A INPUT -p tcp -m tcp --syn -s
+    $ROUTER -j ACCEPT</code>.</p>
+
+    <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+      <p>Be carefull setting the ROUTER variable</p>
+
+      <p>This IP address will never be firewalled and all ports on the
+      server will be open for this address. If you know what you are doing, by
+      setting the <code class="varname">ROUTER</code> variable and allowing all traffic
+      from that address, you will be able to close SSH port for everybody
+      else.</p>
+    </div>
+
+    <p>If you do not have <code class="varname">ROUTER</code> variable set and
+    appropriate lines uncommented you will have to uncomment the line with the
+    rule that allows port 22 (SSH) to pass through. If you do not do this, you
+    will lock yourself out of the system once we run the script (unless you
+    are sitting and terminal and not accessing it remotely via SSH).</p>
+
+    <div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3>
+      <p>This is important</p>
+
+      <p>Please do not run this script if you haven't read and understood
+      the last couple of paragraphs. You could lock yourself out of the
+      system.</p>
+    </div>
+
+    <p>Make the necessary modifications and save the script to
+    <code class="filename">/root/scripts/firewall.sh</code>. Now we just have to make
+    it executable and change it's ownership to the <code class="systemitem">root</code> user.</p>
+
+    <pre class="programlisting">chown root:root /root/scripts/firewall.sh
+chmod 700 /root/scripts/firewall.sh
+chmod +x /root/scripts/firewall.sh</pre>
+
+    <p>After the script is run it will save the information that is needed
+    for the rules to be restored into
+    <code class="filename">/etc/iptables/rules</code>. This file is used by
+    <span class="application">iptables-persistent</span> to restore the rules if you
+    reboot your server.</p>
+
+    <p>As you have maybe notices all ports are closed for now. If you
+    already have some services running on the server you will have to
+    uncomment the appropriate lines and pass the traffic to the ports you
+    need. It's time to finally run the script.</p>
+
+    <pre class="programlisting">/root/scripts/firewall.sh</pre>
+
+    <p>You will see some warning beacuse this is the script I have beed
+    using on Debian Lenny, but rest assured you can safely ignore them. If you
+    check your iptables rules you will see that they are fine.</p>
+
+    <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+      <p>Opening up ports</p>
+
+      <p>As we go through the installation of the mail server we will have
+      to open up specific ports. When the time comes, this will be pointed out
+      to you.</p>
+    </div>
+  </div>
+
+  <div class="section" title="4.2. Intrusion detection"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id36884181"></a>4.2. Intrusion detection</h2></div></div></div>
+    
+
+    <p>For intrusion detection we are going to use a program called
+    <span class="application">OSSEC</span>. If you want to find out more about OSSEC
+    visit it's <a class="link" href="http://www.ossec.net/" target="_top">web site</a>.</p>
+
+    <p>Although <span class="application">OSSEC</span> is not yet available in
+    Debians repositories the good news is that OSSECs installer is "Debian
+    aware" and it will create appropriate init scripts for OSSEC.</p>
+
+    <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+      <p>During the installation OSSEC checks the available files in the
+      /var/log folder and adds them to the list of files that should be
+      monitored. If you install OSSEC before installing all other services on
+      your server some of the log files will not be monitored unless you add
+      them manually to OSSECs configuration.</p>
+
+      <p>Also, OSSEC will not be able to send out emails untill you finish
+      setting up the mail server.</p>
+    </div>
+
+    <p>Download the latest release of OSSEC from its we biste. At the time
+    of writing the latest release is 2.5.1</p>
+
+    <pre class="programlisting">mkdir /root/src
+cd /root/src
+wget http://www.ossec.net/files/ossec-hids-latest.tar.gz</pre>
+
+    <div class="warning" title="Warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3>
+      <p>Do not skip cheksum checking</p>
+
+      <p>On the web site you will also find a list of checksum for the
+      release you just downloaded. Before proceeding any further you should
+      check that the cheksums published on the web site, are the some ones you
+      are getting for the file you just downloaded. Do this using the
+      <span class="application">md5sum</span> and <span class="application">sha1sum</span>
+      utilities.</p>
+    </div>
+
+    <pre class="screen"><code class="prompt">root@atlantis:~/src#</code> <span class="command"><strong>sha1sum ossec-hids-2.5.1.tar.gz</strong></span> 
+<code class="computeroutput">6dbda038020b30ff4f115fe655f69c4d9ae01994  ossec-hids-2.5.1.tar.gz</code>
+<code class="prompt">root@atlantis:~/src#</code> <span class="command"><strong>md5sum ossec-hids-2.5.1.tar.gz</strong></span>
+<code class="computeroutput">94a7cabbba009728510a7a3e290ab200  ossec-hids-2.5.1.tar.gz</code></pre>
+
+    <p>Now we need to extract the files from the downloaded archive.</p>
+
+    <pre class="programlisting">tar -xvzf ossec-hids-2.5.1.tar.gz
+</pre>
+
+    <p>Since the installer will compile OSSEC we need to have a compiler
+    and a <span class="application">make</span> utility installed on our
+    system.</p>
+
+    <pre class="programlisting">apt-get install gcc make</pre>
+
+    <p>Run the installation script</p>
+
+    <pre class="programlisting">cd ossec-hids-2.5.1
+./install.sh</pre>
+
+    <p>During the installation you will have to select set some
+    options:</p>
+
+    <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+        <p>Select the language for the installation</p>
+      </li><li class="listitem">
+        <p>What kind of installation do you want (server, agent, local or
+        help)? <strong class="userinput"><code>local</code></strong></p>
+      </li><li class="listitem">
+        <p>Choose where to install the OSSEC HIDS [/var/ossec]:
+        <strong class="userinput"><code>/var/ossec</code></strong></p>
+      </li><li class="listitem">
+        <p>Do you want e-mail notification? (y/n) [y]:
+        <strong class="userinput"><code>y</code></strong></p>
+      </li><li class="listitem">
+        <p>What's your e-mail address?
+        <strong class="userinput"><code>your-email@example.com</code></strong></p>
+      </li><li class="listitem">
+        <p>What's your SMTP server ip/host?
+        <strong class="userinput"><code>localhost</code></strong></p>
+      </li><li class="listitem">
+        <p>Do you want to run the integrity check daemon? (y/n) [y]:
+        <strong class="userinput"><code>y</code></strong></p>
+      </li><li class="listitem">
+        <p>Do you want to run the rootkit detection engine? (y/n) [y]:
+        <strong class="userinput"><code>y</code></strong></p>
+      </li><li class="listitem">
+        <p>Do you want to enable active response? (y/n) [y]:
+        <strong class="userinput"><code>y</code></strong></p>
+      </li><li class="listitem">
+        <p>Do you want to enable the firewall-drop response? (y/n) [y]:
+        <strong class="userinput"><code>y</code></strong></p>
+      </li><li class="listitem">
+        <p>Do you want to add more IPs to the white list? (y/n)? [n]:
+        <strong class="userinput"><code>y</code></strong></p>
+      </li><li class="listitem">
+        <p>IPs (space separated): <strong class="userinput"><code>IP address you do not want to
+        get blocked</code></strong></p>
+      </li></ol></div>
+
+    <p>After we answer all of the questions the installer will compile
+    <span class="application">OSSEC</span>, finish the installation and create init
+    scripts that will start <span class="application">OSSEC</span> during
+    boot.</p>
+
+    <p>Now it is a good time to commit our changes to the <code class="filename">/etc</code> folder.</p>
+
+    <pre class="programlisting">etckeeper commit "Installed OSSEC"</pre>
+
+    <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+      <p>False positives</p>
+
+      <p>You will probably start getting emails that you do not want to
+      receive. Luckily, <span class="application">OSSEC</span> allows you to filter
+      out those emails. For managing <span class="application">OSSEC</span> rules
+      you will have to reffer to the <span class="application">OSSEC</span>
+      documentation on their <a class="link" href="http://www.ossec.net/" target="_top">web
+      site</a>.</p>
+    </div>
+
+    <p>You probably do not need a compiler on your server and not having
+    one makes it harder to do damage if somebody gains access to your server.
+    So we are going to remove gcc and make.</p>
+
+    <pre class="programlisting">apt-get --purge remove gcc make
+apt-get autoremove</pre>
+  </div>
+</div>
+
+  <div class="chapter" title="Chapter 5. TODO"><div class="titlepage"><div><div><h2 class="title"><a id="todo"></a>Chapter 5. TODO</h2></div></div></div>
   
   
 

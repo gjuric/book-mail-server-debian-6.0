@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="security" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:mml="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Security</title>
+
+  <para>For securing our Debian box, we are going to use a firewall and an
+  intrusion detection system called <application>OSSEC</application>.</para>
+
+  <para>We are also going to create server certificates which we will later
+  use to secure communication coming to and from our server (emails,
+  passwords, ...).</para>
+
+  <section>
+    <title>Firewall</title>
+
+    <para>We are going to secure our web server using iptables as a firewall.
+    To make sure that are firewall rules are not lost when we reboot the
+    server we are also going to install a package called
+    <application>iptables-persistent</application>.</para>
+
+    <programlisting>apt-get install iptables iptables-persistent</programlisting>
+
+    <para>If you check iptables rules with iptables -L you should see a clean
+    chain list:</para>
+
+    <screen><prompt>example:~#</prompt> <command>iptables -L
+</command>Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination</screen>
+
+    <para>To help us set up iptables rules we are going to use a modified
+    version of a firewall script that is used for setting up QmailToaster on
+    CentOS, the script looks like this:</para>
+
+    <programlisting>#!/bin/sh
+#
+# Fedora Core 2
+# Nick Hemmesch &lt;nick@ndhsoft.com&gt;
+# June 2, 2004
+#
+# Customised for Debian/Ubuntu by Goran Juric, April 14, 2009.
+ 
+## Set your IP address
+MYIP="YOUR-IP-ADDRESS"
+#ROUTER="IP-ADDRESS-THAT-BYPASSES-FIREWALL-RULES"
+#
+## Flush rules &amp; reset counters
+iptables -F
+iptables -X
+#
+## Set policies
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT DROP
+#
+## Drop all incoming fragments
+iptables -A INPUT -i eth0 -f -j DROP
+#
+## Drop outside packets with local addresses - anti-spoofing measure
+iptables -A INPUT -s $MYIP -i ! lo -j DROP
+iptables -A INPUT -s 127.0.0.0/8 -i ! lo -j DROP
+iptables -A INPUT -s 10.0.0.0/8 -i ! lo -j DROP
+iptables -A INPUT -s 192.168.0.0/16 -i ! lo -j DROP
+iptables -A INPUT -s 224.0.0.0/4 -i ! lo -j DROP
+iptables -A INPUT -s 0.0.0.0/8 -i ! lo -j DROP
+iptables -A INPUT -s 255.255.255.255 -i ! lo -j DROP
+iptables -A INPUT -s 169.254.0.0/16 -i ! lo -j DROP
+iptables -A INPUT -s 221.240.102 -i ! lo -j DROP
+iptables -A INPUT -s 203.215.94.193 -i ! lo -j DROP
+iptables -A INPUT -s 218.71.137.68 -i ! lo -j DROP
+#
+## Pass all locally-originating packets
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+#
+## Accept ICMP ping echo requests
+## (this allows other people to ping your machine, among other things),
+iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+#
+## Accept all traffic from a specific machine with IP specified in the ROUTER variable
+# Traffic coming from the company router (address of the clients behind NAT)
+<emphasis>#iptables -A INPUT -p tcp -m tcp --syn -s $ROUTER -j ACCEPT</emphasis>
+#
+## Accept traffic on port p from a specific machine with IP x.x.x.x
+## replace p with the desired port number, and replace x.x.x.x with
+## the desired IP, then uncomment the line.
+#iptables -A INPUT -p tcp -m tcp --syn -s x.x.x.x --dport p -j ACCEPT
+#
+## Accept ftp-data and ftp (ports 20 &amp; 21)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 20 -j ACCEPT
+#iptables -A INPUT -p tcp -m tcp --syn --dport 21 -j ACCEPT
+#
+## Accept ssh (port 22)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 22 -j ACCEPT
+#
+## Accept telnet (port 23)
+##iptables -A INPUT -p tcp -m tcp --syn --dport 23 -j ACCEPT
+#
+## Accept smtp (port 25 | 587)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 25 -j ACCEPT
+#iptables -A INPUT -p tcp -m tcp --syn --dport 587 -j ACCEPT
+#
+## Accept dns (port 53)
+#iptables -A INPUT -p udp -m udp -s 0/0 --dport 53 -d 0/0 -j ACCEPT
+#iptables -A INPUT -p tcp -m tcp -s 0/0 --dport 53 -d 0/0 -j ACCEPT
+#
+## Accept http (port 80)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 80 -j ACCEPT
+#
+## Accept Subversion (port 3690)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 3690 -j ACCEPT
+#
+## Accept pop3 (port 110)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 110 -j ACCEPT
+#
+## Accept pop3s (port 995)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 995 -j ACCEPT
+#
+## Accept inbound identd (port 113)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 113 -j ACCEPT
+## or you can reject and send back a TCP RST packet instead
+#iptables -A INPUT -p tcp -m tcp --dport 113 -j REJECT --reject-with tcp-reset
+#
+## Accept imap (port 143)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 143 -j ACCEPT
+## Accept imaps (port 993)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 993 -j ACCEPT
+#
+## Accept https (port 443)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 443 -j ACCEPT
+#
+## Accept smtps (port 465)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 465 -j ACCEPT
+## Accept msp (port 587)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 587 -j ACCEPT
+#
+## Accept SpamAssassin (port 783)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 783 -j ACCEPT
+#
+## Accept imaps (port 993)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 993 -j ACCEPT
+#
+## Accept pop3s (port 995)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 995 -j ACCEPT
+#
+## Accept mysql (port 3306)
+#iptables -A INPUT -p tcp -m tcp --syn --dport 3306 -j ACCEPT
+#
+## Allow inbound established and related outside communication
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+#
+## Drop outside initiated connections
+iptables -A INPUT -m state --state NEW -j REJECT
+#
+## Allow all outbound tcp, udp, icmp traffic with state
+iptables -A OUTPUT -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+ 
+## Save rules
+#
+#service iptables save#
+iptables-save &gt; /etc/iptables/rules
+#
+echo ""
+echo "Check your rules - iptables -L -n and move the iptables.rules to appropriate place"
+echo ""</programlisting>
+
+    <para>There are a couple of things that you have to modify in this
+    script.</para>
+
+    <para>First, and the most important one, is the <varname>MYIP</varname>
+    variable that you should set to the IP address of your server.</para>
+
+    <para>If you are always accessing the server from the same IP addres you
+    can set that IP address to the variable called <varname>ROUTER</varname>
+    and uncomment the line where this variable is defined as well as the line
+    containing <computeroutput>iptables -A INPUT -p tcp -m tcp --syn -s
+    $ROUTER -j ACCEPT</computeroutput>.</para>
+
+    <note>
+      <para>Be carefull setting the ROUTER variable</para>
+
+      <para>This IP address will never be firewalled and all ports on the
+      server will be open for this address. If you know what you are doing, by
+      setting the <varname>ROUTER</varname> variable and allowing all traffic
+      from that address, you will be able to close SSH port for everybody
+      else.</para>
+    </note>
+
+    <para>If you do not have <varname>ROUTER</varname> variable set and
+    appropriate lines uncommented you will have to uncomment the line with the
+    rule that allows port 22 (SSH) to pass through. If you do not do this, you
+    will lock yourself out of the system once we run the script (unless you
+    are sitting and terminal and not accessing it remotely via SSH).</para>
+
+    <warning>
+      <para>This is important</para>
+
+      <para>Please do not run this script if you haven't read and understood
+      the last couple of paragraphs. You could lock yourself out of the
+      system.</para>
+    </warning>
+
+    <para>Make the necessary modifications and save the script to
+    <filename>/root/scripts/firewall.sh</filename>. Now we just have to make
+    it executable and change it's ownership to the <systemitem
+    class="username">root</systemitem> user.</para>
+
+    <programlisting>chown root:root /root/scripts/firewall.sh
+chmod 700 /root/scripts/firewall.sh
+chmod +x /root/scripts/firewall.sh</programlisting>
+
+    <para>After the script is run it will save the information that is needed
+    for the rules to be restored into
+    <filename>/etc/iptables/rules</filename>. This file is used by
+    <application>iptables-persistent</application> to restore the rules if you
+    reboot your server.</para>
+
+    <para>As you have maybe notices all ports are closed for now. If you
+    already have some services running on the server you will have to
+    uncomment the appropriate lines and pass the traffic to the ports you
+    need. It's time to finally run the script.</para>
+
+    <programlisting>/root/scripts/firewall.sh</programlisting>
+
+    <para>You will see some warning beacuse this is the script I have beed
+    using on Debian Lenny, but rest assured you can safely ignore them. If you
+    check your iptables rules you will see that they are fine.</para>
+
+    <note>
+      <para>Opening up ports</para>
+
+      <para>As we go through the installation of the mail server we will have
+      to open up specific ports. When the time comes, this will be pointed out
+      to you.</para>
+    </note>
+  </section>
+
+  <section>
+    <title>Intrusion detection</title>
+
+    <para>For intrusion detection we are going to use a program called
+    <application>OSSEC</application>. If you want to find out more about OSSEC
+    visit it's <link xl:href="http://www.ossec.net/">web site</link>.</para>
+
+    <para>Although <application>OSSEC</application> is not yet available in
+    Debians repositories the good news is that OSSECs installer is "Debian
+    aware" and it will create appropriate init scripts for OSSEC.</para>
+
+    <note>
+      <para>During the installation OSSEC checks the available files in the
+      /var/log folder and adds them to the list of files that should be
+      monitored. If you install OSSEC before installing all other services on
+      your server some of the log files will not be monitored unless you add
+      them manually to OSSECs configuration.</para>
+
+      <para>Also, OSSEC will not be able to send out emails untill you finish
+      setting up the mail server.</para>
+    </note>
+
+    <para>Download the latest release of OSSEC from its we biste. At the time
+    of writing the latest release is 2.5.1</para>
+
+    <programlisting>mkdir /root/src
+cd /root/src
+wget http://www.ossec.net/files/ossec-hids-latest.tar.gz</programlisting>
+
+    <warning>
+      <para>Do not skip cheksum checking</para>
+
+      <para>On the web site you will also find a list of checksum for the
+      release you just downloaded. Before proceeding any further you should
+      check that the cheksums published on the web site, are the some ones you
+      are getting for the file you just downloaded. Do this using the
+      <application>md5sum</application> and <application>sha1sum</application>
+      utilities.</para>
+    </warning>
+
+    <screen><prompt>root@atlantis:~/src#</prompt> <command>sha1sum ossec-hids-2.5.1.tar.gz</command> 
+<computeroutput>6dbda038020b30ff4f115fe655f69c4d9ae01994  ossec-hids-2.5.1.tar.gz</computeroutput>
+<prompt>root@atlantis:~/src#</prompt> <command>md5sum ossec-hids-2.5.1.tar.gz</command>
+<computeroutput>94a7cabbba009728510a7a3e290ab200  ossec-hids-2.5.1.tar.gz</computeroutput></screen>
+
+    <para>Now we need to extract the files from the downloaded archive.</para>
+
+    <programlisting>tar -xvzf ossec-hids-2.5.1.tar.gz
+</programlisting>
+
+    <para>Since the installer will compile OSSEC we need to have a compiler
+    and a <application>make</application> utility installed on our
+    system.</para>
+
+    <programlisting>apt-get install gcc make</programlisting>
+
+    <para>Run the installation script</para>
+
+    <programlisting>cd ossec-hids-2.5.1
+./install.sh</programlisting>
+
+    <para>During the installation you will have to select set some
+    options:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Select the language for the installation</para>
+      </listitem>
+
+      <listitem>
+        <para>What kind of installation do you want (server, agent, local or
+        help)? <userinput>local</userinput></para>
+      </listitem>
+
+      <listitem>
+        <para>Choose where to install the OSSEC HIDS [/var/ossec]:
+        <userinput>/var/ossec</userinput></para>
+      </listitem>
+
+      <listitem>
+        <para>Do you want e-mail notification? (y/n) [y]:
+        <userinput>y</userinput></para>
+      </listitem>
+
+      <listitem>
+        <para>What's your e-mail address?
+        <userinput>your-email@example.com</userinput></para>
+      </listitem>
+
+      <listitem>
+        <para>What's your SMTP server ip/host?
+        <userinput>localhost</userinput></para>
+      </listitem>
+
+      <listitem>
+        <para>Do you want to run the integrity check daemon? (y/n) [y]:
+        <userinput>y</userinput></para>
+      </listitem>
+
+      <listitem>
+        <para>Do you want to run the rootkit detection engine? (y/n) [y]:
+        <userinput>y</userinput></para>
+      </listitem>
+
+      <listitem>
+        <para>Do you want to enable active response? (y/n) [y]:
+        <userinput>y</userinput></para>
+      </listitem>
+
+      <listitem>
+        <para>Do you want to enable the firewall-drop response? (y/n) [y]:
+        <userinput>y</userinput></para>
+      </listitem>
+
+      <listitem>
+        <para>Do you want to add more IPs to the white list? (y/n)? [n]:
+        <userinput>y</userinput></para>
+      </listitem>
+
+      <listitem>
+        <para>IPs (space separated): <userinput>IP address you do not want to
+        get blocked</userinput></para>
+      </listitem>
+    </orderedlist>
+
+    <para>After we answer all of the questions the installer will compile
+    <application>OSSEC</application>, finish the installation and create init
+    scripts that will start <application>OSSEC</application> during
+    boot.</para>
+
+    <para>Now it is a good time to commit our changes to the <filename
+    class="directory">/etc</filename> folder.</para>
+
+    <programlisting>etckeeper commit "Installed OSSEC"</programlisting>
+
+    <note>
+      <para>False positives</para>
+
+      <para>You will probably start getting emails that you do not want to
+      receive. Luckily, <application>OSSEC</application> allows you to filter
+      out those emails. For managing <application>OSSEC</application> rules
+      you will have to reffer to the <application>OSSEC</application>
+      documentation on their <link xl:href="http://www.ossec.net/">web
+      site</link>.</para>
+    </note>
+
+    <para>You probably do not need a compiler on your server and not having
+    one makes it harder to do damage if somebody gains access to your server.
+    So we are going to remove gcc and make.</para>
+
+    <programlisting>apt-get --purge remove gcc make
+apt-get autoremove</programlisting>
+  </section>
+</chapter>
