@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Building a mail server on Debian 6.0</title><link rel="stylesheet" href="docbook.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.0" /><link rel="home" href="#id36883029" title="Building a mail server on Debian 6.0" /><link rel="next" href="#id36882977" title="Foreword" /></head><body><div class="book" title="Building a mail server on Debian 6.0"><div class="titlepage"><div><div><h1 class="title"><a id="id36883029"></a>Building a mail server on Debian 6.0</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Goran</span> <span class="surname">Jurić</span></h3></div></div><div><p class="releaseinfo">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Building a mail server on Debian 6.0</title><link rel="stylesheet" href="docbook.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.0" /><link rel="home" href="#id36883346" title="Building a mail server on Debian 6.0" /><link rel="next" href="#id36883293" title="Foreword" /></head><body><div class="book" title="Building a mail server on Debian 6.0"><div class="titlepage"><div><div><h1 class="title"><a id="id36883346"></a>Building a mail server on Debian 6.0</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Goran</span> <span class="surname">Jurić</span></h3></div></div><div><p class="releaseinfo">
       This is version 0.0.1 of Building a mail server on Debian.
-    </p></div><div><p class="copyright">Copyright © 2010 Goran Jurić</p></div><div><div class="legalnotice" title="Legal Notices"><a id="id36883008"></a>
+    </p></div><div><p class="copyright">Copyright © 2010 Goran Jurić</p></div><div><div class="legalnotice" title="Legal Notices"><a id="id36883324"></a>
       <p class="legalnotice-title"><b>Legal Notices</b></p>
 
       <p>Permission is granted to copy, distribute and/or modify this
@@ -13,10 +13,10 @@
       a copy of the GFDL at this
       <a class="link" href="http://www.gnu.org/copyleft/fdl.html" target="_top">link</a>.
       </p>
-    </div></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="preface"><a href="#id36882977">Foreword</a></span></dt><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#introduction.why.postfix">1.1. Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">1.2. Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">1.3. Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">1.4. Required knowledge</a></span></dt></dl></dd><dt><span class="chapter"><a href="#preparation">2. Preparation</a></span></dt><dd><dl><dt><span class="section"><a href="#preparation.debian-installation">2.1. Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">2.2. Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">2.3. Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">2.4. Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">2.5. NTP - time synchronization</a></span></dt></dl></dd><dt><span class="chapter"><a href="#mail-server">3. Mail server</a></span></dt><dd><dl><dt><span class="section"><a href="#mail-server.dns">3.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">3.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">3.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">3.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">3.2.3. MySQL</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#security">4. Security</a></span></dt><dd><dl><dt><span class="section"><a href="#id36884848">4.1. Firewall</a></span></dt><dt><span class="section"><a href="#id36885018">4.2. Intrusion detection</a></span></dt></dl></dd><dt><span class="chapter"><a href="#todo">5. TODO</a></span></dt></dl></div>
+    </div></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="preface"><a href="#id36883293">Foreword</a></span></dt><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#introduction.why.postfix">1.1. Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">1.2. Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">1.3. Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">1.4. Required knowledge</a></span></dt></dl></dd><dt><span class="chapter"><a href="#preparation">2. Preparation</a></span></dt><dd><dl><dt><span class="section"><a href="#preparation.debian-installation">2.1. Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">2.2. Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">2.3. Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">2.4. Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">2.5. NTP - time synchronization</a></span></dt></dl></dd><dt><span class="chapter"><a href="#security">3. Security</a></span></dt><dd><dl><dt><span class="section"><a href="#security.certificates">3.1. Server certificates</a></span></dt><dt><span class="section"><a href="#security.firewall">3.2. Firewall</a></span></dt><dt><span class="section"><a href="#security.limiting-ssh">3.3. Limiting SSH access</a></span></dt><dt><span class="section"><a href="#security.intrusion-detection">3.4. Intrusion detection</a></span></dt></dl></dd><dt><span class="chapter"><a href="#mail-server">4. Mail server</a></span></dt><dd><dl><dt><span class="section"><a href="#mail-server.dns">4.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">4.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">4.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">4.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">4.2.3. MySQL</a></span></dt><dt><span class="section"><a href="#postfix.sasl">4.2.4. Saslauthd</a></span></dt><dt><span class="section"><a href="#postfix.tls">4.2.5. TLS</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#todo">5. TODO</a></span></dt></dl></div>
   
 
-  <div class="preface" title="Foreword"><div class="titlepage"><div><div><h2 class="title"><a id="id36882977"></a>Foreword</h2></div></div></div>
+  <div class="preface" title="Foreword"><div class="titlepage"><div><div><h2 class="title"><a id="id36883293"></a>Foreword</h2></div></div></div>
     
 
     <p>The internet is full of information on how to do just about
@@ -246,15 +246,15 @@ git config --global user.email you@example.com</pre>
     <pre class="programlisting">apt-get install openssh-server nano dnsutils bsd-mailx telnet </pre>
 
     <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-        SSH server will allow us to connect remotely to the server.
+         SSH server will allow us to connect remotely to the server. 
       </li><li class="listitem">
-        Nano is a text editor. More user friendly than vi.
+         Nano is a text editor. More user friendly than vi. 
       </li><li class="listitem">
-        We will use wget to fetch stuff from the internet.
+         We will use wget to fetch stuff from the internet. 
       </li><li class="listitem">
-        dnsutils package will allow us to troubleshoot possible DNS problems on our system.
+         dnsutils package will allow us to troubleshoot possible DNS problems on our system. 
       </li><li class="listitem">
-        Telnet and bsd-mailx will be used later for troubleshooting our setup.
+         Telnet and bsd-mailx will be used later for troubleshooting our setup. 
       </li></ul></div>
   </div>
 
@@ -308,9 +308,10 @@ apt-get --purge remove isc-dhcp-client isc-dhcp-common</pre>
   <div class="section" title="2.5. NTP - time synchronization"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="preparation.ntp"></a>2.5. NTP - time synchronization</h2></div></div></div>
     
 
-    <p>To make sure our servers time is always up to date we are going to
-    install ntp package which enables our server to use NTP protocol for
-    syncing your servers clock.</p>
+    <p>Every server should have accurate time information, this is
+    especially important for mail server. To make sure our servers time is
+    always up to date we are going to install ntp package which enables our
+    server to use NTP protocol for syncing your servers clock.</p>
 
     <pre class="programlisting">apt-get install ntp</pre>
 
@@ -361,535 +362,7 @@ morcic.RI.CARNe 161.53.1.2       2 u   58   64    3   11.796   26.527   7.751</p
   </div>
 </div>
 
-  <div class="chapter" title="Chapter 3. Mail server"><div class="titlepage"><div><div><h2 class="title"><a id="mail-server"></a>Chapter 3. Mail server</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#mail-server.dns">3.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">3.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">3.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">3.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">3.2.3. MySQL</a></span></dt></dl></dd></dl></div>
-  
-
-  <p>We are going to install <span class="application">Postfix</span> as our MTA
-  (SMTP server) and <span class="application">Courier</span> as our POP/IMAP server.
-  <span class="application">Postfix</span> will use virtual domains, and information
-  about our domains and users will be stored in the
-  <span class="application">MySQL</span> database.</p>
-
-  <p>For managing virtual domains and users we will use
-  <span class="application">PostfixAdmin</span>. For virus scanning and spam
-  protection of our emails we will use <span class="application">ClamAV</span> and
-  <span class="application">Spamassassin</span> that will be run using
-  <span class="application">amavisd-new</span>.</p>
-
-  <p>As a local delivery agent we will use
-  <span class="application">Maildrop</span> that will be configured to move all
-  messages marked as spam to the Junk folder as well as to make sure that
-  users do not go over their assigned quota.</p>
-
-  <p>This implementation of quota on the mail system does not require you
-  to patch Postfix.</p>
-
-  <p>All software is installed from official Debian repositories.</p>
-
-  <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-    <p>This tutorial is a combination of tutorials published on <a class="link" href="http://articles.slicehost.com/email" target="_top">http://articles.slicehost.com/email</a>
-    and <a class="link" href="https://help.ubuntu.com/community/PostfixCompleteVirtualMailSystemHowto" target="_top">https://help.ubuntu.com/community/PostfixCompleteVirtualMailSystemHowto</a>
-    and a lot of my own work. You also must have a valid MX record in the DNS
-    zone of your domain pointing to the IP address of the server.</p>
-  </div>
-
-  <div class="section" title="3.1. DNS settings"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="mail-server.dns"></a>3.1. DNS settings</h2></div></div></div>
-    
-
-    <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-      <p>Mail server in this example is named <code class="systemitem">atlantis.example.com</code>. You can also
-      name it <code class="systemitem">mail.example.com</code>
-      if you like.</p>
-    </div>
-
-    <p>First, we need to check our hostname</p>
-
-    <pre class="screen">atlantis:~# <span class="command"><strong>hostname -f</strong></span>
-atlantis.diabmon.com </pre>
-
-    <p>If hostname did not return FQDN of your server edit
-    <code class="filename">/etc/hosts</code>. You <code class="filename">hosts</code> file
-    should look something like this, if not, change according to your IP
-    address and server name.</p>
-
-    <pre class="programlisting">127.0.0.1       localhost
-YOUR-IP-ADDRESS atlantis.example.com atlantis </pre>
-
-    <p>Now check your <code class="filename">/etc/hostname</code> file it should
-    contain your fully qualified domain name:</p>
-
-    <pre class="programlisting">atlantis.example.com </pre>
-
-    <p>Change the names to match your server name and reboot the server.
-    Run <span class="command"><strong>hostname -f</strong></span> again and you should see <code class="systemitem">atlantis.example.com</code>.</p>
-
-    <p>Now, we need to check that our DNS servers have an MX record for our
-    <code class="systemitem">example.com</code> domain. If you
-    haven't done so already Install DNS utilities:</p>
-
-    <pre class="programlisting">apt-get install dnsutils</pre>
-
-    <p>We are going to use <span class="command"><strong>host</strong></span> command to check
-    information about our domain:</p>
-
-    <pre class="screen">atlantis:~# <span class="command"><strong>host</strong></span> example.com
-example.com has address YOUR-IP-ADDRESS
-example.com mail is handled by 0 mail.example.com. </pre>
-
-    <p>We can see that the mail for our domain is handled by <code class="systemitem">mail.example.com</code>. Which server is
-    supposed to handle mail for your domain is handled by the so called MX
-    records in your domains zone file. Setting up DNS zone files is out of
-    scope for this document.</p>
-
-    <p>Now we must make sure that <code class="systemitem">mail.example.com</code> points to the same
-    address as our server (<code class="systemitem">atlantis.example.com</code>).</p>
-
-    <pre class="screen">atlantis:~# <span class="command"><strong>nslookup</strong></span> mail.example.com
-Server: YOUR-DNS-SERVER
-Address: YOUR-DNS-ADDRESS#53
-
-Non-authoritative answer:
-mail.example.com canonical name = atlantis.example.com.
-Name: example.com
-Address: YOUR-IP-ADDRESS </pre>
-
-    <p>It would be also nice if your reverse DNS points to the same name
-    (<code class="systemitem">atlantis.example.com</code>).</p>
-
-    <pre class="screen">atlantis:~# <span class="command"><strong>nslookup</strong></span> YOUR-IP-ADDRESS
-Server: YOUR-DNS-SERVER
-Address: YOUR-DNS-SERVER#53
-
-Non-authoritative answer: 
-YOUR-IP-ADDRES-REVERSE.in-addr.arpa name = atlantis.example.com. </pre>
-
-    <p>If they do not match you will probably have to ask your ISP to
-    change this for you.</p>
-  </div>
-
-  <div class="section" title="3.2. Postfix"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="postfix"></a>3.2. Postfix</h2></div></div></div>
-    
-
-    <p>The time has finally come to install
-    <span class="application">Postfix</span>.</p>
-
-    <pre class="programlisting">apt-get install postfix</pre>
-
-    <p>During installation Postfix will ask you to choose the type of
-    installation and a domain.</p>
-
-    <p>Choose <code class="computeroutput">Internet site</code> and enter your
-    servers name <code class="computeroutput"><code class="systemitem">atlantis.example.com</code></code>.
-    It is important that your server name is not just <code class="systemitem">example.com</code>.</p>
-
-    <p>After installation finishes we can check if Postfix is runing by
-    connecting to port 25 on your localhost with telnet:</p>
-
-    <pre class="screen"># <span class="command"><strong>telnet</strong></span> localhost 25
-Trying 127.0.0.1...
-Connected to localhost.
-Escape character is '^]'.
-220 atlantis.example.com ESMTP Postfix (Debian/GNU)</pre>
-
-    <p>Type <span class="command"><strong>quit</strong></span> to exit.</p>
-
-    <p>If you see Postfix responding, Postfix is working. For another check
-    we can try to send email to one of your email accounts that are located on
-    another server:</p>
-
-    <a id="postfix.test-email-sending"></a><pre class="screen">atlantis:~# <span class="command"><strong>mail</strong></span> your-other-email@somedomain.com
-Subject: test email from example.com
-test body of the email.
-.
-Cc:</pre>
-
-    <p>The single dot on the line is a sign that your are done with the
-    emails body.</p>
-
-    <p>You should be getting this email message on the account you
-    specified.</p>
-
-    <p>Check that you have your <code class="systemitem">example.com</code> in a file
-    <code class="filename">/etc/mailname</code>.</p>
-
-    <div class="section" title="3.2.1. Initial settings"><div class="titlepage"><div><div><h3 class="title"><a id="postfix.inital-settings"></a>3.2.1. Initial settings</h3></div></div></div>
-      
-
-      <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-        <p>Do not be afraid to play with config files at this stage. If you
-        installed <span class="application">etckeeper</span> <a class="link" href="#preparation.tracking-changes" title="2.2. Tracking configuration changes">as suggested</a>, you can
-        always revert to the previous state. Just remember to commit your
-        changes every time you change something by running <span class="command"><strong>etckeeper
-        commit "Descirption of the changes made"</strong></span>. The default
-        Postfix configuration files were already commited when we installed
-        Postfix.</p>
-      </div>
-
-      <p>First we are going to delete the content of the
-      <code class="filename">/etc/postfix/main.cf</code> file so we can fill it with
-      our own.</p>
-
-      <pre class="programlisting">atlantis:~# <span class="command"><strong>cat</strong></span> /dev/null &gt; /etc/postfix/main.cf</pre>
-
-      <p>Now copy and paste these lines, but make sure to replace
-      <span class="emphasis"><em>myhostname = atlantis.example.com</em></span> with your
-      hostname.</p>
-
-      <pre class="screen">##################
-# Default settings
-##################
-biff = no
-append_dot_mydomain = no
-#delay_warning_time = 4h
-readme_directory = no
-smtpd_banner = $myhostname ESMTP $mail_name
-
-################
-# TLS parameters
-################
-smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
-smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
-smtpd_use_tls=yes
-smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
-
-###############
-# Main settings
-###############
-myhostname = <em class="replaceable"><code>atlantis.example.com</code></em>
-alias_maps = hash:/etc/aliases
-alias_database = hash:/etc/aliases
-myorigin = /etc/mailname
-mydestination = $mydomain, localhost.$mydomain, localhost
-relayhost = 
-mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
-mailbox_size_limit = 0
-recipient_delimiter = +
-inet_interfaces = all</pre>
-
-      <div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3>
-        <p>Postfix extracts $mydomain from the value of the
-        <code class="varname">myhostname</code> and strips the part before the first
-        dot, including the dot. So in this case <code class="varname">mydomain</code> is
-        <span class="emphasis"><em>example.com</em></span>.</p>
-      </div>
-
-      <p>If you are not using IPv6 you can remove IPv6 addresses from
-      <code class="varname">mynetworks</code> and leave just <span class="emphasis"><em>mynetworks =
-      127.0.0.0/8</em></span>. We will use the <code class="varname">mynetworks</code>
-      variable to tell Postfix that all computers specified in the my networks
-      range can send emails without authentification. We are leaving only the
-      localhost here so we make sure that mail originating from the server
-      (like outputs of cron jobs and other system messages) do not get blocked
-      by other rules we will implement.</p>
-
-      <p>Restart Postfix by running <span class="command"><strong>invoke-rc.d postfix
-      restart</strong></span> and try to send another test mail to check that we
-      didn't mess something up.</p>
-
-      <p>Now it would be a good time to also test if Postfix is receiving
-      mails as well. Try sending an email to just <code class="email">&lt;<a class="email" href="mailto:root">root</a>&gt;</code> and to
-      <code class="email">&lt;<a class="email" href="mailto:root@example.com">root@example.com</a>&gt;</code> using the <span class="command"><strong>mail</strong></span>
-      command as described in the <a class="link" href="#postfix.test-email-sending">previous section</a>. If
-      everything works the received emails should be located in
-      <code class="filename">/var/mail/root</code>. Check that file and make sure that
-      you are sending email from the right domain (sender should be
-      <code class="email">&lt;<a class="email" href="mailto:root@example.com">root@example.com</a>&gt;</code>). If you do not receive an email check
-      the Postifx log file <code class="email">&lt;<a class="email" href="mailto:/var/log/mail.log">/var/log/mail.log</a>&gt;</code> to see what could
-      have gone wrong.</p>
-    </div>
-
-    <div class="section" title="3.2.2. Virtual users and domains"><div class="titlepage"><div><div><h3 class="title"><a id="postfix.virtual-users"></a>3.2.2. Virtual users and domains</h3></div></div></div>
-      
-
-      <p>Our current setup can only receive mail for for users that exist
-      on our server (root, the one that you created druing the installation
-      and other system users). As you can see this is not quite helpfull as we
-      could only server one domain and all the users that have email addresses
-      on that domain would have to be created on the server.</p>
-
-      <p>To avoid all this we are going to use virtual domains and users.
-      That means that we are going to create a couple of databases where we
-      will store all the domains and users that we will be receiving mail
-      for.</p>
-
-      <p>First, we are going to create a system user which will have
-      persmissions to read and write emails to the system as well as the
-      directory for storing all of the mail.</p>
-
-      <p>User will be called <code class="systemitem">vmail</code> and will have a group with ID 5000
-      on the system.</p>
-
-      <pre class="programlisting"><span class="command"><strong>groupadd</strong></span> -g 5000 vmail
-<span class="command"><strong>useradd</strong></span> -s /usr/sbin/nologin -g vmail -u 5000 vmail -d /home/vmail -m</pre>
-
-      <p>The extra parameters for the <span class="command"><strong>useradd</strong></span> command
-      tell the system that this user will not be able to log on to the system,
-      that he belongs to group 5000 and that it's home folder is <code class="filename">/home/vmail</code>. This is the folder where all
-      of the received messages will be stored.</p>
-    </div>
-
-    <div class="section" title="3.2.3. MySQL"><div class="titlepage"><div><div><h3 class="title"><a id="postfix.mysql"></a>3.2.3. MySQL</h3></div></div></div>
-      
-
-      <p>Install MySQL.</p>
-
-      <pre class="programlisting">apt-get install postfix-mysql mysql-server</pre>
-
-      <p>We are going to use <span class="application">Postfix Admin</span> for
-      managing virtual users and domains. Download latest version of Postfix
-      Admin and move the content of the archive to
-      <code class="filename">/var/www/postfix</code>.</p>
-
-      <pre class="programlisting">cd /root/src
-wget LINK-TO-THE-LATEST-VERSION
-tar -xvzf postfixadmin-2.3.2.tar.gz
-mv postfixadmin-2.3.2 /var/www/postfix</pre>
-
-      <p>Before installing Postfix Admin we must create a database and a
-      user to access the database.</p>
-
-      <pre class="programlisting">mysql -u root</pre>
-
-      <p>If you have a password set use the <span class="command"><strong>-p</strong></span>
-      flag.</p>
-
-      <p>Once in MySQL:</p>
-
-      <pre class="programlisting">CREATE DATABASE mail;
-CREATE USER 'mailadmin'@'localhost' IDENTIFIED BY '<strong class="userinput"><code>newpassword</code></strong>';
-GRANT ALL PRIVILEGES ON `mail` . * TO 'mailadmin'@'localhost';
-FLUSH PRIVILEGES;</pre>
-
-      <p>Of course you need to change the
-      <strong class="userinput"><code>newpassword</code></strong> with your own password. You can exit
-      MySQL by typing <span class="command"><strong>exit</strong></span>.</p>
-
-      <p>Open <code class="filename">/var/www/postfix/config.inc.php</code> with
-      nano. Set <code class="varname">$CONF['configured']</code> to
-      <code class="literal">true</code>, choose your setup password, set
-      <code class="varname">$CONF['postfix_admin_url']</code> to
-      <code class="literal">http://SERVERS-IP-ADDRESS/postfix</code> and enter your
-      database information and credentials.</p>
-
-      <p>While you are at it, you should also go through all of the other
-      options you can set in the config mail.</p>
-
-      <p>Open up
-      <code class="literal">http://SERVERS-IP-ADDRESS/postfix/setup.php</code> in your
-      browser and finish the installation. Once logged in into the Postfix
-      Admin create a new virtual domain <code class="systemitem">example.com</code>, and create new user accout
-      username@example.com. Use your own domain name here.</p>
-
-      <p>Postifx Admin created MySQL tables for us and now it is time to
-      tell Postfix to use this tables to get information about email addresses
-      and domains it should serve.</p>
-
-      <p>First we need to create 4 files in the <code class="filename">/etc/postfix</code> folder.</p>
-
-      <p><code class="filename">/etc/postfix/mysql_virtual_alias_maps.cf</code></p>
-
-      <pre class="screen">user = mailadmin
-password = newpassword
-hosts = 127.0.0.1
-dbname = mail
-table = alias
-select_field = goto
-where_field = address</pre>
-
-      <p>/etc/postfix/mysql_virtual_domains_maps.cf</p>
-
-      <pre class="screen">user = mailadmin
-password = newpassword
-hosts = 127.0.0.1
-dbname = mail
-table = domain
-select_field = domain
-where_field = domain
-additional_conditions = and backupmx = '0' and active = '1'</pre>
-
-      <p><code class="filename">/etc/postfix/mysql_virtual_mailbox_maps.cf
-      </code></p>
-
-      <pre class="screen">user = mailadmin
-password = newpassword
-hosts = 127.0.0.1
-dbname = mail
-table = mailbox
-query = SELECT CONCAT(domain,'/',SUBSTRING_INDEX(maildir,'@',1),'/') FROM mailbox WHERE username='%s' AND active = 1
-</pre>
-
-      <p><code class="filename">/etc/postfix/mysql_relay_domains_maps.cf</code></p>
-
-      <pre class="screen">user = mailadmin
-password = newpassword
-hosts = 127.0.0.1
-dbname = mail
-table = domain
-select_field = domain
-where_field = domain
-additional_conditions = and backupmx = '1'
-</pre>
-
-      <p>As you can see, these files containt information that Postfix uses
-      to fetch data from the database.</p>
-
-      <p>Since these files contain passwords, we need to protect
-      them:</p>
-
-      <pre class="programlisting"><code class="prompt">root@atlantis:~#</code> <span class="command"><strong>cd /etc/postfix</strong></span>
-<code class="prompt">atlantis:/etc/postfix#</code> <span class="command"><strong>chgrp postfix mysql_*.cf</strong></span>
-<code class="prompt">atlantis:/etc/postfix#</code> <span class="command"><strong>chmod 640 mysql_*.cf</strong></span></pre>
-
-      <p>Edit <code class="filename">/etc/postfix/main.cf</code> and at the bottom
-      of the file add</p>
-
-      <pre class="screen"># Virtual Mailbox Domain Settings
-
-virtual_mailbox_base = /home/vmail
-virtual_transport = virtual
-virtual_alias_maps = mysql:/etc/postfix/mysql_virtual_alias_maps.cf
-virtual_mailbox_domains = mysql:/etc/poRestfix/mysql_virtual_domains_maps.cf
-virtual_mailbox_maps = mysql:/etc/postfix/mysql_virtual_mailbox_maps.cf
-virtual_minimum_uid = 5000
-virtual_uid_maps = static:5000
-virtual_gid_maps = static:5000
-
-# Domains for which we are a secondary MX
-relay_domains = mysql:/etc/postfix/mysql_relay_domains_maps.cfl
-</pre>
-
-      <p>You also need to delete everything in the
-      <code class="varname">mydestination</code> directive because every domain that is
-      entered in the mydestionation is treated as a “local” domain so the mail
-      gets delivered to the local server users and it is located in
-      <code class="filename">/var/spool/mail</code>. </p>
-
-      <p>Restart Postfix.</p>
-
-      <pre class="programlisting">invoke-rc.d postfix restart</pre>
-
-      <p>Now it's time to check if everything is working as expects. Send a
-      test email to the email address you have created using Postfix Admin.
-      Check your <code class="filename">/home/vmail/example.com/username</code> folder.
-      There should be 3 folders inside : <code class="filename">cur</code>,
-      <code class="filename">new</code> and <code class="filename">tmp</code>. Inside the folder
-      <code class="filename">new</code> you should see your email message. If this
-      didn't work, check <code class="filename">/var/log/mail.log</code> for possible
-      hints on what went wrong.</p>
-
-      <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-        <p>Since our system is now ready to receive email from the outside
-        world you can uncomment the line that blocks port 25 in the
-        <code class="filename">firewall.sh</code> script and run the script
-        again.</p>
-      </div>
-
-      <div class="section" title="3.2.3.1. Saslauthd"><div class="titlepage"><div><div><h4 class="title"><a id="id36884669"></a>3.2.3.1. Saslauthd</h4></div></div></div>
-        
-
-        <p>Since we want to allow users to log in to our mail server so
-        they can send emails, we need to configure some kind of protection.
-        First we need to make sure users can log in using the same username
-        and password as the one they will be using for checking email.</p>
-
-        <p>For this, we are going to use
-        <span class="application">Saslauthd</span>. Saslauthd will also use the same
-        database we already created to verify user credentials. </p>
-
-        <pre class="programlisting">apt-get install libsasl2-2 libsasl2-modules libsasl2-modules-sql sasl2-bin libpam-mysql</pre>
-
-        <p>Open <code class="filename">/etc/default/saslauthd</code> with nano and
-        change <code class="computeroutput">START=no</code> to
-        <code class="computeroutput">START=yes</code>. At the end of the file we
-        need to change <code class="computeroutput">OPTIONS=”-c -m
-        /var/run/saslauthd”</code> to </p>
-
-        <pre class="programlisting">OPTIONS="-c -r -m /var/spool/postfix/var/run/saslauthd"</pre>
-
-        <p>We also need to create this directory</p>
-
-        <pre class="programlisting">mkdir -p /var/spool/postfix/var/run/saslauthd</pre>
-
-        <p>and one symbolic link (because Postfix on Debian is running from
-        a chrooted environment and other applications you maybe using on your
-        server (including testsaslauthd for testing if saslauthd is working
-        correctly) are not aware of us changing the saslauthd directory).
-        </p>
-
-        <pre class="programlisting">ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd</pre>
-
-        <p>We also need to create two more files: </p>
-
-        <pre class="programlisting">nano /etc/pam.d/smtp</pre>
-
-        <pre class="screen">auth    required   pam_mysql.so user=mailadmin passwd=newpassword host=127.0.0.1 db=mail table=mailbox usercolumn=username passwdcolumn=password crypt=1
-account sufficient pam_mysql.so user=mailadmin passwd=newpassword host=127.0.0.1 db=mail table=mailbox usercolumn=username passwdcolumn=password crypt=1
-</pre>
-
-        <pre class="programlisting">nano /etc/postfix/sasl/smtpd.conf</pre>
-
-        <pre class="screen">pwcheck_method: saslauthd
-mech_list: plain login
-allow_plaintext: true
-auxprop_plugin: mysql
-sql_hostnames: 127.0.0.1
-sql_user: mailadmin
-sql_passwd: newpassword
-sql_database: mail
-sql_select: select password from mailbox where username = '%u' and active = '1'
-</pre>
-
-        <p>We need to add Postfix to the sasl group so it can access the
-        saslauthd process we just created:</p>
-
-        <pre class="programlisting">adduser postfix sasl</pre>
-
-        <p>Restart Postfix and sasl</p>
-
-        <pre class="screen">/etc/init.d/postfix restart
-/etc/init.d/saslauthd restart</pre>
-
-        <p>Now, we can check is saslauthd is working correctly.</p>
-
-        <pre class="programlisting">testsaslauthd -s smtp -u root@example.com -p newpassword</pre>
-
-        <p>Ofcourse use your own credentials here. Authentification should
-        work.</p>
-
-        <pre class="screen">atlantis:~# testsaslauthd -s smtp -u root@example.com -p newpassword
-0: OK "Success."</pre>
-
-        <p>If you do not get “Success.” as a response, check that you have
-        a symbolic link in <code class="filename">/var/run/</code> named
-        <code class="filename">saslauthd</code> and that it points to
-        <code class="filename">/var/spool/postfix/var/run/saslautdh</code>.</p>
-
-        <p>We have to change permissions to these two files as well:</p>
-
-        <pre class="programlisting">chgrp sasl /etc/pam.d/smtp
-chmod 640 /etc/pam.d/smtp
-chgrp postfix /etc/postfix/sasl/smtpd.conf
-chmod 640 /etc/postfix/sasl/smtpd.conf</pre>
-
-        <p>Restart Postfix and sasl.</p>
-
-        <pre class="programlisting">/etc/init.d/postfix restart
-/etc/init.d/saslauthd restart</pre>
-
-        <div class="section" title="3.2.3.1.1. TLS"><div class="titlepage"><div><div><h5 class="title"><a id="id36884821"></a>3.2.3.1.1. TLS</h5></div></div></div>
-          
-
-          <p></p>
-
-          <pre class="programlisting">apt-get install postfix-tls</pre>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="chapter" title="Chapter 4. Security"><div class="titlepage"><div><div><h2 class="title"><a id="security"></a>Chapter 4. Security</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#id36884848">4.1. Firewall</a></span></dt><dt><span class="section"><a href="#id36885018">4.2. Intrusion detection</a></span></dt></dl></div>
+  <div class="chapter" title="Chapter 3. Security"><div class="titlepage"><div><div><h2 class="title"><a id="security"></a>Chapter 3. Security</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#security.certificates">3.1. Server certificates</a></span></dt><dt><span class="section"><a href="#security.firewall">3.2. Firewall</a></span></dt><dt><span class="section"><a href="#security.limiting-ssh">3.3. Limiting SSH access</a></span></dt><dt><span class="section"><a href="#security.intrusion-detection">3.4. Intrusion detection</a></span></dt></dl></div>
   
 
   <p>For securing our Debian box, we are going to use a firewall and an
@@ -899,7 +372,98 @@ chmod 640 /etc/postfix/sasl/smtpd.conf</pre>
   use to secure communication coming to and from our server (emails,
   passwords, ...).</p>
 
-  <div class="section" title="4.1. Firewall"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id36884848"></a>4.1. Firewall</h2></div></div></div>
+  <div class="section" title="3.1. Server certificates"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="security.certificates"></a>3.1. Server certificates</h2></div></div></div>
+    
+
+    <p>First, we are goint to create a <span class="emphasis"><em>Private
+    key</em></span>.</p>
+
+    <pre class="screen"><code class="prompt">root@atlantis:~#</code> <span class="command"><strong>openssl genrsa -des3 -out server.key 1024</strong></span>
+<code class="computeroutput">Generating RSA private key, 1024 bit long modulus
+.............................................++++++
+.............................................++++++
+e is 65537 (0x10001)
+Enter pass phrase for server.key:</code> <strong class="userinput"><code>your-password-here</code></strong></pre>
+
+    <p>Now that we have a private key, we are going to create what is
+    called a <a class="link" href="http://en.wikipedia.org/wiki/Certificate_signing_request" target="_top">Certificate Signing Request</a>.</p>
+
+    <pre class="screen"><code class="prompt">root@atlantis:~#</code> <span class="command"><strong>openssl req -new -key server.key -out server.csr</strong></span>
+<code class="computeroutput">Enter pass phrase for server.key:
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:<strong class="userinput"><code>HR</code></strong>
+State or Province Name (full name) [Some-State]:<strong class="userinput"><code>Grad Zagreb</code></strong>
+Locality Name (eg, city) []:<strong class="userinput"><code>Zagreb</code></strong>
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:<strong class="userinput"><code>N/A</code></strong> 
+Organizational Unit Name (eg, section) []:
+Common Name (eg, YOUR name) []:<strong class="userinput"><code>atlantis.example.com</code></strong>
+Email Address []:<strong class="userinput"><code>gog@example.com</code></strong>
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:
+An optional company name []:
+</code></pre>
+
+    <p>Make sure that the <code class="varname">Common</code> name matches your fully
+    qualified domain name.</p>
+
+    <p>Now we need to remove the passphrase from the key. If we do not do
+    this, the server will ask you for the passphrase every time you reboot the
+    service (Apache, Postfix or Courier).</p>
+
+    <pre class="screen"><code class="prompt">root@atlantis:~#</code> <span class="command"><strong>cp server.key server.key.org</strong></span>
+<code class="prompt">root@atlantis:~#</code> <span class="command"><strong>openssl rsa -in server.key.org -out server.key</strong></span>
+<code class="computeroutput">Enter pass phrase for server.key.org:
+writing RSA key</code>
+</pre>
+
+    <p><code class="filename">server.key</code> now does not contain a
+    passphrase.</p>
+
+    <p>Now, we are goint to create a self signed certificate. You can
+    change the validity period from 365 days if you like.</p>
+
+    <pre class="screen"><code class="prompt">root@atlantis:~#</code> <span class="command"><strong>openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt</strong></span>
+<code class="computeroutput">Signature ok
+subject=/C=HR/ST=Grad Zagreb/L=Zagreb/O=N/A/CN=atlantis.example.com/emailAddress=gog@example.com
+Getting Private key
+</code></pre>
+
+    <p><code class="filename">server.crt</code> is the name of the self signed
+    certificate.</p>
+
+    <p>To create a <code class="filename">server.pem</code> file you need to
+    concatenate <code class="filename">server.crt</code> and
+    <code class="filename">server.key</code>.</p>
+
+    <pre class="programlisting">cat server.crt server.key &gt; server.pem</pre>
+
+    <p>Since <code class="filename">server.key</code> and
+    <code class="filename">server.pem</code> contain a private server key without a
+    passphrase you have to make sure regular users on your server can not
+    access these files.</p>
+
+    <p>You can store all of the files to <code class="filename">/root/keys</code> as
+    we will need them later.</p>
+
+    <pre class="screen"><code class="prompt">root@atlantis:~#</code> <span class="command"><strong>mkdir keys</strong></span>
+<code class="prompt">root@atlantis:~#</code> <span class="command"><strong>mv server.* keys/</strong></span>
+<code class="prompt">root@atlantis:~#</code> <span class="command"><strong>chown -R root:root keys/</strong></span>
+<code class="prompt">root@atlantis:~#</code> <span class="command"><strong>chmod -R 600 keys</strong></span>
+</pre>
+
+    <p>If you want to understand a little bit more about the whole process.
+    Take a look <a class="link" href="http://www.akadia.com/services/ssh_test_certificate.html" target="_top">here</a>.</p>
+  </div>
+
+  <div class="section" title="3.2. Firewall"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="security.firewall"></a>3.2. Firewall</h2></div></div></div>
     
 
     <p>We are going to secure our web server using iptables as a firewall.
@@ -1130,7 +694,35 @@ chmod +x /root/scripts/firewall.sh</pre>
     </div>
   </div>
 
-  <div class="section" title="4.2. Intrusion detection"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id36885018"></a>4.2. Intrusion detection</h2></div></div></div>
+  <div class="section" title="3.3. Limiting SSH access"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="security.limiting-ssh"></a>3.3. Limiting SSH access</h2></div></div></div>
+    
+
+    <p>There are couple of things you can do to limit access to the SSH
+    service on your system.</p>
+
+    <p>If you have a static IP address that you want to use to accesss the
+    server, setting the <code class="varname">ROUTER</code> variable in the firewall
+    scripts is a good idea because the SSH port for everybody not coming from
+    that address will be closed by the firewall.</p>
+
+    <p>Other things you should consider:</p>
+
+    <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+        <p>Disabling root login, installing <span class="application">sudo</span>
+        and adding your username to the sudoers list.</p>
+      </li><li class="listitem">
+        <p>Changing SSH server to listen on a non standard port (default is
+        22). Just remember to change your firewall rules.</p>
+      </li><li class="listitem">
+        <p>Disabling login via the use of passwords and use keys to login
+        to your server.</p>
+      </li><li class="listitem">
+        <p>Use <a class="link" href="http://en.wikipedia.org/wiki/Port_knocking" target="_top">port
+        knocking</a>.</p>
+      </li></ol></div>
+  </div>
+
+  <div class="section" title="3.4. Intrusion detection"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="security.intrusion-detection"></a>3.4. Intrusion detection</h2></div></div></div>
     
 
     <p>For intrusion detection we are going to use a program called
@@ -1260,16 +852,538 @@ apt-get autoremove</pre>
   </div>
 </div>
 
+  <div class="chapter" title="Chapter 4. Mail server"><div class="titlepage"><div><div><h2 class="title"><a id="mail-server"></a>Chapter 4. Mail server</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#mail-server.dns">4.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">4.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">4.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">4.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">4.2.3. MySQL</a></span></dt><dt><span class="section"><a href="#postfix.sasl">4.2.4. Saslauthd</a></span></dt><dt><span class="section"><a href="#postfix.tls">4.2.5. TLS</a></span></dt></dl></dd></dl></div>
+  
+
+  <p>We are going to install <span class="application">Postfix</span> as our MTA
+  (SMTP server) and <span class="application">Courier</span> as our POP/IMAP server.
+  <span class="application">Postfix</span> will use virtual domains, and information
+  about our domains and users will be stored in the
+  <span class="application">MySQL</span> database.</p>
+
+  <p>For managing virtual domains and users we will use
+  <span class="application">PostfixAdmin</span>. For virus scanning and spam
+  protection of our emails we will use <span class="application">ClamAV</span> and
+  <span class="application">Spamassassin</span> that will be run using
+  <span class="application">amavisd-new</span>.</p>
+
+  <p>As a local delivery agent we will use
+  <span class="application">Maildrop</span> that will be configured to move all
+  messages marked as spam to the Junk folder as well as to make sure that
+  users do not go over their assigned quota.</p>
+
+  <p>This implementation of quota on the mail system does not require you
+  to patch Postfix.</p>
+
+  <p>All software is installed from official Debian repositories.</p>
+
+  <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+    <p>This tutorial is a combination of tutorials published on <a class="link" href="http://articles.slicehost.com/email" target="_top">http://articles.slicehost.com/email</a>
+    and <a class="link" href="https://help.ubuntu.com/community/PostfixCompleteVirtualMailSystemHowto" target="_top">https://help.ubuntu.com/community/PostfixCompleteVirtualMailSystemHowto</a>
+    and a lot of my own work. You also must have a valid MX record in the DNS
+    zone of your domain pointing to the IP address of the server.</p>
+  </div>
+
+  <div class="section" title="4.1. DNS settings"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="mail-server.dns"></a>4.1. DNS settings</h2></div></div></div>
+    
+
+    <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+      <p>Mail server in this example is named <code class="systemitem">atlantis.example.com</code>. You can also
+      name it <code class="systemitem">mail.example.com</code>
+      if you like.</p>
+    </div>
+
+    <p>First, we need to check our hostname</p>
+
+    <pre class="screen">atlantis:~# <span class="command"><strong>hostname -f</strong></span>
+atlantis.diabmon.com </pre>
+
+    <p>If hostname did not return FQDN of your server edit
+    <code class="filename">/etc/hosts</code>. You <code class="filename">hosts</code> file
+    should look something like this, if not, change according to your IP
+    address and server name.</p>
+
+    <pre class="programlisting">127.0.0.1       localhost
+YOUR-IP-ADDRESS atlantis.example.com atlantis </pre>
+
+    <p>Now check your <code class="filename">/etc/hostname</code> file it should
+    contain your fully qualified domain name:</p>
+
+    <pre class="programlisting">atlantis.example.com </pre>
+
+    <p>Change the names to match your server name and reboot the server.
+    Run <span class="command"><strong>hostname -f</strong></span> again and you should see <code class="systemitem">atlantis.example.com</code>.</p>
+
+    <p>Now, we need to check that our DNS servers have an MX record for our
+    <code class="systemitem">example.com</code> domain. If you
+    haven't done so already Install DNS utilities:</p>
+
+    <pre class="programlisting">apt-get install dnsutils</pre>
+
+    <p>We are going to use <span class="command"><strong>host</strong></span> command to check
+    information about our domain:</p>
+
+    <pre class="screen">atlantis:~# <span class="command"><strong>host</strong></span> example.com
+example.com has address YOUR-IP-ADDRESS
+example.com mail is handled by 0 mail.example.com. </pre>
+
+    <p>We can see that the mail for our domain is handled by <code class="systemitem">mail.example.com</code>. Which server is
+    supposed to handle mail for your domain is handled by the so called MX
+    records in your domains zone file. Setting up DNS zone files is out of
+    scope for this document.</p>
+
+    <p>Now we must make sure that <code class="systemitem">mail.example.com</code> points to the same
+    address as our server (<code class="systemitem">atlantis.example.com</code>).</p>
+
+    <pre class="screen">atlantis:~# <span class="command"><strong>nslookup</strong></span> mail.example.com
+Server: YOUR-DNS-SERVER
+Address: YOUR-DNS-ADDRESS#53
+
+Non-authoritative answer:
+mail.example.com canonical name = atlantis.example.com.
+Name: example.com
+Address: YOUR-IP-ADDRESS </pre>
+
+    <p>It would be also nice if your reverse DNS points to the same name
+    (<code class="systemitem">atlantis.example.com</code>).</p>
+
+    <pre class="screen">atlantis:~# <span class="command"><strong>nslookup</strong></span> YOUR-IP-ADDRESS
+Server: YOUR-DNS-SERVER
+Address: YOUR-DNS-SERVER#53
+
+Non-authoritative answer: 
+YOUR-IP-ADDRES-REVERSE.in-addr.arpa name = atlantis.example.com. </pre>
+
+    <p>If they do not match you will probably have to ask your ISP to
+    change this for you.</p>
+  </div>
+
+  <div class="section" title="4.2. Postfix"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="postfix"></a>4.2. Postfix</h2></div></div></div>
+    
+
+    <p>The time has finally come to install
+    <span class="application">Postfix</span>.</p>
+
+    <pre class="programlisting">apt-get install postfix</pre>
+
+    <p>During installation Postfix will ask you to choose the type of
+    installation and a domain.</p>
+
+    <p>Choose <code class="computeroutput">Internet site</code> and enter your
+    servers name <code class="computeroutput"><code class="systemitem">atlantis.example.com</code></code>.
+    It is important that your server name is not just <code class="systemitem">example.com</code>.</p>
+
+    <p>After installation finishes we can check if Postfix is runing by
+    connecting to port 25 on your localhost with telnet:</p>
+
+    <pre class="screen"># <span class="command"><strong>telnet</strong></span> localhost 25
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+220 atlantis.example.com ESMTP Postfix (Debian/GNU)</pre>
+
+    <p>Type <span class="command"><strong>quit</strong></span> to exit.</p>
+
+    <p>If you see Postfix responding, Postfix is working. For another check
+    we can try to send email to one of your email accounts that are located on
+    another server:</p>
+
+    <a id="postfix.test-email-sending"></a><pre class="screen">atlantis:~# <span class="command"><strong>mail</strong></span> your-other-email@somedomain.com
+Subject: test email from example.com
+test body of the email.
+.
+Cc:</pre>
+
+    <p>The single dot on the line is a sign that your are done with the
+    emails body.</p>
+
+    <p>You should be getting this email message on the account you
+    specified.</p>
+
+    <p>Check that you have your <code class="systemitem">example.com</code> in a file
+    <code class="filename">/etc/mailname</code>.</p>
+
+    <div class="section" title="4.2.1. Initial settings"><div class="titlepage"><div><div><h3 class="title"><a id="postfix.inital-settings"></a>4.2.1. Initial settings</h3></div></div></div>
+      
+
+      <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+        <p>Do not be afraid to play with config files at this stage. If you
+        installed <span class="application">etckeeper</span> <a class="link" href="#preparation.tracking-changes" title="2.2. Tracking configuration changes">as suggested</a>, you can
+        always revert to the previous state. Just remember to commit your
+        changes every time you change something by running <span class="command"><strong>etckeeper
+        commit "Descirption of the changes made"</strong></span>. The default
+        Postfix configuration files were already commited when we installed
+        Postfix.</p>
+      </div>
+
+      <p>First we are going to delete the content of the
+      <code class="filename">/etc/postfix/main.cf</code> file so we can fill it with
+      our own.</p>
+
+      <pre class="programlisting">atlantis:~# <span class="command"><strong>cat</strong></span> /dev/null &gt; /etc/postfix/main.cf</pre>
+
+      <p>Now copy and paste these lines, but make sure to replace
+      <span class="emphasis"><em>myhostname = atlantis.example.com</em></span> with your
+      hostname.</p>
+
+      <pre class="screen">##################
+# Default settings
+##################
+biff = no
+append_dot_mydomain = no
+#delay_warning_time = 4h
+readme_directory = no
+smtpd_banner = $myhostname ESMTP $mail_name
+
+################
+# TLS parameters
+################
+smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+smtpd_use_tls=yes
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+###############
+# Main settings
+###############
+myhostname = <em class="replaceable"><code>atlantis.example.com</code></em>
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+myorigin = /etc/mailname
+mydestination = $mydomain, localhost.$mydomain, localhost
+relayhost = 
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all</pre>
+
+      <div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3>
+        <p>Postfix extracts $mydomain from the value of the
+        <code class="varname">myhostname</code> and strips the part before the first
+        dot, including the dot. So in this case <code class="varname">mydomain</code> is
+        <span class="emphasis"><em>example.com</em></span>.</p>
+      </div>
+
+      <p>If you are not using IPv6 you can remove IPv6 addresses from
+      <code class="varname">mynetworks</code> and leave just <span class="emphasis"><em>mynetworks =
+      127.0.0.0/8</em></span>. We will use the <code class="varname">mynetworks</code>
+      variable to tell Postfix that all computers specified in the my networks
+      range can send emails without authentification. We are leaving only the
+      localhost here so we make sure that mail originating from the server
+      (like outputs of cron jobs and other system messages) do not get blocked
+      by other rules we will implement.</p>
+
+      <p>Restart Postfix by running <span class="command"><strong>invoke-rc.d postfix
+      restart</strong></span> and try to send another test mail to check that we
+      didn't mess something up.</p>
+
+      <p>Now it would be a good time to also test if Postfix is receiving
+      mails as well. Try sending an email to just <code class="email">&lt;<a class="email" href="mailto:root">root</a>&gt;</code> and to
+      <code class="email">&lt;<a class="email" href="mailto:root@example.com">root@example.com</a>&gt;</code> using the <span class="command"><strong>mail</strong></span>
+      command as described in the <a class="link" href="#postfix.test-email-sending">previous section</a>. If
+      everything works the received emails should be located in
+      <code class="filename">/var/mail/root</code>. Check that file and make sure that
+      you are sending email from the right domain (sender should be
+      <code class="email">&lt;<a class="email" href="mailto:root@example.com">root@example.com</a>&gt;</code>). If you do not receive an email check
+      the Postifx log file <code class="email">&lt;<a class="email" href="mailto:/var/log/mail.log">/var/log/mail.log</a>&gt;</code> to see what could
+      have gone wrong.</p>
+    </div>
+
+    <div class="section" title="4.2.2. Virtual users and domains"><div class="titlepage"><div><div><h3 class="title"><a id="postfix.virtual-users"></a>4.2.2. Virtual users and domains</h3></div></div></div>
+      
+
+      <p>Our current setup can only receive mail for for users that exist
+      on our server (root, the one that you created druing the installation
+      and other system users). As you can see this is not quite helpfull as we
+      could only server one domain and all the users that have email addresses
+      on that domain would have to be created on the server.</p>
+
+      <p>To avoid all this we are going to use virtual domains and users.
+      That means that we are going to create a couple of databases where we
+      will store all the domains and users that we will be receiving mail
+      for.</p>
+
+      <p>First, we are going to create a system user which will have
+      persmissions to read and write emails to the system as well as the
+      directory for storing all of the mail.</p>
+
+      <p>User will be called <code class="systemitem">vmail</code> and will have a group with ID 5000
+      on the system.</p>
+
+      <pre class="programlisting"><span class="command"><strong>groupadd</strong></span> -g 5000 vmail
+<span class="command"><strong>useradd</strong></span> -s /usr/sbin/nologin -g vmail -u 5000 vmail -d /home/vmail -m</pre>
+
+      <p>The extra parameters for the <span class="command"><strong>useradd</strong></span> command
+      tell the system that this user will not be able to log on to the system,
+      that he belongs to group 5000 and that it's home folder is <code class="filename">/home/vmail</code>. This is the folder where all
+      of the received messages will be stored.</p>
+    </div>
+
+    <div class="section" title="4.2.3. MySQL"><div class="titlepage"><div><div><h3 class="title"><a id="postfix.mysql"></a>4.2.3. MySQL</h3></div></div></div>
+      
+
+      <p>Install MySQL.</p>
+
+      <pre class="programlisting">apt-get install postfix-mysql mysql-server</pre>
+
+      <p>We are going to use <span class="application">Postfix Admin</span> for
+      managing virtual users and domains. Download latest version of Postfix
+      Admin and move the content of the archive to
+      <code class="filename">/var/www/postfix</code>.</p>
+
+      <pre class="programlisting">cd /root/src
+wget LINK-TO-THE-LATEST-VERSION
+tar -xvzf postfixadmin-2.3.2.tar.gz
+mv postfixadmin-2.3.2 /var/www/postfix</pre>
+
+      <p>Before installing Postfix Admin we must create a database and a
+      user to access the database.</p>
+
+      <pre class="programlisting">mysql -u root</pre>
+
+      <p>If you have a password set use the <span class="command"><strong>-p</strong></span>
+      flag.</p>
+
+      <p>Once in MySQL:</p>
+
+      <pre class="programlisting">CREATE DATABASE mail;
+CREATE USER 'mailadmin'@'localhost' IDENTIFIED BY '<strong class="userinput"><code>newpassword</code></strong>';
+GRANT ALL PRIVILEGES ON `mail` . * TO 'mailadmin'@'localhost';
+FLUSH PRIVILEGES;</pre>
+
+      <p>Of course you need to change the
+      <strong class="userinput"><code>newpassword</code></strong> with your own password. You can exit
+      MySQL by typing <span class="command"><strong>exit</strong></span>.</p>
+
+      <p>Open <code class="filename">/var/www/postfix/config.inc.php</code> with
+      nano. Set <code class="varname">$CONF['configured']</code> to
+      <code class="literal">true</code>, choose your setup password, set
+      <code class="varname">$CONF['postfix_admin_url']</code> to
+      <code class="literal">http://SERVERS-IP-ADDRESS/postfix</code> and enter your
+      database information and credentials.</p>
+
+      <p>While you are at it, you should also go through all of the other
+      options you can set in the config mail.</p>
+
+      <p>Open up
+      <code class="literal">http://SERVERS-IP-ADDRESS/postfix/setup.php</code> in your
+      browser and finish the installation. Once logged in into the Postfix
+      Admin create a new virtual domain <code class="systemitem">example.com</code>, and create new user accout
+      username@example.com. Use your own domain name here.</p>
+
+      <p>Postifx Admin created MySQL tables for us and now it is time to
+      tell Postfix to use this tables to get information about email addresses
+      and domains it should serve.</p>
+
+      <p>First we need to create 4 files in the <code class="filename">/etc/postfix</code> folder.</p>
+
+      <p><code class="filename">/etc/postfix/mysql_virtual_alias_maps.cf</code></p>
+
+      <pre class="screen">user = mailadmin
+password = newpassword
+hosts = 127.0.0.1
+dbname = mail
+table = alias
+select_field = goto
+where_field = address</pre>
+
+      <p>/etc/postfix/mysql_virtual_domains_maps.cf</p>
+
+      <pre class="screen">user = mailadmin
+password = newpassword
+hosts = 127.0.0.1
+dbname = mail
+table = domain
+select_field = domain
+where_field = domain
+additional_conditions = and backupmx = '0' and active = '1'</pre>
+
+      <p><code class="filename">/etc/postfix/mysql_virtual_mailbox_maps.cf
+      </code></p>
+
+      <pre class="screen">user = mailadmin
+password = newpassword
+hosts = 127.0.0.1
+dbname = mail
+table = mailbox
+query = SELECT CONCAT(domain,'/',SUBSTRING_INDEX(maildir,'@',1),'/') FROM mailbox WHERE username='%s' AND active = 1
+</pre>
+
+      <p><code class="filename">/etc/postfix/mysql_relay_domains_maps.cf</code></p>
+
+      <pre class="screen">user = mailadmin
+password = newpassword
+hosts = 127.0.0.1
+dbname = mail
+table = domain
+select_field = domain
+where_field = domain
+additional_conditions = and backupmx = '1'
+</pre>
+
+      <p>As you can see, these files containt information that Postfix uses
+      to fetch data from the database.</p>
+
+      <p>Since these files contain passwords, we need to protect
+      them:</p>
+
+      <pre class="programlisting"><code class="prompt">root@atlantis:~#</code> <span class="command"><strong>cd /etc/postfix</strong></span>
+<code class="prompt">atlantis:/etc/postfix#</code> <span class="command"><strong>chgrp postfix mysql_*.cf</strong></span>
+<code class="prompt">atlantis:/etc/postfix#</code> <span class="command"><strong>chmod 640 mysql_*.cf</strong></span></pre>
+
+      <p>Edit <code class="filename">/etc/postfix/main.cf</code> and at the bottom
+      of the file add</p>
+
+      <pre class="screen"># Virtual Mailbox Domain Settings
+
+virtual_mailbox_base = /home/vmail
+virtual_transport = virtual
+virtual_alias_maps = mysql:/etc/postfix/mysql_virtual_alias_maps.cf
+virtual_mailbox_domains = mysql:/etc/poRestfix/mysql_virtual_domains_maps.cf
+virtual_mailbox_maps = mysql:/etc/postfix/mysql_virtual_mailbox_maps.cf
+virtual_minimum_uid = 5000
+virtual_uid_maps = static:5000
+virtual_gid_maps = static:5000
+
+# Domains for which we are a secondary MX
+relay_domains = mysql:/etc/postfix/mysql_relay_domains_maps.cfl
+</pre>
+
+      <p>You also need to delete everything in the
+      <code class="varname">mydestination</code> directive because every domain that is
+      entered in the mydestionation is treated as a “local” domain so the mail
+      gets delivered to the local server users and it is located in
+      <code class="filename">/var/spool/mail</code>. </p>
+
+      <p>Restart Postfix.</p>
+
+      <pre class="programlisting">invoke-rc.d postfix restart</pre>
+
+      <p>Now it's time to check if everything is working as expects. Send a
+      test email to the email address you have created using Postfix Admin.
+      Check your <code class="filename">/home/vmail/example.com/username</code> folder.
+      There should be 3 folders inside : <code class="filename">cur</code>,
+      <code class="filename">new</code> and <code class="filename">tmp</code>. Inside the folder
+      <code class="filename">new</code> you should see your email message. If this
+      didn't work, check <code class="filename">/var/log/mail.log</code> for possible
+      hints on what went wrong.</p>
+
+      <div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+        <p>Since our system is now ready to receive email from the outside
+        world you can uncomment the line that blocks port 25 in the
+        <code class="filename">firewall.sh</code> script and run the script
+        again.</p>
+      </div>
+      </div>
+
+      <div class="section" title="4.2.4. Saslauthd"><div class="titlepage"><div><div><h3 class="title"><a id="postfix.sasl"></a>4.2.4. Saslauthd</h3></div></div></div>
+        
+
+        <p>Since we want to allow users to log in to our mail server so
+        they can send emails, we need to configure some kind of protection.
+        First we need to make sure users can log in using the same username
+        and password as the one they will be using for checking email.</p>
+
+        <p>For this, we are going to use
+        <span class="application">Saslauthd</span>. Saslauthd will also use the same
+        database we already created to verify user credentials. </p>
+
+        <pre class="programlisting">apt-get install libsasl2-2 libsasl2-modules libsasl2-modules-sql sasl2-bin libpam-mysql</pre>
+
+        <p>Open <code class="filename">/etc/default/saslauthd</code> with nano and
+        change <code class="computeroutput">START=no</code> to
+        <code class="computeroutput">START=yes</code>. At the end of the file we
+        need to change <code class="computeroutput">OPTIONS=”-c -m
+        /var/run/saslauthd”</code> to </p>
+
+        <pre class="programlisting">OPTIONS="-c -r -m /var/spool/postfix/var/run/saslauthd"</pre>
+
+        <p>We also need to create this directory</p>
+
+        <pre class="programlisting">mkdir -p /var/spool/postfix/var/run/saslauthd</pre>
+
+        <p>and one symbolic link (because Postfix on Debian is running from
+        a chrooted environment and other applications you maybe using on your
+        server (including testsaslauthd for testing if saslauthd is working
+        correctly) are not aware of us changing the saslauthd directory).
+        </p>
+
+        <pre class="programlisting">ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd</pre>
+
+        <p>We also need to create two more files: </p>
+
+        <pre class="programlisting">nano /etc/pam.d/smtp</pre>
+
+        <pre class="screen">auth    required   pam_mysql.so user=mailadmin passwd=newpassword host=127.0.0.1 db=mail table=mailbox usercolumn=username passwdcolumn=password crypt=1
+account sufficient pam_mysql.so user=mailadmin passwd=newpassword host=127.0.0.1 db=mail table=mailbox usercolumn=username passwdcolumn=password crypt=1
+</pre>
+
+        <pre class="programlisting">nano /etc/postfix/sasl/smtpd.conf</pre>
+
+        <pre class="screen">pwcheck_method: saslauthd
+mech_list: plain login
+allow_plaintext: true
+auxprop_plugin: mysql
+sql_hostnames: 127.0.0.1
+sql_user: mailadmin
+sql_passwd: newpassword
+sql_database: mail
+sql_select: select password from mailbox where username = '%u' and active = '1'
+</pre>
+
+        <p>We need to add Postfix to the sasl group so it can access the
+        saslauthd process we just created:</p>
+
+        <pre class="programlisting">adduser postfix sasl</pre>
+
+        <p>Restart Postfix and sasl</p>
+
+        <pre class="screen">/etc/init.d/postfix restart
+/etc/init.d/saslauthd restart</pre>
+
+        <p>Now, we can check is saslauthd is working correctly.</p>
+
+        <pre class="programlisting">testsaslauthd -s smtp -u root@example.com -p newpassword</pre>
+
+        <p>Ofcourse use your own credentials here. Authentification should
+        work.</p>
+
+        <pre class="screen">atlantis:~# testsaslauthd -s smtp -u root@example.com -p newpassword
+0: OK "Success."</pre>
+
+        <p>If you do not get “Success.” as a response, check that you have
+        a symbolic link in <code class="filename">/var/run/</code> named
+        <code class="filename">saslauthd</code> and that it points to
+        <code class="filename">/var/spool/postfix/var/run/saslautdh</code>.</p>
+
+        <p>We have to change permissions to these two files as well:</p>
+
+        <pre class="programlisting">chgrp sasl /etc/pam.d/smtp
+chmod 640 /etc/pam.d/smtp
+chgrp postfix /etc/postfix/sasl/smtpd.conf
+chmod 640 /etc/postfix/sasl/smtpd.conf</pre>
+
+        <p>Restart Postfix and sasl.</p>
+
+        <pre class="programlisting">/etc/init.d/postfix restart
+/etc/init.d/saslauthd restart</pre>
+      </div>
+      <div class="section" title="4.2.5. TLS"><div class="titlepage"><div><div><h3 class="title"><a id="postfix.tls"></a>4.2.5. TLS</h3></div></div></div>
+        
+
+        <p>Now, we are going to configure Postfix to use TLS. If you still haven't created a <a class="link" href="#security.certificates" title="3.1. Server certificates">self signed certificates do it now</a>.</p>
+
+        <pre class="programlisting">apt-get install postfix-tls</pre>
+    </div>
+  </div>
+</div>
+
   <div class="chapter" title="Chapter 5. TODO"><div class="titlepage"><div><div><h2 class="title"><a id="todo"></a>Chapter 5. TODO</h2></div></div></div>
   
   
 
       <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
-            <p>
-                Firewalling was written as if it is done prior to the installation, but it's located in a 
-                chapter after the installation of the server.
-            </p>
-          </li><li class="listitem">
           <p>
               Fetching mail with mailman
           </p>

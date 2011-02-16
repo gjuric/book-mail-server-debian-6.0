@@ -11,13 +11,6 @@
   
 
       <itemizedlist>
-          <listitem>
-            <para>
-                Firewalling was written as if it is done prior to the installation, but it's located in a 
-                chapter after the installation of the server.
-            </para>
-          </listitem>
-
         <listitem>
           <para>
               Fetching mail with mailman

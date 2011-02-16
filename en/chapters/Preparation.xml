@@ -136,23 +136,23 @@ git config --global user.email you@example.com</programlisting>
 
     <itemizedlist>
       <listitem>
-        SSH server will allow us to connect remotely to the server.
+         SSH server will allow us to connect remotely to the server. 
       </listitem>
 
       <listitem>
-        Nano is a text editor. More user friendly than vi.
+         Nano is a text editor. More user friendly than vi. 
       </listitem>
 
       <listitem>
-        We will use wget to fetch stuff from the internet.
+         We will use wget to fetch stuff from the internet. 
       </listitem>
 
       <listitem>
-        dnsutils package will allow us to troubleshoot possible DNS problems on our system.
+         dnsutils package will allow us to troubleshoot possible DNS problems on our system. 
       </listitem>
 
       <listitem>
-        Telnet and bsd-mailx will be used later for troubleshooting our setup.
+         Telnet and bsd-mailx will be used later for troubleshooting our setup. 
       </listitem>
     </itemizedlist>
   </section>
@@ -207,9 +207,10 @@ apt-get --purge remove isc-dhcp-client isc-dhcp-common</programlisting>
   <section xml:id="preparation.ntp">
     <title>NTP - time synchronization</title>
 
-    <para>To make sure our servers time is always up to date we are going to
-    install ntp package which enables our server to use NTP protocol for
-    syncing your servers clock.</para>
+    <para>Every server should have accurate time information, this is
+    especially important for mail server. To make sure our servers time is
+    always up to date we are going to install ntp package which enables our
+    server to use NTP protocol for syncing your servers clock.</para>
 
     <programlisting>apt-get install ntp</programlisting>
 

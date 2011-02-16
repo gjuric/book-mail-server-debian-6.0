@@ -15,7 +15,98 @@
   use to secure communication coming to and from our server (emails,
   passwords, ...).</para>
 
-  <section>
+  <section xml:id="security.certificates">
+    <title>Server certificates</title>
+
+    <para>First, we are goint to create a <emphasis>Private
+    key</emphasis>.</para>
+
+    <screen><prompt>root@atlantis:~#</prompt> <command>openssl genrsa -des3 -out server.key 1024</command>
+<computeroutput>Generating RSA private key, 1024 bit long modulus
+.............................................++++++
+.............................................++++++
+e is 65537 (0x10001)
+Enter pass phrase for server.key:</computeroutput> <userinput>your-password-here</userinput></screen>
+
+    <para>Now that we have a private key, we are going to create what is
+    called a <link xl:href="http://en.wikipedia.org/wiki/Certificate_signing_request">Certificate Signing Request</link>.</para>
+
+    <screen><prompt>root@atlantis:~#</prompt> <command>openssl req -new -key server.key -out server.csr</command>
+<computeroutput>Enter pass phrase for server.key:
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:<userinput>HR</userinput>
+State or Province Name (full name) [Some-State]:<userinput>Grad Zagreb</userinput>
+Locality Name (eg, city) []:<userinput>Zagreb</userinput>
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:<userinput>N/A</userinput> 
+Organizational Unit Name (eg, section) []:
+Common Name (eg, YOUR name) []:<userinput>atlantis.example.com</userinput>
+Email Address []:<userinput>gog@example.com</userinput>
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:
+An optional company name []:
+</computeroutput></screen>
+
+    <para>Make sure that the <varname>Common</varname> name matches your fully
+    qualified domain name.</para>
+
+    <para>Now we need to remove the passphrase from the key. If we do not do
+    this, the server will ask you for the passphrase every time you reboot the
+    service (Apache, Postfix or Courier).</para>
+
+    <screen><prompt>root@atlantis:~#</prompt> <command>cp server.key server.key.org</command>
+<prompt>root@atlantis:~#</prompt> <command>openssl rsa -in server.key.org -out server.key</command>
+<computeroutput>Enter pass phrase for server.key.org:
+writing RSA key</computeroutput>
+</screen>
+
+    <para><filename>server.key</filename> now does not contain a
+    passphrase.</para>
+
+    <para>Now, we are goint to create a self signed certificate. You can
+    change the validity period from 365 days if you like.</para>
+
+    <screen><prompt>root@atlantis:~#</prompt> <command>openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt</command>
+<computeroutput>Signature ok
+subject=/C=HR/ST=Grad Zagreb/L=Zagreb/O=N/A/CN=atlantis.example.com/emailAddress=gog@example.com
+Getting Private key
+</computeroutput></screen>
+
+    <para><filename>server.crt</filename> is the name of the self signed
+    certificate.</para>
+
+    <para>To create a <filename>server.pem</filename> file you need to
+    concatenate <filename>server.crt</filename> and
+    <filename>server.key</filename>.</para>
+
+    <programlisting>cat server.crt server.key &gt; server.pem</programlisting>
+
+    <para>Since <filename>server.key</filename> and
+    <filename>server.pem</filename> contain a private server key without a
+    passphrase you have to make sure regular users on your server can not
+    access these files.</para>
+
+    <para>You can store all of the files to <filename>/root/keys</filename> as
+    we will need them later.</para>
+
+    <screen><prompt>root@atlantis:~#</prompt> <command>mkdir keys</command>
+<prompt>root@atlantis:~#</prompt> <command>mv server.* keys/</command>
+<prompt>root@atlantis:~#</prompt> <command>chown -R root:root keys/</command>
+<prompt>root@atlantis:~#</prompt> <command>chmod -R 600 keys</command>
+</screen>
+
+    <para>If you want to understand a little bit more about the whole process.
+    Take a look <link xl:href="http://www.akadia.com/services/ssh_test_certificate.html">here</link>.</para>
+  </section>
+
+  <section xml:id="security.firewall">
     <title>Firewall</title>
 
     <para>We are going to secure our web server using iptables as a firewall.
@@ -247,7 +338,44 @@ chmod +x /root/scripts/firewall.sh</programlisting>
     </note>
   </section>
 
-  <section>
+  <section xml:id="security.limiting-ssh">
+    <title>Limiting SSH access</title>
+
+    <para>There are couple of things you can do to limit access to the SSH
+    service on your system.</para>
+
+    <para>If you have a static IP address that you want to use to accesss the
+    server, setting the <varname>ROUTER</varname> variable in the firewall
+    scripts is a good idea because the SSH port for everybody not coming from
+    that address will be closed by the firewall.</para>
+
+    <para>Other things you should consider:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Disabling root login, installing <application>sudo</application>
+        and adding your username to the sudoers list.</para>
+      </listitem>
+
+      <listitem>
+        <para>Changing SSH server to listen on a non standard port (default is
+        22). Just remember to change your firewall rules.</para>
+      </listitem>
+
+      <listitem>
+        <para>Disabling login via the use of passwords and use keys to login
+        to your server.</para>
+      </listitem>
+
+      <listitem>
+        <para>Use <link
+        xl:href="http://en.wikipedia.org/wiki/Port_knocking">port
+        knocking</link>.</para>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section xml:id="security.intrusion-detection">
     <title>Intrusion detection</title>
 
     <para>For intrusion detection we are going to use a program called
