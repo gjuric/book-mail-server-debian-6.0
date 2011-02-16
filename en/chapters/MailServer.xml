@@ -447,8 +447,9 @@ relay_domains = mysql:/etc/postfix/mysql_relay_domains_maps.cfl
         <filename>firewall.sh</filename> script and run the script
         again.</para>
       </note>
+      </section>
 
-      <section>
+      <section xml:id="postfix.sasl">
         <title>Saslauthd</title>
 
         <para>Since we want to allow users to log in to our mail server so
@@ -546,8 +547,6 @@ chmod 640 /etc/postfix/sasl/smtpd.conf</programlisting>
           <para></para>
 
           <programlisting>apt-get install postfix-tls</programlisting>
-        </section>
-      </section>
     </section>
   </section>
 </chapter>
