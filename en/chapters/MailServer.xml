@@ -292,7 +292,262 @@ inet_interfaces = all</screen>
     <section xml:id="postfix.mysql">
       <title>MySQL</title>
 
-      <para></para>
+      <para>Install MySQL.</para>
+
+      <programlisting>apt-get install postfix-mysql mysql-server</programlisting>
+
+      <para>We are going to use <application>Postfix Admin</application> for
+      managing virtual users and domains. Download latest version of Postfix
+      Admin and move the content of the archive to
+      <filename>/var/www/postfix</filename>.</para>
+
+      <programlisting>cd /root/src
+wget LINK-TO-THE-LATEST-VERSION
+tar -xvzf postfixadmin-2.3.2.tar.gz
+mv postfixadmin-2.3.2 /var/www/postfix</programlisting>
+
+      <para>Before installing Postfix Admin we must create a database and a
+      user to access the database.</para>
+
+      <programlisting>mysql -u root</programlisting>
+
+      <para>If you have a password set use the <command>-p</command>
+      flag.</para>
+
+      <para>Once in MySQL:</para>
+
+      <programlisting>CREATE DATABASE mail;
+CREATE USER 'mailadmin'@'localhost' IDENTIFIED BY '<userinput>newpassword</userinput>';
+GRANT ALL PRIVILEGES ON `mail` . * TO 'mailadmin'@'localhost';
+FLUSH PRIVILEGES;</programlisting>
+
+      <para>Of course you need to change the
+      <userinput>newpassword</userinput> with your own password. You can exit
+      MySQL by typing <command>exit</command>.</para>
+
+      <para>Open <filename>/var/www/postfix/config.inc.php</filename> with
+      nano. Set <varname>$CONF['configured']</varname> to
+      <literal>true</literal>, choose your setup password, set
+      <varname>$CONF['postfix_admin_url']</varname> to
+      <literal>http://SERVERS-IP-ADDRESS/postfix</literal> and enter your
+      database information and credentials.</para>
+
+      <para>While you are at it, you should also go through all of the other
+      options you can set in the config mail.</para>
+
+      <para>Open up
+      <literal>http://SERVERS-IP-ADDRESS/postfix/setup.php</literal> in your
+      browser and finish the installation. Once logged in into the Postfix
+      Admin create a new virtual domain <systemitem
+      class="domainname">example.com</systemitem>, and create new user accout
+      username@example.com. Use your own domain name here.</para>
+
+      <para>Postifx Admin created MySQL tables for us and now it is time to
+      tell Postfix to use this tables to get information about email addresses
+      and domains it should serve.</para>
+
+      <para>First we need to create 4 files in the <filename
+      class="directory">/etc/postfix</filename> folder.</para>
+
+      <para><filename>/etc/postfix/mysql_virtual_alias_maps.cf</filename></para>
+
+      <screen>user = mailadmin
+password = newpassword
+hosts = 127.0.0.1
+dbname = mail
+table = alias
+select_field = goto
+where_field = address</screen>
+
+      <para>/etc/postfix/mysql_virtual_domains_maps.cf</para>
+
+      <screen>user = mailadmin
+password = newpassword
+hosts = 127.0.0.1
+dbname = mail
+table = domain
+select_field = domain
+where_field = domain
+additional_conditions = and backupmx = '0' and active = '1'</screen>
+
+      <para><filename>/etc/postfix/mysql_virtual_mailbox_maps.cf
+      </filename></para>
+
+      <screen>user = mailadmin
+password = newpassword
+hosts = 127.0.0.1
+dbname = mail
+table = mailbox
+query = SELECT CONCAT(domain,'/',SUBSTRING_INDEX(maildir,'@',1),'/') FROM mailbox WHERE username='%s' AND active = 1
+</screen>
+
+      <para><filename>/etc/postfix/mysql_relay_domains_maps.cf</filename></para>
+
+      <screen>user = mailadmin
+password = newpassword
+hosts = 127.0.0.1
+dbname = mail
+table = domain
+select_field = domain
+where_field = domain
+additional_conditions = and backupmx = '1'
+</screen>
+
+      <para>As you can see, these files containt information that Postfix uses
+      to fetch data from the database.</para>
+
+      <para>Since these files contain passwords, we need to protect
+      them:</para>
+
+      <programlisting><prompt>root@atlantis:~#</prompt> <command>cd /etc/postfix</command>
+<prompt>atlantis:/etc/postfix#</prompt> <command>chgrp postfix mysql_*.cf</command>
+<prompt>atlantis:/etc/postfix#</prompt> <command>chmod 640 mysql_*.cf</command></programlisting>
+
+      <para>Edit <filename>/etc/postfix/main.cf</filename> and at the bottom
+      of the file add</para>
+
+      <screen># Virtual Mailbox Domain Settings
+
+virtual_mailbox_base = /home/vmail
+virtual_transport = virtual
+virtual_alias_maps = mysql:/etc/postfix/mysql_virtual_alias_maps.cf
+virtual_mailbox_domains = mysql:/etc/poRestfix/mysql_virtual_domains_maps.cf
+virtual_mailbox_maps = mysql:/etc/postfix/mysql_virtual_mailbox_maps.cf
+virtual_minimum_uid = 5000
+virtual_uid_maps = static:5000
+virtual_gid_maps = static:5000
+
+# Domains for which we are a secondary MX
+relay_domains = mysql:/etc/postfix/mysql_relay_domains_maps.cfl
+</screen>
+
+      <para>You also need to delete everything in the
+      <varname>mydestination</varname> directive because every domain that is
+      entered in the mydestionation is treated as a “local” domain so the mail
+      gets delivered to the local server users and it is located in
+      <filename>/var/spool/mail</filename>. </para>
+
+      <para>Restart Postfix.</para>
+
+      <programlisting>invoke-rc.d postfix restart</programlisting>
+
+      <para>Now it's time to check if everything is working as expects. Send a
+      test email to the email address you have created using Postfix Admin.
+      Check your <filename
+      class="directory">/home/vmail/example.com/username</filename> folder.
+      There should be 3 folders inside : <filename>cur</filename>,
+      <filename>new</filename> and <filename>tmp</filename>. Inside the folder
+      <filename>new</filename> you should see your email message. If this
+      didn't work, check <filename>/var/log/mail.log</filename> for possible
+      hints on what went wrong.</para>
+
+      <note>
+        <para>Since our system is now ready to receive email from the outside
+        world you can uncomment the line that blocks port 25 in the
+        <filename>firewall.sh</filename> script and run the script
+        again.</para>
+      </note>
+
+      <section>
+        <title>Saslauthd</title>
+
+        <para>Since we want to allow users to log in to our mail server so
+        they can send emails, we need to configure some kind of protection.
+        First we need to make sure users can log in using the same username
+        and password as the one they will be using for checking email.</para>
+
+        <para>For this, we are going to use
+        <application>Saslauthd</application>. Saslauthd will also use the same
+        database we already created to verify user credentials. </para>
+
+        <programlisting>apt-get install libsasl2-2 libsasl2-modules libsasl2-modules-sql sasl2-bin libpam-mysql</programlisting>
+
+        <para>Open <filename>/etc/default/saslauthd</filename> with nano and
+        change <computeroutput>START=no</computeroutput> to
+        <computeroutput>START=yes</computeroutput>. At the end of the file we
+        need to change <computeroutput>OPTIONS=”-c -m
+        /var/run/saslauthd”</computeroutput> to </para>
+
+        <programlisting>OPTIONS="-c -r -m /var/spool/postfix/var/run/saslauthd"</programlisting>
+
+        <para>We also need to create this directory</para>
+
+        <programlisting>mkdir -p /var/spool/postfix/var/run/saslauthd</programlisting>
+
+        <para>and one symbolic link (because Postfix on Debian is running from
+        a chrooted environment and other applications you maybe using on your
+        server (including testsaslauthd for testing if saslauthd is working
+        correctly) are not aware of us changing the saslauthd directory).
+        </para>
+
+        <programlisting>ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd</programlisting>
+
+        <para>We also need to create two more files: </para>
+
+        <programlisting>nano /etc/pam.d/smtp</programlisting>
+
+        <screen>auth    required   pam_mysql.so user=mailadmin passwd=newpassword host=127.0.0.1 db=mail table=mailbox usercolumn=username passwdcolumn=password crypt=1
+account sufficient pam_mysql.so user=mailadmin passwd=newpassword host=127.0.0.1 db=mail table=mailbox usercolumn=username passwdcolumn=password crypt=1
+</screen>
+
+        <programlisting>nano /etc/postfix/sasl/smtpd.conf</programlisting>
+
+        <screen>pwcheck_method: saslauthd
+mech_list: plain login
+allow_plaintext: true
+auxprop_plugin: mysql
+sql_hostnames: 127.0.0.1
+sql_user: mailadmin
+sql_passwd: newpassword
+sql_database: mail
+sql_select: select password from mailbox where username = '%u' and active = '1'
+</screen>
+
+        <para>We need to add Postfix to the sasl group so it can access the
+        saslauthd process we just created:</para>
+
+        <programlisting>adduser postfix sasl</programlisting>
+
+        <para>Restart Postfix and sasl</para>
+
+        <screen>/etc/init.d/postfix restart
+/etc/init.d/saslauthd restart</screen>
+
+        <para>Now, we can check is saslauthd is working correctly.</para>
+
+        <programlisting>testsaslauthd -s smtp -u root@example.com -p newpassword</programlisting>
+
+        <para>Ofcourse use your own credentials here. Authentification should
+        work.</para>
+
+        <screen>atlantis:~# testsaslauthd -s smtp -u root@example.com -p newpassword
+0: OK "Success."</screen>
+
+        <para>If you do not get “Success.” as a response, check that you have
+        a symbolic link in <filename>/var/run/</filename> named
+        <filename>saslauthd</filename> and that it points to
+        <filename>/var/spool/postfix/var/run/saslautdh</filename>.</para>
+
+        <para>We have to change permissions to these two files as well:</para>
+
+        <programlisting>chgrp sasl /etc/pam.d/smtp
+chmod 640 /etc/pam.d/smtp
+chgrp postfix /etc/postfix/sasl/smtpd.conf
+chmod 640 /etc/postfix/sasl/smtpd.conf</programlisting>
+
+        <para>Restart Postfix and sasl.</para>
+
+        <programlisting>/etc/init.d/postfix restart
+/etc/init.d/saslauthd restart</programlisting>
+
+        <section>
+          <title>TLS</title>
+
+          <para></para>
+
+          <programlisting>apt-get install postfix-tls</programlisting>
+        </section>
+      </section>
     </section>
   </section>
 </chapter>

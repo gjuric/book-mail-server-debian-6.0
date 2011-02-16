@@ -8,7 +8,7 @@
       xmlns:xl="http://www.w3.org/1999/xlink"
       xmlns:ns="http://docbook.org/ns/docbook">
   <info>
-    <title>Building a mail server on Debian 6.0 (Squeeze)</title>
+    <title>Building a mail server on Debian 6.0</title>
 
     <author>
       <personname><firstname>Goran</firstname>
