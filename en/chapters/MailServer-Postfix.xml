@@ -285,8 +285,9 @@ additional_conditions = and backupmx = '1'</screen>
     <para>Edit <filename>/etc/postfix/main.cf</filename> and at the bottom of
     the file add</para>
 
-    <screen># Virtual Mailbox Domain Settings
-
+    <screen>##################
+# Virtual Settings
+##################
 virtual_mailbox_base = /home/vmail
 virtual_transport = virtual
 virtual_alias_maps = mysql:/etc/postfix/mysql_virtual_alias_maps.cf
@@ -297,7 +298,7 @@ virtual_uid_maps = static:5000
 virtual_gid_maps = static:5000
 
 # Domains for which we are a secondary MX
-relay_domains = mysql:/etc/postfix/mysql_relay_domains_maps.cfl</screen>
+relay_domains = mysql:/etc/postfix/mysql_relay_domains_maps.cf</screen>
 
     <para>You also need to delete everything in the
     <varname>mydestination</varname> directive because every domain that is
@@ -357,7 +358,17 @@ relay_domains = mysql:/etc/postfix/mysql_relay_domains_maps.cfl</screen>
     (including testsaslauthd for testing if saslauthd is working correctly)
     are not aware of us changing the saslauthd directory).</para>
 
-    <programlisting>ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd</programlisting>
+    <programlisting>rm -rf /var/run/saslauthd
+ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd</programlisting>
+
+    <warning>
+      <para>If you do not delete <filename>/var/run/saslauthd</filename>
+      before creating a symbolic link the link will we created in
+      <filename>/var/run/saslauthd/saslauthd</filename> and testing SASL with
+      <application>testsaslauthd</application> will result in an error:
+      "<computeroutput>connect() : No such file or directory
+      0</computeroutput>".</para>
+    </warning>
 
     <para>We also need to create two more files:</para>
 

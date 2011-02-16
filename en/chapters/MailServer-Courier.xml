@@ -71,7 +71,7 @@ MYSQL_QUOTA_FIELD concat(quota,'S')</screen>
     store.</para>
   </section>
 
-  <section>
+  <section xml:id="courier.certificates">
     <title>Use certificates</title>
 
     <para>Edit <filename>/etc/courier/imapd-ssl</filename> and change the
@@ -103,7 +103,7 @@ TLS_TRUSTCERTS=/etc/ssl/self-signed/server.crt</screen>
     <filename>/etc/courier/imapd-ssl</filename>. </para>
   </section>
 
-  <section>
+  <section xml:id="courier.firewall-rules">
     <title>Firewall rules</title>
 
     <para>You have to change Firewall rules to allow inbound connections to
@@ -120,7 +120,7 @@ TLS_TRUSTCERTS=/etc/ssl/self-signed/server.crt</screen>
     </itemizedlist>
   </section>
 
-  <section>
+  <section xml:id="courier.commit-changes">
     <title>Commit your changes</title>
 
     <para>If you are using etckeeper now is a good time to commit the changes
