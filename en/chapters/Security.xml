@@ -29,7 +29,9 @@ e is 65537 (0x10001)
 Enter pass phrase for server.key:</computeroutput> <userinput>your-password-here</userinput></screen>
 
     <para>Now that we have a private key, we are going to create what is
-    called a <link xl:href="http://en.wikipedia.org/wiki/Certificate_signing_request">Certificate Signing Request</link>.</para>
+    called a <link
+    xl:href="http://en.wikipedia.org/wiki/Certificate_signing_request">Certificate
+    Signing Request</link>.</para>
 
     <screen><prompt>root@atlantis:~#</prompt> <command>openssl req -new -key server.key -out server.csr</command>
 <computeroutput>Enter pass phrase for server.key:
@@ -96,14 +98,20 @@ Getting Private key
     <para>You can store all of the files to <filename>/root/keys</filename> as
     we will need them later.</para>
 
-    <screen><prompt>root@atlantis:~#</prompt> <command>mkdir keys</command>
-<prompt>root@atlantis:~#</prompt> <command>mv server.* keys/</command>
-<prompt>root@atlantis:~#</prompt> <command>chown -R root:root keys/</command>
-<prompt>root@atlantis:~#</prompt> <command>chmod -R 600 keys</command>
+    <screen><prompt>root@atlantis:~#</prompt> <command>mkdir /etc/ssl/self-signed</command>
+<prompt>root@atlantis:~#</prompt> <command>mv server.* /etc/ssl/self-signed/</command>
+<prompt>root@atlantis:~#</prompt> <command>chown -R root:root /etc/ssl/self-signed/</command>
+<prompt>root@atlantis:~#</prompt> <command>chmod -R 644 /etc/ssl/self-signed/</command>
 </screen>
 
     <para>If you want to understand a little bit more about the whole process.
-    Take a look <link xl:href="http://www.akadia.com/services/ssh_test_certificate.html">here</link>.</para>
+    Take a look <link
+    xl:href="http://www.akadia.com/services/ssh_test_certificate.html">here</link>.</para>
+
+    <para>Since we moved the keys to the <filename>/etc</filename> folder we
+    should commit the changes.</para>
+
+    <programlisting>etckeeper commit "Added server keys"</programlisting>
   </section>
 
   <section xml:id="security.firewall">
@@ -336,6 +344,8 @@ chmod +x /root/scripts/firewall.sh</programlisting>
       to open up specific ports. When the time comes, this will be pointed out
       to you.</para>
     </note>
+
+    <para>Commit the changes made to the firewall rules with etckeeper.</para>
   </section>
 
   <section xml:id="security.limiting-ssh">

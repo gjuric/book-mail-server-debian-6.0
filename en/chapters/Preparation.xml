@@ -120,10 +120,14 @@ git config --global user.email you@example.com</programlisting>
 
     <programlisting>git log</programlisting>
 
-    <para>You can learn more about git and etckeeper at the projects homepage.
-    Just remember to commit your changes after the each change you make or you
-    will not be able to install packages because etckeeper will complain that
-    there are uncommitted changes in the folder.</para>
+    <para>You can learn more about git and etckeeper at the projects
+    homepage.</para>
+
+    <warning>
+      <para>Remember to commit your changes after the each change you make or
+      you will not be able to install packages because etckeeper will complain
+      that there are uncommitted changes in the folder.</para>
+    </warning>
   </section>
 
   <section xml:id="preparation.essentials">

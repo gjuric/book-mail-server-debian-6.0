@@ -425,10 +425,7 @@ chmod 640 /etc/postfix/sasl/smtpd.conf</programlisting>
 
     <programlisting>apt-get install postfix-tls</programlisting>
 
-    <para>Copy the created <filename>server.pem</filename> file to <filename
-    class="directory">/etc/ssl/self-signed</filename> folder and
-    <command>chmod</command> it to 644. Edit
-    <filename>/etc/postfix/main.cf</filename> and look for the part
+    <para>Edit <filename>/etc/postfix/main.cf</filename> and look for the part
     containing</para>
 
     <screen>smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
@@ -507,6 +504,15 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</screen>
     add</para>
 
     <screen>message_size_limit = 20480000</screen>
+  </section>
+
+  <section>
+    <title>Commit your changes</title>
+
+    <para>If you are using etckeeper now is a good time to commit the changes
+    you made.</para>
+
+    <programlisting>etckeeper commit "Configured Postfix"</programlisting>
   </section>
 
   <section>

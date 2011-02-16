@@ -8,7 +8,124 @@
          xmlns:db="http://docbook.org/ns/docbook">
   <title>Courier</title>
 
-  <para>The time has finally come to install
-  <application>Postfix</application>.</para>
+  <para>For now, our server can receive emails, but we have no way of
+  accessing those emails from a mail client. For this we are going to use
+  <application>Courier</application> as our IMAP and POP server.</para>
 
+  <para><application>Dovecot</application> is another popular option, but for
+  this integration you will have to look elsewhere. For me, Dovecot is not an
+  option because it does not automatically check for new mail in all of the
+  IMAP folder when you select <option>Get Mail</option> option in your mail
+  client. And since all of the emails marked as <emphasis>Spam</emphasis> is
+  moved automatically to a <filename>Junk</filename> folder my client would
+  not report to me if there are any new messages in the
+  <filename>Junk</filename> folder unless I explicitly check for them. </para>
+
+  <section xml:id="courier.installation">
+    <title>Installation</title>
+
+    <programlisting>apt-get install courier-authdaemon courier-authlib-mysql courier-pop courier-pop-ssl courier-imap courier-imap-ssl</programlisting>
+
+    <para>If you do not want to use POP you can skip installing packages that
+    provide POP and install only</para>
+
+    <programlisting>apt-get install courier-authdaemon courier-authlib-mysql courier-imap courier-imap-ssl</programlisting>
+
+    <para>When asked if you would like to create directories for web-based
+    administration, answer <userinput>No</userinput>.</para>
+
+    <para>Open <filename>/etc/courier/authdaemonrc</filename> and
+    change</para>
+
+    <screen>authmodulelist="authpam"</screen>
+
+    <para>to</para>
+
+    <screen>authmodulelist="authmysql"</screen>
+
+    <para>Empty <filename>/etc/courier/authmysqlrc</filename> and paste the
+    following (change you password.</para>
+
+    <screen>MYSQL_SERVER localhost
+MYSQL_USERNAME mailadmin
+MYSQL_PASSWORD <userinput>newpassword</userinput>
+MYSQL_PORT 0
+MYSQL_DATABASE mail
+MYSQL_USER_TABLE mailbox
+MYSQL_CRYPT_PWFIELD password
+MYSQL_UID_FIELD 5000
+MYSQL_GID_FIELD 5000
+MYSQL_LOGIN_FIELD username
+MYSQL_HOME_FIELD "/home/vmail"
+MYSQL_MAILDIR_FIELD CONCAT(SUBSTRING_INDEX(username,'@',-1),'/',SUBSTRING_INDEX(username,'@',1),'/')
+MYSQL_QUOTA_FIELD concat(quota,'S')</screen>
+
+    <para>Notice that the QUOTE_FIELD has an “S” appended to the value. This
+    is because Postfix Admin stores MailDir quota as an integer, and Courier
+    maildrop expects the quota value to be in the format XXXS, where XXX
+    represent the number of bytes that can be stored in the Maildir, and “S”
+    stands for size. </para>
+
+    <para>Maildrop can also use XXXC, where “C” I guess stands for “COUNT”
+    because this value stands for number of messages that MailDir can
+    store.</para>
+  </section>
+
+  <section>
+    <title>Use certificates</title>
+
+    <para>Edit <filename>/etc/courier/imapd-ssl</filename> and change the
+    values of <varname>TLS_CERTFILE</varname> and
+    <filename>TLS_TRUSTCERTS</filename> to </para>
+
+    <screen>TLS_CERTFILE=/etc/ssl/self-signed/server.pem
+TLS_TRUSTCERTS=/etc/ssl/self-signed/server.crt</screen>
+
+    <para>To restart Courier you have to restart couple of services.</para>
+
+    <screen>/etc/init.d/courier-authdaemon restart
+/etc/init.d/courier-imap restart
+/etc/init.d/courier-imap-ssl restart</screen>
+
+    <para>And if you have it installed POP3 you need to restart those as
+    well.</para>
+
+    <screen>/etc/init.d/courier-pop restart
+/etc/init.d/courier-pop-ssl restart</screen>
+
+    <para>If you would like users of every virtual domain on your server to
+    connect to <systemitem
+    class="fqdomainname">mail.their-domain.com</systemitem> instead of to
+    <systemitem class="fqdomainname">atlantis.example.com</systemitem> you
+    will have to sign new certificates for every domain and also use a
+    separate IP address for each virtual host. Information on placing
+    certificates for various hosts can be found in
+    <filename>/etc/courier/imapd-ssl</filename>. </para>
+  </section>
+
+  <section>
+    <title>Firewall rules</title>
+
+    <para>You have to change Firewall rules to allow inbound connections to
+    ports that Courier uses:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Pop and secure Pop use ports 110 and 995 respectively.</para>
+      </listitem>
+
+      <listitem>
+        <para>Imap and secure imap use ports 143 and 993 respectively.</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Commit your changes</title>
+
+    <para>If you are using etckeeper now is a good time to commit the changes
+    you made.</para>
+
+    <programlisting>etckeeper commit "Configured Courier"</programlisting>
+  </section>
 </section>
