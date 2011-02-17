@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Building a mail server on Debian 6.0</title><link rel="stylesheet" href="docbook.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.0" /><link rel="home" href="#id36883989" title="Building a mail server on Debian 6.0" /><link rel="next" href="#id36883937" title="Foreword" /></head><body><div class="book" title="Building a mail server on Debian 6.0"><div class="titlepage"><div><div><h1 class="title"><a id="id36883989"></a>Building a mail server on Debian 6.0</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Goran</span> <span class="surname">Jurić</span></h3></div></div><div><p class="releaseinfo">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Building a mail server on Debian 6.0</title><link rel="stylesheet" href="docbook.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.75.0" /><link rel="home" href="#id36884166" title="Building a mail server on Debian 6.0" /><link rel="next" href="#id36884113" title="Foreword" /></head><body><div class="book" title="Building a mail server on Debian 6.0"><div class="titlepage"><div><div><h1 class="title"><a id="id36884166"></a>Building a mail server on Debian 6.0</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Goran</span> <span class="surname">Jurić</span></h3></div></div><div><p class="releaseinfo">
       This is version 0.0.1 of Building a mail server on Debian.
-    </p></div><div><p class="copyright">Copyright © 2010 Goran Jurić</p></div><div><div class="legalnotice" title="Legal Notices"><a id="id36883968"></a>
+    </p></div><div><p class="copyright">Copyright © 2010 Goran Jurić</p></div><div><div class="legalnotice" title="Legal Notices"><a id="id36884144"></a>
       <p class="legalnotice-title"><b>Legal Notices</b></p>
 
       <p>Permission is granted to copy, distribute and/or modify this
@@ -13,10 +13,10 @@
       a copy of the GFDL at this
       <a class="link" href="http://www.gnu.org/copyleft/fdl.html" target="_top">link</a>.
       </p>
-    </div></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="preface"><a href="#id36883937">Foreword</a></span></dt><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#introduction.why.postfix">1.1. Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">1.2. Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">1.3. Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">1.4. Required knowledge</a></span></dt></dl></dd><dt><span class="chapter"><a href="#preparation">2. Preparation</a></span></dt><dd><dl><dt><span class="section"><a href="#preparation.debian-installation">2.1. Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">2.2. Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">2.3. Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">2.4. Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">2.5. NTP - time synchronization</a></span></dt></dl></dd><dt><span class="chapter"><a href="#security">3. Security</a></span></dt><dd><dl><dt><span class="section"><a href="#security.certificates">3.1. Server certificates</a></span></dt><dt><span class="section"><a href="#security.firewall">3.2. Firewall</a></span></dt><dt><span class="section"><a href="#security.limiting-ssh">3.3. Limiting SSH access</a></span></dt><dt><span class="section"><a href="#security.intrusion-detection">3.4. Intrusion detection</a></span></dt></dl></dd><dt><span class="chapter"><a href="#mail-server">4. Mail server</a></span></dt><dd><dl><dt><span class="section"><a href="#dns">4.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">4.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">4.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">4.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">4.2.3. MySQL</a></span></dt><dt><span class="section"><a href="#postfix.sasl">4.2.4. Saslauthd</a></span></dt><dt><span class="section"><a href="#postfix.tls">4.2.5. TLS</a></span></dt><dt><span class="section"><a href="#id36886527">4.2.6. Submission port</a></span></dt><dt><span class="section"><a href="#id36886560">4.2.7. Blocking certain attachments</a></span></dt><dt><span class="section"><a href="#id36886594">4.2.8. Maximum message size</a></span></dt><dt><span class="section"><a href="#id36886612">4.2.9. Commit your changes</a></span></dt><dt><span class="section"><a href="#id36886627">4.2.10. Important commands</a></span></dt></dl></dd><dt><span class="section"><a href="#courier">4.3. Courier</a></span></dt><dd><dl><dt><span class="section"><a href="#courier.installation">4.3.1. Installation</a></span></dt><dt><span class="section"><a href="#courier.certificates">4.3.2. Use certificates</a></span></dt><dt><span class="section"><a href="#courier.firewall-rules">4.3.3. Firewall rules</a></span></dt><dt><span class="section"><a href="#courier.commit-changes">4.3.4. Commit your changes</a></span></dt></dl></dd><dt><span class="section"><a href="#amavis">4.4. amavisd-new</a></span></dt></dl></dd><dt><span class="chapter"><a href="#todo">5. TODO</a></span></dt></dl></div>
+    </div></div></div><hr /></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="preface"><a href="#id36884113">Foreword</a></span></dt><dt><span class="chapter"><a href="#introduction">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#introduction.why.postfix">1.1. Why Postfix</a></span></dt><dt><span class="section"><a href="#introduction.why.debian">1.2. Why Debian</a></span></dt><dt><span class="section"><a href="#introduction.software-used">1.3. Sofware used</a></span></dt><dt><span class="section"><a href="#introduction.required-knowledge">1.4. Required knowledge</a></span></dt></dl></dd><dt><span class="chapter"><a href="#preparation">2. Preparation</a></span></dt><dd><dl><dt><span class="section"><a href="#preparation.debian-installation">2.1. Debian installation</a></span></dt><dt><span class="section"><a href="#preparation.tracking-changes">2.2. Tracking configuration changes</a></span></dt><dt><span class="section"><a href="#preparation.essentials">2.3. Essential software</a></span></dt><dt><span class="section"><a href="#preparation.static-ip">2.4. Setting a static IP address</a></span></dt><dt><span class="section"><a href="#preparation.ntp">2.5. NTP - time synchronization</a></span></dt></dl></dd><dt><span class="chapter"><a href="#security">3. Security</a></span></dt><dd><dl><dt><span class="section"><a href="#security.certificates">3.1. Server certificates</a></span></dt><dt><span class="section"><a href="#security.firewall">3.2. Firewall</a></span></dt><dt><span class="section"><a href="#security.limiting-ssh">3.3. Limiting SSH access</a></span></dt><dt><span class="section"><a href="#security.intrusion-detection">3.4. Intrusion detection</a></span></dt></dl></dd><dt><span class="chapter"><a href="#mail-server">4. Mail server</a></span></dt><dd><dl><dt><span class="section"><a href="#dns">4.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">4.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">4.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">4.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">4.2.3. MySQL</a></span></dt><dt><span class="section"><a href="#postfix.sasl">4.2.4. Saslauthd</a></span></dt><dt><span class="section"><a href="#postfix.tls">4.2.5. TLS</a></span></dt><dt><span class="section"><a href="#id36886703">4.2.6. Submission port</a></span></dt><dt><span class="section"><a href="#id36886737">4.2.7. Blocking certain attachments</a></span></dt><dt><span class="section"><a href="#id36886770">4.2.8. Maximum message size</a></span></dt><dt><span class="section"><a href="#id36886788">4.2.9. Commit your changes</a></span></dt><dt><span class="section"><a href="#id36886803">4.2.10. Important commands</a></span></dt></dl></dd><dt><span class="section"><a href="#courier">4.3. Courier</a></span></dt><dd><dl><dt><span class="section"><a href="#courier.installation">4.3.1. Installation</a></span></dt><dt><span class="section"><a href="#courier.certificates">4.3.2. Use certificates</a></span></dt><dt><span class="section"><a href="#courier.firewall-rules">4.3.3. Firewall rules</a></span></dt><dt><span class="section"><a href="#courier.commit-changes">4.3.4. Commit your changes</a></span></dt></dl></dd><dt><span class="section"><a href="#antispam">4.4. Fighting spam</a></span></dt><dd><dl><dt><span class="section"><a href="#antispam.clamav">4.4.1. ClamAV</a></span></dt><dt><span class="section"><a href="#id36887117">4.4.2. SpamAssassin</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#todo">5. TODO</a></span></dt></dl></div>
   
 
-  <div class="preface" title="Foreword"><div class="titlepage"><div><div><h2 class="title"><a id="id36883937"></a>Foreword</h2></div></div></div>
+  <div class="preface" title="Foreword"><div class="titlepage"><div><div><h2 class="title"><a id="id36884113"></a>Foreword</h2></div></div></div>
     
 
     <p>The internet is full of information on how to do just about
@@ -605,9 +605,6 @@ iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 ## Accept SpamAssassin (port 783)
 #iptables -A INPUT -p tcp -m tcp --syn --dport 783 -j ACCEPT
 #
-## Accept imaps (port 993)
-#iptables -A INPUT -p tcp -m tcp --syn --dport 993 -j ACCEPT
-#
 ## Accept pop3s (port 995)
 #iptables -A INPUT -p tcp -m tcp --syn --dport 995 -j ACCEPT
 #
@@ -864,7 +861,7 @@ apt-get autoremove</pre>
   </div>
 </div>
 
-  <div class="chapter" title="Chapter 4. Mail server"><div class="titlepage"><div><div><h2 class="title"><a id="mail-server"></a>Chapter 4. Mail server</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dns">4.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">4.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">4.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">4.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">4.2.3. MySQL</a></span></dt><dt><span class="section"><a href="#postfix.sasl">4.2.4. Saslauthd</a></span></dt><dt><span class="section"><a href="#postfix.tls">4.2.5. TLS</a></span></dt><dt><span class="section"><a href="#id36886527">4.2.6. Submission port</a></span></dt><dt><span class="section"><a href="#id36886560">4.2.7. Blocking certain attachments</a></span></dt><dt><span class="section"><a href="#id36886594">4.2.8. Maximum message size</a></span></dt><dt><span class="section"><a href="#id36886612">4.2.9. Commit your changes</a></span></dt><dt><span class="section"><a href="#id36886627">4.2.10. Important commands</a></span></dt></dl></dd><dt><span class="section"><a href="#courier">4.3. Courier</a></span></dt><dd><dl><dt><span class="section"><a href="#courier.installation">4.3.1. Installation</a></span></dt><dt><span class="section"><a href="#courier.certificates">4.3.2. Use certificates</a></span></dt><dt><span class="section"><a href="#courier.firewall-rules">4.3.3. Firewall rules</a></span></dt><dt><span class="section"><a href="#courier.commit-changes">4.3.4. Commit your changes</a></span></dt></dl></dd><dt><span class="section"><a href="#amavis">4.4. amavisd-new</a></span></dt></dl></div>
+  <div class="chapter" title="Chapter 4. Mail server"><div class="titlepage"><div><div><h2 class="title"><a id="mail-server"></a>Chapter 4. Mail server</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#dns">4.1. DNS settings</a></span></dt><dt><span class="section"><a href="#postfix">4.2. Postfix</a></span></dt><dd><dl><dt><span class="section"><a href="#postfix.inital-settings">4.2.1. Initial settings</a></span></dt><dt><span class="section"><a href="#postfix.virtual-users">4.2.2. Virtual users and domains</a></span></dt><dt><span class="section"><a href="#postfix.mysql">4.2.3. MySQL</a></span></dt><dt><span class="section"><a href="#postfix.sasl">4.2.4. Saslauthd</a></span></dt><dt><span class="section"><a href="#postfix.tls">4.2.5. TLS</a></span></dt><dt><span class="section"><a href="#id36886703">4.2.6. Submission port</a></span></dt><dt><span class="section"><a href="#id36886737">4.2.7. Blocking certain attachments</a></span></dt><dt><span class="section"><a href="#id36886770">4.2.8. Maximum message size</a></span></dt><dt><span class="section"><a href="#id36886788">4.2.9. Commit your changes</a></span></dt><dt><span class="section"><a href="#id36886803">4.2.10. Important commands</a></span></dt></dl></dd><dt><span class="section"><a href="#courier">4.3. Courier</a></span></dt><dd><dl><dt><span class="section"><a href="#courier.installation">4.3.1. Installation</a></span></dt><dt><span class="section"><a href="#courier.certificates">4.3.2. Use certificates</a></span></dt><dt><span class="section"><a href="#courier.firewall-rules">4.3.3. Firewall rules</a></span></dt><dt><span class="section"><a href="#courier.commit-changes">4.3.4. Commit your changes</a></span></dt></dl></dd><dt><span class="section"><a href="#antispam">4.4. Fighting spam</a></span></dt><dd><dl><dt><span class="section"><a href="#antispam.clamav">4.4.1. ClamAV</a></span></dt><dt><span class="section"><a href="#id36887117">4.4.2. SpamAssassin</a></span></dt></dl></dd></dl></div>
   
 
   <p>We are going to install <span class="application">Postfix</span> as our MTA
@@ -1422,7 +1419,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</pre>
     selected.</p>
   </div>
 
-  <div class="section" title="4.2.6. Submission port"><div class="titlepage"><div><div><h3 class="title"><a id="id36886527"></a>4.2.6. Submission port</h3></div></div></div>
+  <div class="section" title="4.2.6. Submission port"><div class="titlepage"><div><div><h3 class="title"><a id="id36886703"></a>4.2.6. Submission port</h3></div></div></div>
     
 
     <p>Many ISPs today block port 25 for users. To be able to send email
@@ -1445,7 +1442,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</pre>
     </div>
   </div>
 
-  <div class="section" title="4.2.7. Blocking certain attachments"><div class="titlepage"><div><div><h3 class="title"><a id="id36886560"></a>4.2.7. Blocking certain attachments</h3></div></div></div>
+  <div class="section" title="4.2.7. Blocking certain attachments"><div class="titlepage"><div><div><h3 class="title"><a id="id36886737"></a>4.2.7. Blocking certain attachments</h3></div></div></div>
     
 
     <p>To block certain extensions of attachments (.exe, .bat, …) edit
@@ -1463,7 +1460,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</pre>
     want.</p>
   </div>
 
-  <div class="section" title="4.2.8. Maximum message size"><div class="titlepage"><div><div><h3 class="title"><a id="id36886594"></a>4.2.8. Maximum message size</h3></div></div></div>
+  <div class="section" title="4.2.8. Maximum message size"><div class="titlepage"><div><div><h3 class="title"><a id="id36886770"></a>4.2.8. Maximum message size</h3></div></div></div>
     
 
     <p>Default maximum size of the message is 10240000 bytes (10 MB), to
@@ -1473,7 +1470,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</pre>
     <pre class="screen">message_size_limit = 20480000</pre>
   </div>
 
-  <div class="section" title="4.2.9. Commit your changes"><div class="titlepage"><div><div><h3 class="title"><a id="id36886612"></a>4.2.9. Commit your changes</h3></div></div></div>
+  <div class="section" title="4.2.9. Commit your changes"><div class="titlepage"><div><div><h3 class="title"><a id="id36886788"></a>4.2.9. Commit your changes</h3></div></div></div>
     
 
     <p>If you are using etckeeper now is a good time to commit the changes
@@ -1482,7 +1479,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</pre>
     <pre class="programlisting">etckeeper commit "Configured Postfix"</pre>
   </div>
 
-  <div class="section" title="4.2.10. Important commands"><div class="titlepage"><div><div><h3 class="title"><a id="id36886627"></a>4.2.10. Important commands</h3></div></div></div>
+  <div class="section" title="4.2.10. Important commands"><div class="titlepage"><div><div><h3 class="title"><a id="id36886803"></a>4.2.10. Important commands</h3></div></div></div>
     
 
     <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
@@ -1621,9 +1618,120 @@ TLS_TRUSTCERTS=/etc/ssl/self-signed/server.crt</pre>
     <pre class="programlisting">etckeeper commit "Configured Courier"</pre>
   </div>
 </div>
-  <div class="section" title="4.4. amavisd-new"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="amavis"></a>4.4. amavisd-new</h2></div></div></div>
+  <div class="section" title="4.4. Fighting spam"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="antispam"></a>4.4. Fighting spam</h2></div></div></div>
   
 
+  <p>Amavisd-new is a program that receives mail from Postfix, passes it
+  through SpamAssassin and ClamAV and based on the user (or global) settings
+  decides if the mail should be flagged as a spam, deleted or delivered as a
+  legitimate mail.</p>
+
+  <p>We are going to install all of the packages at once.</p>
+
+  <pre class="programlisting">apt-get install amavisd-new spamassassin clamav-daemon</pre>
+
+  <div class="section" title="4.4.1. ClamAV"><div class="titlepage"><div><div><h3 class="title"><a id="antispam.clamav"></a>4.4.1. ClamAV</h3></div></div></div>
+    
+
+    <p>ClamAV needs some utilities that are not provided in the mail Debian
+    repository. This utillities will be used to extract email attachments so
+    the content of the archives can be scanned for potential viruses.</p>
+
+    <p>Because of this utillites we need to add
+    <span class="emphasis"><em>contrib</em></span> and <span class="emphasis"><em>non-free</em></span>
+    repositories to the <code class="filename">/etc/apt/sources.list</code>. To do this
+    you have to append ”<code class="computeroutput">contrib non-free</code>” on
+    every line that starts with deb, and ends with main. Your
+    <code class="filename">/etc/apt/sources.list</code> file should look like
+    this:</p>
+
+    <pre class="screen">deb http://ftp2.de.debian.org/debian/ squeeze main contrib non-free
+deb-src http://ftp2.de.debian.org/debian/ squeeze main
+
+deb http://security.debian.org/ squeeze/updates main contrib non-free
+deb-src http://security.debian.org/ squeeze/updates main
+
+deb http://ftp2.de.debian.org/debian/ squeeze-updates main contrib non-free
+deb-src http://ftp2.de.debian.org/debian/ squeeze-updates main</pre>
+
+    <p>After editing <code class="filename">/etc/apt/sources.list</code> commit the
+    changes you made to <code class="filename">sources.list</code> with etckeeper. Now
+    we need to update the apt database. While we are at it we can also check
+    if there are any packages that should be updated.</p>
+
+    <pre class="programlisting">apt-get update
+apt-get upgrade</pre>
+
+    <p>Now we are ready to install utilities for decompression of
+    archives.</p>
+
+    <pre class="programlisting">apt-get install arj bzip2 cabextract cpio file gzip lha nomarch pax rar unrar unzip zip zoo</pre>
+
+    <p>Add clamav user to the amavis group and vice versa in order for
+    Clamav to have access to scan files: </p>
+
+    <pre class="screen">adduser clamav amavis
+adduser amavis clamav</pre>
+
+    <p></p>
+
+    <p></p>
+  </div>
+
+  <div class="section" title="4.4.2. SpamAssassin"><div class="titlepage"><div><div><h3 class="title"><a id="id36887117"></a>4.4.2. SpamAssassin</h3></div></div></div>
+    
+
+    <p>Both SpamAssassind and amavisd-new are Perl programs, and
+    amavisd-new includes SpamaAssassins libraries so it doesn't need
+    SpamAssassin daemon running on the server. We are going to turn off the
+    daemon and prevent it from starting up during boot.</p>
+
+    <pre class="programlisting">/etc/init.d/spamassassin stop
+update-rc.d -f spamassassin remove
+etckeeper commit "Removed spamassassin from rcX.d"</pre>
+
+    <p>To enable DKIM checking of received emails in SpamAssassin one has
+    to install Mail::DKIM Perl library.</p>
+
+    <pre class="programlisting">apt-get install libmail-dkim-perl</pre>
+
+    <p>Edit <code class="filename">/etc/spamassassin/v312.pre</code> and uncomment
+    the line:</p>
+
+    <pre class="screen">loadplugin Mail::SpamAssassin::Plugin::DKIM</pre>
+
+    <p>After that you can try running SpamAssassing manually: </p>
+
+    <pre class="programlisting">spamassassin -D -t &lt; /usr/share/doc/spamassassin/examples/sample-spam.txt 2&gt;&amp;1 | tee sa.out</pre>
+
+    <p>You should see DKIM mentioned in the sa.out file, and the end of the
+    output should look something like this: </p>
+
+    <pre class="screen">Content analysis details: (1005.3 points, 5.0 required)
+
+ pts rule name              description
+---- ---------------------- --------------------------------------------------
+-0.0 NO_RELAYS              Informational: message was not relayed via SMTP
+1000 GTUBE                  BODY: Generic Test for Unsolicited Bulk Email
+ 1.5 RAZOR2_CF_RANGE_E4_51_100 Razor2 gives engine 4 confidence level
+                            above 50%
+                            [cf: 100]
+ 0.5 RAZOR2_CHECK           Listed in Razor2 (http://razor.sf.net/)
+ 0.5 RAZOR2_CF_RANGE_51_100 Razor2 gives confidence level above 50%
+                            [cf: 100]
+ 2.8 PYZOR_CHECK            Listed in Pyzor (http://pyzor.sf.net/)
+ 0.0 DIGEST_MULTIPLE        Message hits more than one network digest check
+-0.0 NO_RECEIVED            Informational: message has no Received headers
+</pre>
+
+    <div class="section" title="4.4.2.1. Training SpamAssassin"><div class="titlepage"><div><div><h4 class="title"><a id="id36887251"></a>4.4.2.1. Training SpamAssassin</h4></div></div></div>
+      
+
+      <p>Bayes filtering is a strong To learn SpamAssassin what is spam,
+      run the sa-learn utillity on your Junk folder (move into the Junk folder
+      spam, and only spam!!!!)</p>
+    </div>
+  </div>
 </div>
 
 </div>

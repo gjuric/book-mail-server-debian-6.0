@@ -1,12 +1,372 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section version="5.0" xml:id="amavis"
-         xmlns="http://docbook.org/ns/docbook"
+<section version="5.0" xml:id="antispam" xmlns="http://docbook.org/ns/docbook"
          xmlns:xl="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:mml="http://www.w3.org/1998/Math/MathML"
          xmlns:html="http://www.w3.org/1999/xhtml"
          xmlns:db="http://docbook.org/ns/docbook">
-  <title>amavisd-new</title>
+  <title>Fighting spam</title>
 
+  <para>Amavisd-new is a program that receives mail from Postfix, passes it
+  through SpamAssassin and ClamAV and based on the user (or global) settings
+  decides if the mail should be flagged as a spam, deleted or delivered as a
+  legitimate mail.</para>
+
+  <para>We are going to install all of the packages at once.</para>
+
+  <programlisting>apt-get install amavisd-new spamassassin clamav-daemon</programlisting>
+
+  <section xml:id="antispam.clamav">
+    <title>ClamAV</title>
+
+    <para>ClamAV needs some utilities that are not provided in the mail Debian
+    repository. This utillities will be used to extract email attachments so
+    the content of the archives can be scanned for potential viruses.</para>
+
+    <para>Because of this utillites we need to add
+    <emphasis>contrib</emphasis> and <emphasis>non-free</emphasis>
+    repositories to the <filename>/etc/apt/sources.list</filename>. To do this
+    you have to append ”<computeroutput>contrib non-free</computeroutput>” on
+    every line that starts with deb, and ends with main. Your
+    <filename>/etc/apt/sources.list</filename> file should look like
+    this:</para>
+
+    <screen>deb http://ftp2.de.debian.org/debian/ squeeze main contrib non-free
+deb-src http://ftp2.de.debian.org/debian/ squeeze main
+
+deb http://security.debian.org/ squeeze/updates main contrib non-free
+deb-src http://security.debian.org/ squeeze/updates main
+
+deb http://ftp2.de.debian.org/debian/ squeeze-updates main contrib non-free
+deb-src http://ftp2.de.debian.org/debian/ squeeze-updates main</screen>
+
+    <para>After editing <filename>/etc/apt/sources.list</filename> commit the
+    changes you made to <filename>sources.list</filename> with etckeeper. Now
+    we need to update the apt database. While we are at it we can also check
+    if there are any packages that should be updated.</para>
+
+    <programlisting>apt-get update
+apt-get upgrade</programlisting>
+
+    <para>Now we are ready to install utilities for decompression of
+    archives.</para>
+
+    <programlisting>apt-get install arj bzip2 cabextract cpio file gzip lha nomarch pax rar unrar unzip zip zoo</programlisting>
+
+    <para>Add clamav user to the amavis group and vice versa in order for
+    Clamav to have access to scan files: </para>
+
+    <screen>adduser clamav amavis
+adduser amavis clamav</screen>
+  </section>
+
+  <section xml:id="antispam.spamassassin">
+    <title>SpamAssassin</title>
+
+    <para>Both SpamAssassind and amavisd-new are Perl programs, and
+    amavisd-new includes SpamaAssassins libraries so it doesn't need
+    SpamAssassin daemon running on the server. We are going to turn off the
+    daemon and prevent it from starting up during boot.</para>
+
+    <programlisting>/etc/init.d/spamassassin stop
+update-rc.d -f spamassassin remove
+etckeeper commit "Removed spamassassin from rcX.d"</programlisting>
+
+    <para>To enable DKIM checking of received emails in SpamAssassin one has
+    to install Mail::DKIM Perl library.</para>
+
+    <programlisting>apt-get install libmail-dkim-perl</programlisting>
+
+    <para>Edit <filename>/etc/spamassassin/v312.pre</filename> and uncomment
+    the line:</para>
+
+    <screen>loadplugin Mail::SpamAssassin::Plugin::DKIM</screen>
+
+    <para>After that you can try running SpamAssassing manually: </para>
+
+    <programlisting>spamassassin -D -t &lt; /usr/share/doc/spamassassin/examples/sample-spam.txt 2&gt;&amp;1 | tee sa.out</programlisting>
+
+    <para>You should see DKIM mentioned in the sa.out file, and the end of the
+    output should look something like this: </para>
+
+    <screen>Content analysis details: (1005.3 points, 5.0 required)
+
+ pts rule name              description
+---- ---------------------- --------------------------------------------------
+-0.0 NO_RELAYS              Informational: message was not relayed via SMTP
+1000 GTUBE                  BODY: Generic Test for Unsolicited Bulk Email
+ 1.5 RAZOR2_CF_RANGE_E4_51_100 Razor2 gives engine 4 confidence level
+                            above 50%
+                            [cf: 100]
+ 0.5 RAZOR2_CHECK           Listed in Razor2 (http://razor.sf.net/)
+ 0.5 RAZOR2_CF_RANGE_51_100 Razor2 gives confidence level above 50%
+                            [cf: 100]
+ 2.8 PYZOR_CHECK            Listed in Pyzor (http://pyzor.sf.net/)
+ 0.0 DIGEST_MULTIPLE        Message hits more than one network digest check
+-0.0 NO_RECEIVED            Informational: message has no Received headers
+</screen>
+
+    <section xml:id="antispam.spamassassin.training">
+      <title>Training SpamAssassin</title>
+
+      <para>Bayes filtering is a strong weapon for fighting spam. It works by
+      learning what is spam to you and what isn't. For SpamAssassing to start
+      using Bayes filtering you have to train it first. Training your Bayes
+      filters is something that you should do on a regular basis. The more
+      emails it process the smarter it gets.</para>
+
+      <para>To learn SpamAssassin what is spam, you have to use the sa-learn
+      utillity on a folder where your spam messages are stored (in my case the
+      folder is called <filename>Junk</filename>).</para>
+
+      <para>Because SpamAssassin is run by amavisd-new you have to run the
+      sa-learn utility as the amavis user.</para>
+
+      <programlisting>su amavis sa-learn --no-sync --spam /home/vmail/example.com/demo/.Junk/cur</programlisting>
+
+      <para>To learn what is not spam run sa-learn in the folder that only
+      contains your non-spam mail (in this case, sa-learn examines the
+      <filename>Inbox</filename> folder).</para>
+
+      <programlisting>su amavis sa-learn --no-sync --ham /home/vmail/example.com/demo/cur</programlisting>
+
+      <para>Bayes filtering will be used once you train SpamAssassin on more
+      than 200 spam <emphasis>and</emphasis> ham messages. </para>
+
+      <para>To update SpamAssassin you can run:</para>
+
+      <programlisting>sa-update -D</programlisting>
+
+      <para><computeroutput>-D</computeroutput> is for debug.</para>
+    </section>
+
+    <section xml:id="antispam.spamassassin.bayes-mysql">
+      <title>Move Bayes data to MySQL</title>
+
+      <para>TODO</para>
+    </section>
+  </section>
+
+  <section xml:id="antispam.amavis">
+    <title>Amavisd-new</title>
+
+    <para>Edit <filename>/etc/amavis/conf.d/15-content_filter_mode</filename>
+    and ucomment antivirus and spam checking</para>
+
+    <screen>use strict;
+
+# You can modify this file to re-enable SPAM checking through spamassassin
+# and to re-enable antivirus checking.
+
+#
+# Default antivirus checking mode
+# Uncomment the two lines below to enable it back
+#
+
+@bypass_virus_checks_maps = (
+   \%bypass_virus_checks, \@bypass_virus_checks_acl, \$bypass_virus_checks_re);
+
+
+#
+# Default SPAM checking mode
+# Uncomment the two lines below to enable it back
+#
+
+@bypass_spam_checks_maps = (
+   \%bypass_spam_checks, \@bypass_spam_checks_acl, \$bypass_spam_checks_re);
+
+1;  # ensure a defined return
+</screen>
+
+    <para>To integrate Amavis with Postfix we need to add a content_filter in
+    <filename>/etc/postfix/main.cf</filename>.</para>
+
+    <programlisting>content_filter = smtp-amavis:[127.0.0.1]:10024</programlisting>
+
+    <para>Open <filename>/etc/postfix/master.cf</filename> and add this at the
+    end of the file: </para>
+
+    <screen>smtp-amavis     unix    -       -       -       -       2       smtp
+        -o smtp_data_done_timeout=1200
+        -o smtp_send_xforward_command=yes
+        -o disable_dns_lookups=yes
+        -o max_use=20
+
+127.0.0.1:10025 inet    n       -       -       -       -       smtpd
+        -o content_filter=
+        -o local_recipient_maps=
+        -o relay_recipient_maps=
+        -o smtpd_restriction_classes=
+        -o smtpd_delay_reject=no
+        -o smtpd_client_restrictions=permit_mynetworks,reject
+        -o smtpd_helo_restrictions=
+        -o smtpd_sender_restrictions=
+        -o smtpd_recipient_restrictions=permit_mynetworks,reject
+        -o smtpd_data_restrictions=reject_unauth_pipelining
+        -o smtpd_end_of_data_restrictions=
+        -o mynetworks=127.0.0.0/8
+        -o smtpd_error_sleep_time=0
+        -o smtpd_soft_error_limit=1001
+        -o smtpd_hard_error_limit=1000
+        -o smtpd_client_connection_count_limit=0
+        -o smtpd_client_connection_rate_limit=0
+        -o receive_override_options=no_header_body_checks,no_unknown_recipient_checks</screen>
+
+    <para>and add this immediately below the “pickup” transport
+    service:</para>
+
+    <screen>         -o content_filter=
+         -o receive_override_options=no_header_body_checks</screen>
+
+    <para>This will prevent messages that are generated to report on spam from
+    being classified as spam.</para>
+
+    <para>Amavisd-new listens on port 1024 where Postfix sends all of the mail
+    coming into the server. After processing the email amavisd-new returns the
+    mail to Postfix on port 1025 for final delivery.</para>
+
+    <para>Edit <filename>/etc/amavis/conf.d/50-user</filename> and paste this
+    into the file:</para>
+
+    <screen>use strict;
+
+@local_domains_acl = ( ".$mydomain" );
+
+$sa_spam_subject_tag = 'SPAM &gt; ';
+$sa_tag_level_deflt  = -999;  # add spam info headers if at, or above that level
+$sa_tag2_level_deflt = 5; # add 'spam detected' headers at that level
+$sa_kill_level_deflt = 12; # triggers spam evasive actions
+
+$final_virus_destiny      = D_DISCARD;  # (data not lost, see virus quarantine)
+$final_banned_destiny     = D_REJECT;   # D_REJECT when front-end MTA
+$final_spam_destiny       = D_DISCARD;
+$final_bad_header_destiny = D_PASS;     # False-positive prone (for spam)
+
+#------------ Do not modify anything below this line -------------
+1;  # ensure a defined return
+</screen>
+
+    <para>Of course, you do not just want to paste stuff into configuration
+    files without knowing what are you actually doing. So let us go througg
+    the file, line by line:</para>
+
+    <screen>@local_domains_acl = ( ".$mydomain" );</screen>
+
+    <para>This is a list of domains for which this server considers itself as
+    a final destination. If you do not add all your domains here, they will
+    not be processed by amavis, so if you have more domains on your server,
+    except for the default line, this should look something like this: </para>
+
+    <screen>@local_domains_acl = ( ".$mydomain", "domain2.com", "domain3.org" );</screen>
+
+    <para>Later, we will see how can automate this to read the information
+    from the database.</para>
+
+    <screen>$sa_spam_subject_tag = 'SPAM &gt; ';
+$sa_tag_level_deflt  = -999;  # add spam info headers if at, or above that level
+$sa_tag2_level_deflt = 5; # add 'spam detected' headers at that level
+$sa_kill_level_deflt = 12; # triggers spam evasive actions</screen>
+
+    <para>When SpamAssassin processes message, it gives them a score
+    identifying what is the probability of message being a spam.
+    <computeroutput>$sa_tag_level_deflt</computeroutput> tells amavis that ig
+    the score is greater or equal to this level that amavis should append
+    X-Spam headers to the message. The score of -999 means that we want to
+    apply <computeroutput>X-Spam</computeroutput> header to all of our
+    messages, so it is easier for us to see why is, or why is not, a message
+    considered spam by examining the headers of the message. </para>
+
+    <para><computeroutput>$sa_tag2_level_deflt = 5;</computeroutput> is the
+    spam level the message needs to reach for amavis to apply the header
+    <computeroutput>X-Spam-Flag: YES</computeroutput> so we (our mail client)
+    knows that this message is considered to be spam. At this level the
+    message subject is prefixed with the value of the variable
+    <computeroutput>$sa_spam_subject_tag</computeroutput>. In this case the
+    subject is prefixed with “<computeroutput>SPAM &gt; </computeroutput>”.
+    </para>
+
+    <para><computeroutput>$sa_kill_level_deflt</computeroutput> holds the
+    value of the spam level that message needs to reach to do something with
+    the message. What we are going to do with messages that are spam depends
+    of the value of <computeroutput>$final_spam_destiny
+    variable</computeroutput>. In this case we are discarding this
+    messages.</para>
+
+    <para>This means that the message is not going to reach to recipients
+    mailbox at all. But that does not mean that the message is lost. Spam
+    messages that are discarded can still be fetched from the system. Default
+    configuration is to store them in the
+    <filename>/var/lib/amavis/virusmails</filename> folder. It is possible to
+    store them in the database, for this you have the add this lines as
+    well:</para>
+
+    <screen>@lookup_sql_dsn =  ( ['DBI:mysql:database=DATABASE-NAME;host=127.0.0.1;port=3306', 'USERNAME', 'PASSWORD']);
+@storage_sql_dsn = @lookup_sql_dsn;
+
+$inet_socket_port = [10024,9998];
+$interface_policy{'9998'} = 'AM.PDP-INET';
+$policy_bank{'AM.PDP-INET'} = {
+  protocol =&gt; 'AM.PDP',  # select Amavis policy delegation protocol
+  inet_acl =&gt; [qw( 127.0.0.1 [::1] )],  # restrict access to these IP addresses
+# auth_required_release =&gt; 0,  # don't require secret_id for amavisd-release
+};
+
+$virus_quarantine_method = 'sql:';
+$spam_quarantine_method = 'sql:';
+$banned_files_quarantine_method = 'sql:';
+$bad_header_quarantine_method = 'sql:';</screen>
+
+    <para>For this to work, you will have to create the database in MySQL and
+    change the value of <computeroutput>@lookup_sql_dsn</computeroutput>
+    variable to match your database, username &amp; password. You will have to
+    create the tables for this database by looking at the amavis
+    documentation). When you set this all up, you can use
+    <application>Mailzu</application> or <application>Postvis
+    Admin</application> to retrieve the quarantined messages. For users of
+    <application>SquirrelMail</application> webmail system, there as a plugin
+    called <application>AmavisNewSQL</application> which enables access for
+    users to quarantined messages that were addressed to them. </para>
+
+    <note>
+      <para>Quarantined messages (on the file system, or in the database) have
+      to be deleted periodically!</para>
+    </note>
+
+    <para>If you do not want to quarantine any of the messages, change</para>
+
+    <screen>$virus_quarantine_method = 'sql:';
+$spam_quarantine_method = 'sql:';
+$banned_files_quarantine_method = 'sql:';
+$bad_header_quarantine_method = 'sql:';</screen>
+
+    <para>to</para>
+
+    <screen>$virus_quarantine_method = undef;
+$spam_quarantine_method = undef;
+$banned_files_quarantine_method = undef;
+$bad_header_quarantine_method = undef;</screen>
+
+    <para>SQL support for amavis, except for easier access to quarantined
+    messages also provides features to change spam setting on a per user
+    basis. Once you create the database, and configure
+    <computeroutput>@lookup_sql_dsn</computeroutput> this part is very easy
+    achieved by reading through the amavis documentation.</para>
+
+    <para>Messages that have a spam value between
+    <computeroutput>$sa_tag2_level_deflt</computeroutput> and
+    <computeroutput>$sa_kill_level_deflt</computeroutput> are delivered into
+    the recipients mailbox and marked with “<computeroutput>SPAM
+    &gt;</computeroutput>” in the subject and have the
+    <computeroutput>X-Spam-Flag: YES</computeroutput> header added to them.
+    Although this may be enough for you, since I use only IMAP access to the
+    mailboxes I wanted to move this messages to the <filename>Junk</filename>
+    folder inside the users mailbox automatically. This has some benefits:
+    Inbox will not be filled with spam messages, but in case of a false
+    positive, user could check his Junk folder to check for messages marked as
+    spam. This folder can also be used for learning SpamAssassing what is
+    spam, and if users move the messages that are not recognized as spam to
+    this folder instead of deleting them SpamAssassin will get smarter about
+    what is considered to be spam, and what is not. </para>
+  </section>
 </section>
