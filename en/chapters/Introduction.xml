@@ -92,7 +92,8 @@
       </listitem>
 
       <listitem>
-        <para>Maildrop - for delivering mails to users mailboxes</para>
+        <para>Maildrop - for delivering mails to users mailboxes and quota
+        support</para>
       </listitem>
     </itemizedlist>
   </section>

@@ -64,10 +64,10 @@ adduser amavis clamav</screen>
   <section xml:id="antispam.spamassassin">
     <title>SpamAssassin</title>
 
-    <para>Both SpamAssassind and amavisd-new are Perl programs, and
-    amavisd-new includes SpamaAssassins libraries so it doesn't need
-    SpamAssassin daemon running on the server. We are going to turn off the
-    daemon and prevent it from starting up during boot.</para>
+    <para>Both SpamAssassin and amavisd-new are Perl programs, and amavisd-new
+    includes SpamaAssassins libraries so it doesn't need SpamAssassin daemon
+    running on the server. We are going to turn off the daemon and prevent it
+    from starting up during boot.</para>
 
     <programlisting>/etc/init.d/spamassassin stop
 update-rc.d -f spamassassin remove
@@ -78,10 +78,15 @@ etckeeper commit "Removed spamassassin from rcX.d"</programlisting>
 
     <programlisting>apt-get install libmail-dkim-perl</programlisting>
 
-    <para>Edit <filename>/etc/spamassassin/v312.pre</filename> and uncomment
-    the line:</para>
+    <para>Edit <filename>/etc/spamassassin/v312.pre</filename> and check that
+    this line is uncommented:</para>
 
     <screen>loadplugin Mail::SpamAssassin::Plugin::DKIM</screen>
+
+    <para>We are also going to install Pyzor and Razor for additional
+    checks.</para>
+
+    <programlisting>apt-get install pyzor razor</programlisting>
 
     <para>After that you can try running SpamAssassing manually:</para>
 
@@ -90,22 +95,21 @@ etckeeper commit "Removed spamassassin from rcX.d"</programlisting>
     <para>You should see DKIM mentioned in the sa.out file, and the end of the
     output should look something like this:</para>
 
-    <screen>Content analysis details: (1005.3 points, 5.0 required)
+    <screen>Content analysis details:   (1004.5 points, 5.0 required)
 
  pts rule name              description
 ---- ---------------------- --------------------------------------------------
 -0.0 NO_RELAYS              Informational: message was not relayed via SMTP
 1000 GTUBE                  BODY: Generic Test for Unsolicited Bulk Email
- 1.5 RAZOR2_CF_RANGE_E4_51_100 Razor2 gives engine 4 confidence level
+ 0.4 RAZOR2_CF_RANGE_51_100 Razor2 gives confidence level above 50%
+                            [cf: 100]
+ 0.5 RAZOR2_CF_RANGE_E4_51_100 Razor2 gives engine 4 confidence level
                             above 50%
                             [cf: 100]
- 0.5 RAZOR2_CHECK           Listed in Razor2 (http://razor.sf.net/)
- 0.5 RAZOR2_CF_RANGE_51_100 Razor2 gives confidence level above 50%
-                            [cf: 100]
- 2.8 PYZOR_CHECK            Listed in Pyzor (http://pyzor.sf.net/)
+ 1.7 RAZOR2_CHECK           Listed in Razor2 (http://razor.sf.net/)
+ 2.0 PYZOR_CHECK            Listed in Pyzor (http://pyzor.sf.net/)
  0.0 DIGEST_MULTIPLE        Message hits more than one network digest check
--0.0 NO_RECEIVED            Informational: message has no Received headers
-</screen>
+-0.0 NO_RECEIVED            Informational: message has no Received headers</screen>
 
     <section xml:id="antispam.spamassassin.training">
       <title>Training SpamAssassin</title>
@@ -248,7 +252,7 @@ $final_bad_header_destiny = D_PASS;     # False-positive prone (for spam)
 </screen>
 
     <para>Of course, you do not just want to paste stuff into configuration
-    files without knowing what are you actually doing. So let us go througg
+    files without knowing what are you actually doing. So let us go through
     the file, line by line:</para>
 
     <screen>@local_domains_acl = ( ".$mydomain" );</screen>
@@ -368,6 +372,190 @@ $bad_header_quarantine_method = undef;</screen>
     spam, and if users move the messages that are not recognized as spam to
     this folder instead of deleting them SpamAssassin will get smarter about
     what is considered to be spam, and what is not.</para>
+
+    <para>It's time to restart Postfix and Amavis and commit changes using
+    etckeeper.</para>
+
+    <programlisting>/etc/init.d/postfix restart
+/etc/init.d/amavis restart
+etckeeper commit "Configured amavisd-new"</programlisting>
+  </section>
+
+  <section xml:id="antispam.dkim">
+    <title>DKIM</title>
+
+    <para>Using <link xl:href="http://www.dkim.org/">DKIM</link> signing of
+    your outgoing emails gives you a better chance (though it depend on the
+    recipients server configuration) that your mail does not get classified as
+    spam. Bumping down the spam score of valid DKIM signed email can also
+    prevent false positives.</para>
+
+    <section xml:id="antispam.dkim.checking">
+      <title>DKIM check for incoming emails</title>
+
+      <para>To enable checking of DKIM in SpamAssasin edit
+      <filename>/etc/spamassassin/v312.pre</filename> and uncomment this
+      line:</para>
+
+      <screen>loadplugin Mail::SpamAssassin::Plugin::DKIM</screen>
+
+      <para>Make sure to install <application>libmail-dkim-perl</application>
+      package.</para>
+
+      <programlisting>apt-get install libmail-dkim-perl</programlisting>
+
+      <para>Default score for DKIM signed domains are quite low, I usually set
+      in my <filename>/etc/spamassassin/local.cf</filename></para>
+
+      <screen>score DKIM_VERIFIED -1
+score DKIM_SIGNED    0</screen>
+
+      <para>so verified DKIM signed emails have a lower spam score. Although,
+      be aware, spammers sometime also sign emails with DKIM. But you will at
+      least be able to know for sure that the spam email came from the
+      specified domain.</para>
+
+      <para>Amavisd-new has a lot of advanced options that you can fine tune
+      for DKIM signed emails, but you will have to look at the amavisd-new
+      documentation for more information.</para>
+    </section>
+
+    <section xml:id="antispam.dkim.signing">
+      <title>Signing your outgoing mail</title>
+
+      <para>We are going to sign are outgoing mail using amavisd-new DKIM
+      signing (we are not going to use dkim-milters). For this to work as
+      expected we will need to distinguish between mail coming from the
+      incoming and outgoing emails going through our system because we only
+      want to sign outgoing emails.</para>
+
+      <para>We are going to achieve this by classifying users in postfix and
+      sending our locally originating emails to amavisd-new on port 10026, and
+      all other mail (incoming mail from other domains) we are going to send
+      to amavisd-new on the port 10024 as we were doing before DKIM
+      implementation.</para>
+
+      <section xml:id="antispam.dkim.signing.postfix">
+        <title>Postfix</title>
+
+        <para>Open up <filename>/etc/postfix/main.cf</filename>, find the line
+        <computeroutput>content_filter =
+        smtp-amavis:[127.0.0.1]:10024</computeroutput> and replace it
+        with:</para>
+
+        <screen># Amavis content filtering
+
+# On requing of messages sender_restriction are not checked so set the default filter that
+# does not sign messages but performs other checks (spam, virus)
+content_filter = smtp-amavis:[127.0.0.1]:10024
+
+# If mail is coming from mynetwork or from authenticated users use amavis filtering on port 10026 (DKIM signing)
+smtpd_sender_restrictions =
+  check_sender_access regexp:/etc/postfix/tag_as_originating.re
+  permit_mynetworks
+  permit_sasl_authenticated
+  permit_tls_clientcerts
+# For other mail use amavis filtering on port 10024 (skips DKIM signing)
+  check_sender_access regexp:/etc/postfix/tag_as_foreign.re</screen>
+      </section>
+
+      <section xml:id="antispam.dkim.signing.postfix">
+        <title>Amavisd-new</title>
+
+        <para>We are going to use one key to sign all of our domain with the
+        same key. When you move one of the virtual domains to another server
+        you will either have to copy the same private key used for signing
+        domains to the other server, or you will have to change the DNS record
+        of the domain you are moving so that its TXT record showing the public
+        key is updated with the new key that will be used on the other server
+        (or disable DKIM signing).</para>
+
+        <para>We are going to generate a new private key and store it in the
+        <filename>/etc/amavis/dkim</filename>.</para>
+
+        <programlisting>amavisd-new genrsa /etc/amavis/dkim/atlantis-example-com.key.pem</programlisting>
+
+        <para>Open <filename>/etc/amavisd.conf/50-user</filename> and
+        replace</para>
+
+        <screen>$inet_socket_port = [10024,9998];</screen>
+
+        <para>with</para>
+
+        <screen>$inet_socket_port = [10024,10026,9998];</screen>
+
+        <para>You also need to enable the dkim signing, so add</para>
+
+        <screen>$enable_dkim_signing = 1;  # loads DKIM signing code</screen>
+
+        <para>and add the key for all of the domains you want to sign.</para>
+
+        <screen># Set keys
+dkim_key('example.com', 'mail', '/etc/amavis/dkim/atlantis-example-com.key.pem');
+dkim_key('some-other-virtual.com', 'mail', '/etc/amavis/dkim/atlantis-example-com.key.pem');
+dkim_key('another-virtual', 'mail', '/etc/amavis/dkim/atlantis-example-com.key.pem');
+....</screen>
+
+        <para>If you want to generate a specific private key for every domain
+        you just have to edit the path to the key for the domain you want to
+        change. mail in this example is a selector and you can put anything
+        you like here. The value you enter here has to be inserted on your DNS
+        record.</para>
+
+        <para>One more thing we need to do in the
+        <filename>/etc/amavis/conf.d/50-user</filename> is to create a policy
+        that will be used for mail coming on port 1026 that need to be
+        signed:</para>
+
+        <screen># switch policy bank to 'ORIGINATING' for mail received on port 10026:
+$interface_policy{'10026'} = 'ORIGINATING';
+$policy_bank{'ORIGINATING'} = {  # mail originating from our users
+  originating =&gt; 1,  # indicates client is ours, allows signing
+  # force MTA to convert mail to 7-bit before DKIM signing
+  # to avoid later conversions which could destroy signature:
+  smtpd_discard_ehlo_keywords =&gt; ['8BITMIME'],
+};</screen>
+
+        <para>Since this is the policy that is used for outgoing mail you can
+        use it to change some other settings as well, but for this you will
+        have to consult the amavisd-new documentation on <link
+        xl:href="http://amavisd.de.postfix.org/amavisd-new-docs.html#pbanks">policy
+        banks</link>.</para>
+      </section>
+
+      <section xml:id="antispam.dkim.signing.dns">
+        <title>DNS</title>
+
+        <para>To get the the TXT record which contains the public part of your
+        key you have to run:</para>
+
+        <programlisting>amavisd-new showkeys</programlisting>
+
+        <para>and you should get something like this:</para>
+
+        <screen>mail._domainkey.example.com.   3600 TXT (
+  "v=DKIM1; p="
+  "MIGfMA0GCSqGSIbHASU3KSMA84GNADCBiQKBgQDZNEarYcwLtVJ5y/gMUM8UimUX"
+  "Dp9oluwww1KdTGTQkg3OYyYfDyt8ZoutsxT6cnpMvG8D0jLLKy8rHGWE5I7pdQbL"
+  "qADufNR/08c7Ti3GSK3/WoWXQv/NzYLXaf7bdSk5f6+XZHCp/EKOuW6I/2Q7dv/B"
+  "+rAJJQZggHbolduwCwID2HBR")</screen>
+
+        <para>u have to paste this into your DNS server configuration. If you
+        are using an online tool to manage your domain name records (like
+        GoDaddys Total DNS Control) you will have to create a new TXT record
+        and for the TXT name enter</para>
+
+        <programlisting>mail._domainkey</programlisting>
+
+        <para>and for the value you will have to “glue” the multiple lines
+        into one and erase all the quotation marks.</para>
+
+        <screen>v=DKIM1; p=MIGfMA0GCSqGSIbHASU3KSMA84GNAD.....B+rAJJQZggHbolduwCwID2HBR</screen>
+
+        <para>If you used another selector instead of mail you have to enter
+        <computeroutput>your-selector._domainkey</computeroutput>. </para>
+      </section>
+    </section>
   </section>
 
   <section xml:id="antispam.greylisting">
