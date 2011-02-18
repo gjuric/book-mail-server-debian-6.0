@@ -55,7 +55,7 @@ apt-get upgrade</programlisting>
     <programlisting>apt-get install arj bzip2 cabextract cpio file gzip lha nomarch pax rar unrar unzip zip zoo</programlisting>
 
     <para>Add clamav user to the amavis group and vice versa in order for
-    Clamav to have access to scan files: </para>
+    Clamav to have access to scan files:</para>
 
     <screen>adduser clamav amavis
 adduser amavis clamav</screen>
@@ -83,12 +83,12 @@ etckeeper commit "Removed spamassassin from rcX.d"</programlisting>
 
     <screen>loadplugin Mail::SpamAssassin::Plugin::DKIM</screen>
 
-    <para>After that you can try running SpamAssassing manually: </para>
+    <para>After that you can try running SpamAssassing manually:</para>
 
     <programlisting>spamassassin -D -t &lt; /usr/share/doc/spamassassin/examples/sample-spam.txt 2&gt;&amp;1 | tee sa.out</programlisting>
 
     <para>You should see DKIM mentioned in the sa.out file, and the end of the
-    output should look something like this: </para>
+    output should look something like this:</para>
 
     <screen>Content analysis details: (1005.3 points, 5.0 required)
 
@@ -132,7 +132,7 @@ etckeeper commit "Removed spamassassin from rcX.d"</programlisting>
       <programlisting>su amavis sa-learn --no-sync --ham /home/vmail/example.com/demo/cur</programlisting>
 
       <para>Bayes filtering will be used once you train SpamAssassin on more
-      than 200 spam <emphasis>and</emphasis> ham messages. </para>
+      than 200 spam <emphasis>and</emphasis> ham messages.</para>
 
       <para>To update SpamAssassin you can run:</para>
 
@@ -185,7 +185,7 @@ etckeeper commit "Removed spamassassin from rcX.d"</programlisting>
     <programlisting>content_filter = smtp-amavis:[127.0.0.1]:10024</programlisting>
 
     <para>Open <filename>/etc/postfix/master.cf</filename> and add this at the
-    end of the file: </para>
+    end of the file:</para>
 
     <screen>smtp-amavis     unix    -       -       -       -       2       smtp
         -o smtp_data_done_timeout=1200
@@ -256,7 +256,7 @@ $final_bad_header_destiny = D_PASS;     # False-positive prone (for spam)
     <para>This is a list of domains for which this server considers itself as
     a final destination. If you do not add all your domains here, they will
     not be processed by amavis, so if you have more domains on your server,
-    except for the default line, this should look something like this: </para>
+    except for the default line, this should look something like this:</para>
 
     <screen>@local_domains_acl = ( ".$mydomain", "domain2.com", "domain3.org" );</screen>
 
@@ -275,7 +275,7 @@ $sa_kill_level_deflt = 12; # triggers spam evasive actions</screen>
     X-Spam headers to the message. The score of -999 means that we want to
     apply <computeroutput>X-Spam</computeroutput> header to all of our
     messages, so it is easier for us to see why is, or why is not, a message
-    considered spam by examining the headers of the message. </para>
+    considered spam by examining the headers of the message.</para>
 
     <para><computeroutput>$sa_tag2_level_deflt = 5;</computeroutput> is the
     spam level the message needs to reach for amavis to apply the header
@@ -283,8 +283,8 @@ $sa_kill_level_deflt = 12; # triggers spam evasive actions</screen>
     knows that this message is considered to be spam. At this level the
     message subject is prefixed with the value of the variable
     <computeroutput>$sa_spam_subject_tag</computeroutput>. In this case the
-    subject is prefixed with “<computeroutput>SPAM &gt; </computeroutput>”.
-    </para>
+    subject is prefixed with “<computeroutput>SPAM &gt;
+    </computeroutput>”.</para>
 
     <para><computeroutput>$sa_kill_level_deflt</computeroutput> holds the
     value of the spam level that message needs to reach to do something with
@@ -326,7 +326,7 @@ $bad_header_quarantine_method = 'sql:';</screen>
     Admin</application> to retrieve the quarantined messages. For users of
     <application>SquirrelMail</application> webmail system, there as a plugin
     called <application>AmavisNewSQL</application> which enables access for
-    users to quarantined messages that were addressed to them. </para>
+    users to quarantined messages that were addressed to them.</para>
 
     <note>
       <para>Quarantined messages (on the file system, or in the database) have
@@ -367,6 +367,12 @@ $bad_header_quarantine_method = undef;</screen>
     spam. This folder can also be used for learning SpamAssassing what is
     spam, and if users move the messages that are not recognized as spam to
     this folder instead of deleting them SpamAssassin will get smarter about
-    what is considered to be spam, and what is not. </para>
+    what is considered to be spam, and what is not.</para>
+  </section>
+
+  <section xml:id="antispam.greylisting">
+    <title>Greylisting</title>
+
+    <para>TODO: sqlgrey</para>
   </section>
 </section>
