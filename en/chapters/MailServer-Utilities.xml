@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section version="5.0" xml:id="utilities"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:mml="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Utilities</title>
+
+  <section xml:id="utilities.maildrop">
+    <title>Maildrop</title>
+
+    <para>Postfix has a built in local delivery agent, but to provide quota
+    support and moving messages marked as spam into separate folders we are
+    going to replace it with <application>Maildrop</application>.</para>
+
+    <para>To install maildrop, run</para>
+
+    <programlisting>apt-get install maildrop</programlisting>
+
+    <para>Maildrop config file is located at
+    <filename>/etc/maildroprc</filename>, open it and replace the content with
+    this:</para>
+
+    <screen># Global maildrop filter file (used on Debian)
+# For use with Postfix/Courier IMAP/Amavisd-new virtual mailbox domains.
+#
+# This maildroprc automagically creates a Spam folder for the recipient
+# and places spam there. It also subscibes the recipient to the folder.
+#
+# Example maildir: /home/vmail/example.com/user/
+#
+# Also in main.cf:
+# virtual_transport = maildrop
+# maildrop_destination_concurrency_limit = 2
+# maildrop_destination_recipient_limit = 1
+#
+# and in master.cf:
+#
+# maildrop  unix  -       n       n       -       -       pipe
+#  flags=DRhu user=vmail:vmail argv=/usr/bin/maildrop -w 90 -d ${user}@${nexthop}
+#  ${extension} ${recipient} ${user} ${nexthop}
+#
+# /var/log/maildroprc.log needs to exist and owned by vmail:vmail and
+# a logrotate script needs to be created.
+#
+HOME_DIR="/home/vmail"
+logfile "/var/log/maildroprc.log"
+EXTENSION="$1"
+RECIPIENT=tolower("$2")
+USER="$3"
+HOST="$4"
+SENDER="$5"
+DEFAULT="$HOME_DIR/$HOST/$USER"
+ 
+# Check if host and user directory exist
+ 
+`test -e $HOME_DIR/$HOST/$USER`
+#log "Testing for $HOME_DIR/$HOST subdirectory: result=$RETURNCODE"
+# Only continue if directory does NOT exist
+if ($RETURNCODE != 0)
+{
+        log "MailDir $HOME_DIR/$HOST/$USER does NOT exist"
+        `test -e $HOME_DIR/$HOST`
+        if ( $RETURNCODE != 0 )
+        {
+                log "Creating $HOME_DIR/$HOST"
+                `mkdir $HOME_DIR/$HOST`
+                `chmod -R 0700 $HOME_DIR/$HOST`
+        }
+ 
+        # Create users MailDir
+        `maildirmake $HOME_DIR/$HOST/$USER`
+}
+ 
+if (/^X-Spam-Flag: YES/)
+{
+        EXTENSION = "Junk"
+ 
+        # See if the spam directory already exists
+        `test -e $HOME_DIR/$HOST/$USER/.$EXTENSION`
+        #log "Testing for $EXTENSION subdirectory: result=$RETURNCODE"
+        if ( $RETURNCODE != 0 ) # spam directory does not exist - so we create it
+        {
+                # Create the subdirectory
+                `maildirmake -f $EXTENSION $HOME_DIR/$HOST/$USER`
+                log "Ran \"maildirmake -f $EXTENSION $HOME_DIR/$HOST/$USER\""
+ 
+                # Auto-subscribe the subdirectory
+                `if ! grep -q INBOX.$EXTENSION $HOME_DIR/$HOST/$USER/courierimapsubscribed; then echo INBOX.$EXTENSION &gt;&gt; $HOME_DIR/$HOST/$USER/courierimapsubscribed; fi`
+        }
+ 
+        # Deliver the message to the mailbox
+        exception {
+                # for those who unsubscribed themselves - subscribe them
+                `if ! grep -q INBOX.$EXTENSION $HOME_DIR/$HOST/$USER/courierimapsubscribed; then echo INBOX.$EXTENSION &gt;&gt; $HOME_DIR/$HOST/$USER/courierimapsubscribed; fi`
+                to "$HOME_DIR/$HOST/$USER/.$EXTENSION"
+        }
+}</screen>
+
+    <para>This script does two things:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Creates the folders for the users mail on the server if they do
+        not exist (this is the part that Postfix virtual delivery agent does
+        automatically).</para>
+      </listitem>
+
+      <listitem>
+        <para>Checks if the messages has the <computeroutput>X-Spam-Flag:
+        YES</computeroutput> header and delivers the message to the Junk
+        folder (it creates one if it doesn't exist).</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>We also need to create a log file and change its permission.</para>
+
+    <programlisting>touch /var/log/maildroprc.log
+chown vmail:vmail /var/log/maildroprc.log</programlisting>
+
+    <para>To automatically rotate logs for the maildroprc.log file create
+    <filename>/etc/logrotate.d/maildroprc</filename> with the following
+    content:</para>
+
+    <screen>/var/log/maildroprc.log {
+    rotate 7
+    daily
+    compress
+    delaycompress
+    copytruncate
+    notifempty
+}</screen>
+
+    <para>To tell Postfix to use Maildrop as a local delivery agent edit
+    <filename>/etc/postfix/main.cf</filename> and add</para>
+
+    <screen>virtual_transport = maildrop
+maildrop_destination_concurrency_limit = 2
+maildrop_destination_recipient_limit = 1</screen>
+
+    <important>
+      <para>You already have <computeroutput>virtual_transport =
+      virtual</computeroutput>, you have to replace this line and change
+      <computeroutput>virtual</computeroutput> to
+      <computeroutput>maildrop</computeroutput>.</para>
+    </important>
+
+    <para>Edit <filename>/etc/postfix/master.cf</filename> and replace</para>
+
+    <screen>maildrop  unix  -       n       n       -       -       pipe
+  flags=DRhu user=vmail argv=/usr/bin/maildrop -d ${recipient}</screen>
+
+    <para>with</para>
+
+    <screen>maildrop  unix  -       n       n       -       -       pipe
+  flags=ODRhu user=vmail:vmail argv=/usr/bin/maildrop -w 90 -d ${user}@${nexthop}
+  ${extension} ${recipient} ${user} ${nexthop}</screen>
+
+    <para>As you can see we are invoking maildrop as user:group “vmail:vmail”.
+    Maildrop on Debian is compiled against the courier-authlib library which
+    need access to the <filename>/var/run/courier/authdaemon
+    folder</filename>. Debian package sets user/group permission to
+    daemon:daemon on this folder. To force maildrop to work when invoked as
+    vmail:vmail we need to change the group ownership of this folder to
+    <systemitem class="username">vmail</systemitem>.</para>
+
+    <programlisting>chgrp vmail /var/run/courier/authdaemon</programlisting>
+
+    <para>As you can see we are invoking maildrop with two parameters.
+    <computeroutput>-w 90</computeroutput> tells maildrop to copy the quota
+    warning message if the user is over 90% of his mailbox quota.</para>
+
+    <para>The quota warning message must be located in
+    <filename>/etc/quotawarnmsg</filename> and it should look something like
+    this:</para>
+
+    <screen>X-Comment: Rename/Copy this file to quotawarnmsg, and make appropriate changes
+X-Comment: See deliverquota man page for more information
+From: Mail Delivery System &lt;postmaster@example.com&gt;
+Reply-To: postmaster@example.com
+To: Valued Customer:;
+Subject: Mail quota warning
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 7bit
+
+Your mailbox on the server is now more than 90% full. So that you can continue to receive mail you need to remove some messages from your mailbox</screen>
+
+    <para>Unfortunately Postfix Admin does not allow entering quota values,
+    but id does create the needed columns in the database table mbox. To enter
+    quota values log into mysql and add the quota value for the mailbox you
+    wish to have quota applied. Your mailbox should have something like
+    this:</para>
+
+    <screen>mysql&gt; select * from mailbox;
++-----------------+----------+-------------+--------------------+-----------+------------+--------------+---------------------+---------------------+--------+
+| username        | password | name        | maildir            | quota     | local_part | domain       | created             | modified            | active |
++-----------------+----------+-------------+--------------------+-----------+------------+--------------+---------------------+---------------------+--------+
+| gog@example.com | ommited  | Goran Juric | mail@example.com/  | 100000000 | mail       | example.com  | 2009-04-14 00:53:38 | 2009-04-14 00:53:38 |      1 |
+</screen>
+
+    <para>Maildrop will get quota information using Couriers
+    <filename>/etc/courier/authmysqlrc</filename> settings we set earlier.
+    That is the reason why we have added <computeroutput>MYSQL_QUOTA_FIELD
+    concat(quota,'S')</computeroutput> in
+    <filename>authmysqlrc</filename>.</para>
+
+    <para>Change the permissions on
+    <filename>/var/lib/amavis/tmp</filename></para>
+
+    <programlisting>chmod -R 775 /var/lib/amavis/tmp</programlisting>
+
+    <para>We also need to restart Amavisd-new and Postfix.</para>
+
+    <programlisting>/etc/init.d/amavis restart
+/etc/init.d/postfix restart</programlisting>
+
+    <para>Send a test email to check that everything is working and commit
+    your changes with <application>etckeeper</application>.</para>
+
+    <tip>
+      <para>Examine /var/log/maildroprc.log and /var/log/mail.info if you are
+      expiriencing problems.</para>
+    </tip>
+
+    <section xml.id="utilities.maildrop.per-user">
+      <title>Per user filtering</title>
+
+      <para>If you would like to have the ability to provide per user
+      filtering you will have to modify <filename>/etc/maildroprc</filename>
+      to check if there is a “<filename>mailfilter</filename>” file in the
+      users directory and if it's found that it gets included.</para>
+
+      <para>You can change it like this</para>
+
+      <screen>[....]
+        # Create users MailDir
+        `maildirmake $HOME_DIR/$HOST/$USER`
+}
+ 
+`test -e $DEFAULT/mailfilter`
+if ( $RETURNCODE == 0 )
+{
+     exception {
+         log "Including $HOME_DIR/$HOST/$USER/mailfilter..."
+         include "$HOME_DIR/$HOST/$USER/mailfilter"
+     }
+}
+ 
+if (/^X-Spam-Flag: YES/)
+[...]</screen>
+
+      <para>All you have to do now is to put your rules in the mailfilter
+      file.</para>
+    </section>
+  </section>
+
+  <section xml.id="utilities.vacation">
+    <title>Vacation</title>
+
+    <para>Vacation plugin</para>
+  </section>
+
+  <section xml.id="utilities.mailing-lists">
+    <title>Mailing lists</title>
+
+    <para>Mailman integration.</para>
+  </section>
+</section>
