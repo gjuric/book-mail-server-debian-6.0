@@ -226,7 +226,7 @@ Your mailbox on the server is now more than 90% full. So that you can continue t
       expiriencing problems.</para>
     </tip>
 
-    <section xml.id="utilities.maildrop.per-user">
+    <section xml:id="utilities.maildrop.per-user">
       <title>Per user filtering</title>
 
       <para>If you would like to have the ability to provide per user
@@ -258,13 +258,105 @@ if (/^X-Spam-Flag: YES/)
     </section>
   </section>
 
-  <section xml.id="utilities.vacation">
+  <section xml:id="utilities.vacation">
     <title>Vacation</title>
 
-    <para>Vacation plugin</para>
+    <para>Vacation script that we will be using requires some Perl
+    modules:</para>
+
+    <programlisting>apt-get install libmail-sender-perl libemail-valid-perl libmime-perl liblog-log4perl-perl liblog-dispatch-perl libgetopt-argvfile-perl libmime-charset-perl libmime-encwords-perl</programlisting>
+
+    <para>Create user vacation on your system. This user will handle the
+    vacation script and should have minimal privileges:</para>
+
+    <programlisting>adduser vacation --no-create-home --disabled-login
+mkdir /var/spool/vacation</programlisting>
+
+    <para>Copy the <filename>vacation.pl</filename> script (it is distributed
+    with Postfix Admin) and you can find it inside the
+    <filename>VIRTUAL_VACATION</filename> folder. </para>
+
+    <programlisting>cp /var/www/postfix/VIRTUAL_VACATION/vacation.pl /var/spool/vacation/vacation.pl
+chown -R vacation:vacation /var/spool/vacation/
+chmod 700 /var/spool/vacation/vacation.pl</programlisting>
+
+    <para>Create a file called
+    <filename>/etc/postfix/transport</filename>.</para>
+
+    <screen>autoreply.example.com        vacation:</screen>
+
+    <para>Replace <systemitem>example.com</systemitem> with your own
+    domain.</para>
+
+    <para>This is the domain that will be used for passing the mail to the
+    vacation script. When vacation is activated an alias is created that
+    forwards mail that is delivered to username@example.com to
+    username@autoreply.example.com. The vacation scripts gets that email and
+    decides how to respond.</para>
+
+    <para>Edit <filename>/etc/hosts</filename> and add</para>
+
+    <para><screen>your-ip-address   autoreply.example.com autoreply</screen></para>
+
+    <para>Create a hash of the transport map:</para>
+
+    <programlisting>postmap /etc/postfix/transport</programlisting>
+
+    <para>Edit /etc/postfix/main.cf and add</para>
+
+    <screen>transport_maps = hash:/etc/postfix/transport</screen>
+
+    <para>Add vacation transport to the
+    <filename>/etc/postfix/master.cf</filename>.</para>
+
+    <screen>vacation    unix  -       n       n       -       -       pipe
+  flags=Rq user=vacation argv=/var/spool/vacation/vacation.pl -f ${sender} -- ${recipient}</screen>
+
+    <para>You also have to edit the amavis transport to add
+    <computeroutput>no_address_mappings</computeroutput> in the
+    <computeroutput>receive_override_options</computeroutput> so your
+    transport for amavis should now look like this: </para>
+
+    <screen>127.0.0.1:10025 inet    n       -       -       -       -       smtpd
+      -o content_filter=
+      -o local_recipient_maps=
+      -o relay_recipient_maps=
+      -o smtpd_restriction_classes=
+      -o smtpd_delay_reject=no
+      -o smtpd_client_restrictions=permit_mynetworks,reject
+      -o smtpd_helo_restrictions=
+      -o smtpd_sender_restrictions=
+      -o smtpd_recipient_restrictions=permit_mynetworks,reject
+      -o smtpd_data_restrictions=reject_unauth_pipelining
+      -o smtpd_end_of_data_restrictions=
+      -o mynetworks=127.0.0.0/8
+      -o smtpd_error_sleep_time=0
+      -o smtpd_soft_error_limit=1001
+      -o smtpd_hard_error_limit=1000
+      -o smtpd_client_connection_count_limit=0
+      -o smtpd_client_connection_rate_limit=0
+      -o receive_override_options=no_header_body_checks,no_unknown_recipient_checks,no_address_mappings</screen>
+
+    <para>Edit <filename>/var/spool/vacation/vacation.pl</filename> and change
+    the configuration settings to match your system (set database type,
+    database settings, vacation domain, etc.) </para>
+
+    <para>Reload Postfix and commit your changes.</para>
+
+    <programlisting>/etc/init.d/postfix restart
+etckeeper commit "Added vacation"</programlisting>
+
+    <para>To handle the Vacation using Postfix admin you will also have to
+    edit its <filename>config.inc.php</filename> file and set</para>
+
+    <screen>$CONF['vacation'] = 'YES';
+$CONF['vacation_domain'] = 'autoreply.example.com';</screen>
+
+    <para>You can use Postfix Admin tu toggle vacations and change the
+    vacation message.</para>
   </section>
 
-  <section xml.id="utilities.mailing-lists">
+  <section xml:id="utilities.mailing-lists">
     <title>Mailing lists</title>
 
     <para>Mailman integration.</para>
