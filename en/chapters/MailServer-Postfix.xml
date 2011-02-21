@@ -440,6 +440,28 @@ chmod 640 /etc/postfix/sasl/smtpd.conf</programlisting>
 /etc/init.d/saslauthd restart</programlisting>
   </section>
 
+  <section xml:id="postfix.acl">
+    <title>Preventing unwanted access</title>
+
+    <para>To make sure our mail server is not used as an open relay, we will
+    also add <computeroutput>smtpd_recipient_restrictions</computeroutput> to
+    <filename>main.cf</filename>:</para>
+
+    <screen>smtpd_recipient_restrictions =
+    permit_mynetworks
+    permit_sasl_authenticated 
+    reject_unauth_destination
+    reject_unlisted_recipient
+    reject_unverified_recipient</screen>
+
+    <para>You need to restart Postfix once again. After setting this up you
+    should <link xl:href="http://www.mailradar.com/openrelay/">check if your
+    mail server can be used as an open relay</link>. If you have installed
+    OSSEC for intrusion detection don't worry if the test don't finish because
+    OSSECs active response blocks hosts that try to abuse your server (like
+    the open relay test tool).</para>
+  </section>
+
   <section xml:id="postfix.tls">
     <title>TLS</title>
 

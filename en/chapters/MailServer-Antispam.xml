@@ -593,6 +593,26 @@ $policy_bank{'ORIGINATING'} = {  # mail originating from our users
     </section>
   </section>
 
+  <section>
+    <title>RBL lists</title>
+
+    <para><link xl:href="http://en.wikipedia.org/wiki/DNSBL">RBL (DNSBL)
+    lists</link> are an efficient way of controlling spam. Postfix has built
+    in support for RBL lists. We are going to add checking of RBL list <link
+    xl:href="http://www.spamhaus.org/zen/">zen.spamhaus.org</link> by editing
+    <filename>/etc/postfix/main.cf</filename> and adding
+    <computeroutput>reject_rbl_client zen.spamhaus.org</computeroutput> to a
+    list of smtpd_recipient_restrictions.</para>
+
+    <screen>smtpd_recipient_restrictions =
+    permit_mynetworks
+    permit_sasl_authenticated 
+    reject_unauth_destination
+    reject_unlisted_recipient
+    reject_unverified_recipient
+    reject_rbl_client zen.spamhaus.org</screen>
+  </section>
+
   <section xml:id="antispam.greylisting">
     <title>Greylisting</title>
 
