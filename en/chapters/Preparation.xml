@@ -264,7 +264,7 @@ morcic.RI.CARNe 161.53.1.2       2 u   58   64    3   11.796   26.527   7.751</s
     </caution>
   </section>
 
-  <section>
+  <section xml:id="preparation.lamp">
     <title>Apache, MySQL and PHP</title>
 
     <para>If you plan to use Postfix Admin to manage your virtual users and

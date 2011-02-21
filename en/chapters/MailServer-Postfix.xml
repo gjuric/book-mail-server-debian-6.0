@@ -58,7 +58,7 @@ Cc:</screen>
 
     <note>
       <para>Do not be afraid to play with config files at this stage. If you
-      installed <application>etckeeper</application> <link
+      have installed <application>etckeeper</application> <link
       xl:href="#preparation.tracking-changes">as suggested</link>, you can
       always revert to the previous state. Just remember to commit your
       changes every time you change something by running <command>etckeeper
@@ -216,6 +216,9 @@ FLUSH PRIVILEGES;</programlisting>
 
     <para>While you are at it, you should also go through all of the other
     options you can set in the config mail.</para>
+
+    <note><para>To use Postfix Admin you must setup PHP and Apache as described
+    <link xl:href="#preparation.lamp">here</link>.</para></note>
 
     <para>Open up
     <literal>http://SERVERS-IP-ADDRESS/postfix/setup.php</literal> in your
