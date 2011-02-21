@@ -601,6 +601,71 @@ $policy_bank{'ORIGINATING'} = {  # mail originating from our users
   <section xml:id="antispam.greylisting">
     <title>Greylisting</title>
 
-    <para>TODO: sqlgrey</para>
+    <para>From all the spam fighting measures I have tried, <link
+    xl:href="http://en.wikipedia.org/wiki/Greylisting">greylisting</link>
+    block the most of the spam. Of course, it has its downsides, but if you
+    can live with waiting for the first mail from a person for a 30 minutes
+    more then normal I highly recommend it.</para>
+
+    <para>There are various greylisting implementations that work with Postfix
+    but I recommend <application>sqlgrey</application> because it works with a
+    database and has a nice looking GUI so you can manage it using your web
+    browser.</para>
+
+    <programlisting>apt-get install sqlgrey</programlisting>
+
+    <para>Now we need to create a database and a user for sqlgrey so it can
+    connect to the database. Enter <application>mysql</application> and
+    run:</para>
+
+    <screen>mysql&gt; create database mail_sqlgrey;
+Query OK, 1 row affected (0.00 sec)
+
+mysql&gt; CREATE USER 'sqlgrey'@'localhost' IDENTIFIED BY 'newpasswd';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql&gt; GRANT ALL PRIVILEGES ON `mail_sqlgrey` . * TO 'sqlgrey'@'localhost';
+Query OK, 0 rows affected (0.02 sec)</screen>
+
+    <para>Choose your own password naturally. Open
+    <filename>/etc/sqlgrey/sqlgrey.conf</filename> and edit the database
+    settings.</para>
+
+    <screen>db_type = mysql               
+db_name = mail_sqlgrey
+# Note: the following are not used with SQLite
+db_host = localhost
+db_port = default
+db_user = sqlgrey
+db_pass = newpasswd </screen>
+
+    <para>While you are at it examine the other settings in the config file
+    and change them if appropriately.</para>
+
+    <para>Restart <application>sqlgrey</application> and check that the tables
+    inside the <computeroutput>mail_sqlgrey</computeroutput> database are
+    created.</para>
+
+    <programlisting>/etc/init.d/sqlgrey restart</programlisting>
+
+    <para>To tell Postfix to use sqlgrey edit
+    <filename>/etc/postfix/main.cf</filename> and add check_policy_service to
+    your <computeroutput>smtpd_recipient_resctriction</computeroutput>
+    directive.</para>
+
+    <screen>smtpd_recipient_restrictions =
+    ... your other rules ...
+    check_policy_service inet:127.0.0.1:2501</screen>
+
+    <para>Restart Postfix and commit your changes.</para>
+
+    <programlisting>/etc/init.d/postfix restart
+etckeeper commit "Added greylisting to Postfix"</programlisting>
+
+    <note>
+      <para>If you want to use a web interface to edit the white- and
+      blacklists as well as the current state of the greylist take a look at
+      <link xl:href="http://www.vanheusden.com/sgwi/">sgwi</link>.</para>
+    </note>
   </section>
 </section>
