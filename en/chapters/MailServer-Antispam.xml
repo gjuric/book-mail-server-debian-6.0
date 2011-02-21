@@ -448,31 +448,26 @@ score DKIM_SIGNED    0</screen>
         <title>Postfix</title>
 
         <para>Open up <filename>/etc/postfix/main.cf</filename>, find the line
-        <computeroutput>content_filter =
-        smtp-amavis:[127.0.0.1]:10024</computeroutput> and replace it
-        with:</para>
+        containing your smtpd_sender_restrictions and add check_sender_acces
+        before and after other rules listed there:</para>
 
-        <screen># Amavis content filtering
-
-# On requing of messages sender_restriction are not checked so set the default filter that
-# does not sign messages but performs other checks (spam, virus)
-content_filter = smtp-amavis:[127.0.0.1]:10024
-
+        <screen>smtpd_sender_restrictions =
 # If mail is coming from mynetwork or from authenticated users use amavis filtering on port 10026 (DKIM signing)
-smtpd_sender_restrictions =
-  check_sender_access regexp:/etc/postfix/tag_as_originating.re
+  check_sender_access regexp:/etc/postfix/amavis/tag_as_originating.re
   permit_mynetworks
   permit_sasl_authenticated
   permit_tls_clientcerts
 # For other mail use amavis filtering on port 10024 (skips DKIM signing)
-  check_sender_access regexp:/etc/postfix/tag_as_foreign.re</screen>
+  check_sender_access regexp:/etc/postfix/amavis/tag_as_foreign.re</screen>
 
-        <para>Create <filename>/etc/postfix/tag_as_originating.re</filename>
-        and insert:</para>
+        <para>Create
+        <filename>/etc/postfix/amavis/tag_as_originating.re</filename> and
+        insert:</para>
 
         <para><screen>/^/ FILTER smtp-amavis:[127.0.0.1]:10026</screen></para>
 
-        <para>Create <filename>/etc/postfix/tag_as_foreign.re</filename> and
+        <para>Create
+        <filename>/etc/postfix/amavis/tag_as_foreign.re</filename> and
         insert:</para>
 
         <para><screen>/^/ FILTER smtp-amavis:[127.0.0.1]:10024</screen></para>

@@ -217,8 +217,10 @@ FLUSH PRIVILEGES;</programlisting>
     <para>While you are at it, you should also go through all of the other
     options you can set in the config mail.</para>
 
-    <note><para>To use Postfix Admin you must setup PHP and Apache as described
-    <link xl:href="#preparation.lamp">here</link>.</para></note>
+    <note>
+      <para>To use Postfix Admin you must setup PHP and Apache as described
+      <link xl:href="#preparation.lamp">here</link>.</para>
+    </note>
 
     <para>Open up
     <literal>http://SERVERS-IP-ADDRESS/postfix/setup.php</literal> in your
@@ -234,7 +236,7 @@ FLUSH PRIVILEGES;</programlisting>
     <para>First we need to create 4 files in the <filename
     class="directory">/etc/postfix</filename> folder.</para>
 
-    <para><filename>/etc/postfix/mysql_virtual_alias_maps.cf</filename></para>
+    <para><filename>/etc/postfix/sql/virtual_alias_maps.cf</filename></para>
 
     <screen>user = mailadmin
 password = newpassword
@@ -244,7 +246,7 @@ table = alias
 select_field = goto
 where_field = address</screen>
 
-    <para>/etc/postfix/mysql_virtual_domains_maps.cf</para>
+    <para>/etc/postfix/sql/virtual_domains_maps.cf</para>
 
     <screen>user = mailadmin
 password = newpassword
@@ -255,7 +257,7 @@ select_field = domain
 where_field = domain
 additional_conditions = and backupmx = '0' and active = '1'</screen>
 
-    <para><filename>/etc/postfix/mysql_virtual_mailbox_maps.cf
+    <para><filename>/etc/postfix/sql/virtual_mailbox_maps.cf
     </filename></para>
 
     <screen>user = mailadmin
@@ -265,7 +267,7 @@ dbname = mail
 table = mailbox
 query = SELECT CONCAT(domain,'/',SUBSTRING_INDEX(maildir,'@',1),'/') FROM mailbox WHERE username='%s' AND active = 1</screen>
 
-    <para><filename>/etc/postfix/mysql_relay_domains_maps.cf</filename></para>
+    <para><filename>/etc/postfix/sql/relay_domains_maps.cf</filename></para>
 
     <screen>user = mailadmin
 password = newpassword
@@ -281,9 +283,9 @@ additional_conditions = and backupmx = '1'</screen>
 
     <para>Since these files contain passwords, we need to protect them:</para>
 
-    <programlisting><prompt>root@atlantis:~#</prompt> <command>cd /etc/postfix</command>
-<prompt>atlantis:/etc/postfix#</prompt> <command>chgrp postfix mysql_*.cf</command>
-<prompt>atlantis:/etc/postfix#</prompt> <command>chmod 640 mysql_*.cf</command></programlisting>
+    <programlisting><prompt>root@atlantis:~#</prompt> <command>cd /etc/postfix/sql</command>
+<prompt>atlantis:/etc/postfix/sql#</prompt> <command>chgrp postfix *</command>
+<prompt>atlantis:/etc/postfix/sql#</prompt> <command>chmod 640 *</command></programlisting>
 
     <para>Edit <filename>/etc/postfix/main.cf</filename> and at the bottom of
     the file add</para>
@@ -293,15 +295,15 @@ additional_conditions = and backupmx = '1'</screen>
 ##################
 virtual_mailbox_base = /home/vmail
 virtual_transport = virtual
-virtual_alias_maps = mysql:/etc/postfix/mysql_virtual_alias_maps.cf
-virtual_mailbox_domains = mysql:/etc/poRestfix/mysql_virtual_domains_maps.cf
-virtual_mailbox_maps = mysql:/etc/postfix/mysql_virtual_mailbox_maps.cf
+virtual_alias_maps = mysql:/etc/postfix/sql/virtual_alias_maps.cf
+virtual_mailbox_domains = mysql:/etc/postfix/sql/virtual_domains_maps.cf
+virtual_mailbox_maps = mysql:/etc/postfix/sql/virtual_mailbox_maps.cf
 virtual_minimum_uid = 5000
 virtual_uid_maps = static:5000
 virtual_gid_maps = static:5000
 
 # Domains for which we are a secondary MX
-relay_domains = mysql:/etc/postfix/mysql_relay_domains_maps.cf</screen>
+relay_domains = mysql:/etc/postfix/sql/relay_domains_maps.cf</screen>
 
     <para>You also need to delete everything in the
     <varname>mydestination</varname> directive because every domain that is
@@ -423,6 +425,14 @@ sql_select: select password from mailbox where username = '%u' and active = '1'<
 chmod 640 /etc/pam.d/smtp
 chgrp postfix /etc/postfix/sasl/smtpd.conf
 chmod 640 /etc/postfix/sasl/smtpd.conf</programlisting>
+
+    <para>We also need to tell Postfix to allow authenticated users to send
+    mail. Edit <filename>/etc/postfix/main.cf</filename> and add</para>
+
+    <screen>smtpd_sender_restrictions =
+    permit_mynetworks
+    permit_sasl_authenticated
+    permit_tls_clientcerts</screen>
 
     <para>Restart Postfix and sasl.</para>
 

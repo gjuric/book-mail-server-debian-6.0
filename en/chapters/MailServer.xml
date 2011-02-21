@@ -40,7 +40,6 @@
     zone of your domain pointing to the IP address of the server.</para>
   </note>
 
-  <xi:include href="MailServer-DNS.xml" />
   <xi:include href="MailServer-Postfix.xml" />
   <xi:include href="MailServer-Courier.xml" />
   <xi:include href="MailServer-Antispam.xml" />
