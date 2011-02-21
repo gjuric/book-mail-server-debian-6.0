@@ -116,6 +116,15 @@ etckeeper commit "Removed spamassassin from rcX.d"</programlisting>
  0.0 DIGEST_MULTIPLE        Message hits more than one network digest check
 -0.0 NO_RECEIVED            Informational: message has no Received headers</screen>
 
+    <para>To enable AWL edit <filename>/etc/spamassassin/v310.pre</filename>
+    and uncomment:</para>
+
+    <screen>loadplugin Mail::SpamAssassin::Plugin::AWL</screen>
+
+    <para>Edit /etc/spamassassin/local.cf and add:</para>
+
+    <screen>use_auto_whitelist 1</screen>
+
     <section xml:id="antispam.spamassassin.training">
       <title>Training SpamAssassin</title>
 
@@ -151,9 +160,107 @@ etckeeper commit "Removed spamassassin from rcX.d"</programlisting>
     </section>
 
     <section xml:id="antispam.spamassassin.bayes-mysql">
-      <title>Move Bayes data to MySQL</title>
+      <title>Move Bayes and AWL data to MySQL</title>
 
-      <para>TODO</para>
+      <para>Enter mysql and create database table and user for
+      SpamAssassin.</para>
+
+      <screen>CREATE DATABASE mail_spamassassin;
+CREATE USER 'spamassassin'@'localhost' IDENTIFIED BY 'new_password';
+GRANT ALL PRIVILEGES ON `mail_sa` . * TO 'sa'@'localhost';
+FLUSH PRIVILEGES;</screen>
+
+      <para>Usw wget to download scripts that we will need from
+      http://spamassassin.apache.org/full/3.0.x/dist/tools/.</para>
+
+      <programlisting>cd /root
+wget http://spamassassin.apache.org/full/3.0.x/dist/tools/convert_awl_dbm_to_sql
+</programlisting>
+
+      <para>To create the tables in MySQL run:</para>
+
+      <programlisting>mysql -u root -p mail_spamassassin &lt; /usr/share/doc/spamassassin/sql/bayes_mysql.sql
+mysql -u root -p mail_spamassassin &lt; /usr/share/doc/spamassassin/sql/awl_mysql.sql</programlisting>
+
+      <para>Edit /etc/spamassassin/local.cf and add this at the end:</para>
+
+      <screen>bayes_store_module              Mail::SpamAssassin::BayesStore::MySQL   
+ 
+bayes_sql_dsn                   DBI:mysql:mail_spamassassin:localhost
+bayes_sql_username              spamassassin
+bayes_sql_password              new_password
+bayes_sql_override_username     amavis
+
+auto_whitelist_factory          Mail::SpamAssassin::SQLBasedAddrList
+user_awl_dsn                    DBI:mysql:mail_spamassassin:localhost
+user_awl_sql_username           spamassassin
+user_awl_sql_password           new_password</screen>
+
+      <para>Now we need to initialise the database table:</para>
+
+      <programlisting>su amavis -c 'sa-learn --spam /usr/share/doc/spamassassin/examples/sample-spam.txt'</programlisting>
+
+      <para>If you are starting clean and do not have existing Bayes data you
+      can skip importing of existing data into the database.</para>
+
+      <para>Move to the amavis users home folder and dump the existing
+      data:</para>
+
+      <programlisting>cd /var/lib/amavis/.spamassassin
+su amavis -c 'sa-learn --sync --force-expire
+su amavis -c 'sa-learn --backup &gt; /root/backup.txt</programlisting>
+
+      <para>To convert the AWL data:</para>
+
+      <programlisting>cd /root
+chmod +x convert_awl_dbm_to_sql
+./convert_awl_dbm_to_sql </programlisting>
+
+      <para>To run the actuall convert copy this line and replace your
+      password and other data you might have modified:</para>
+
+      <programlisting>./convert_awl_dbm_to_sql --username amavis --dsn DBI:mysql:mail_spamassassin:localhost --dbautowhitelist /var/lib/amavis/.spamassassin/auto-whitelist --sqlusername spamassassin --sqlpassword new_password --ok </programlisting>
+
+      <para>To insert the Bayes data run:</para>
+
+      <programlisting>su amavis -c 'sa-learn --restore backup.txt'</programlisting>
+
+      <para>The existing data should be inserted into MySQL.</para>
+
+      <para>Restart amavisd-new and commit the changes made.</para>
+
+      <programlisting>/etc/init.d/amavis restart
+etckeeper commit "Moved Bayes and AWL data to MySQL"</programlisting>
+
+      <para>If you have enough Bayes and AWL data you can test SpamAssassin
+      like this:</para>
+
+      <screen>atlantis:~# su amavis -c "spamassassin -D -t &lt; /usr/share/doc/spamassassin/examples/sample-spam.txt 2&gt;&amp;1 | egrep '(bayes:|whitelist:|AWL)'" 
+[26387] dbg: plugin: loading Mail::SpamAssassin::Plugin::AWL from @INC
+[26387] dbg: bayes: using username: amavis
+[26387] dbg: bayes: database connection established
+[26387] dbg: bayes: found bayes db version 3
+[26387] dbg: bayes: Using userid: 1
+[26387] dbg: bayes: corpus size: nspam = 27443, nham = 7248
+[26387] dbg: bayes: tok_get_all: token count: 65
+[26387] dbg: bayes: score = 0.25382662007679
+[26387] dbg: bayes: DB expiry: tokens in DB: 116828, Expiry max size: 150000, Oldest atime: 1287200200, Newest atime: 1298305866, Last expire: 1298265907, Current time: 1298310696
+[26387] dbg: auto-whitelist: sql-based connected to DBI:mysql:mail_spamassassin:localhost
+[26387] dbg: auto-whitelist: sql-based using username: amavis
+[26387] dbg: auto-whitelist: sql-based get_addr_entry: no entry found for sender@example.net|ip=none
+[26387] dbg: auto-whitelist: sql-based sender@example.net|ip=none scores 0/0
+[26387] dbg: auto-whitelist: AWL active, pre-score: 1006.014, autolearn score: 6.014, mean: undef, IP: undef
+[26387] dbg: auto-whitelist: sql-based add_score: created new entry for sender@example.net|ip=none with totscore: 6.014
+[26387] dbg: auto-whitelist: sql-based finish: disconnected from DBI:mysql:spamassassin:localhost
+[26387] dbg: auto-whitelist: post auto-whitelist score: 1006.014</screen>
+
+      <warning>
+        <para>Some of the data from the database should be pruned regularly.
+        For more information on how to create scripts that will automatically
+        prune your database from stale records take a <link
+        xl:href="http://www200.pair.com/mecham/spam/debian-spamassassin-sql.html">look
+        here</link>.</para>
+      </warning>
     </section>
   </section>
 
