@@ -354,6 +354,11 @@ relay_domains = mysql:/etc/postfix/sql/relay_domains_maps.cf</screen>
 
     <programlisting>OPTIONS="-c -r -m /var/spool/postfix/var/run/saslauthd"</programlisting>
 
+    <para>This change needs to be made because Postfix on Debian is run under
+    chroot so it needs access to saslauthd socket and adding of
+    <computeroutput>-r</computeroutput> parameter is needed because otherwise
+    username is not passed correctly from Postfix to saslauthd.</para>
+
     <para>We also need to create this directory</para>
 
     <programlisting>mkdir -p /var/spool/postfix/var/run/saslauthd</programlisting>
@@ -386,13 +391,7 @@ account sufficient pam_mysql.so user=mailadmin passwd=newpassword host=127.0.0.1
 
     <screen>pwcheck_method: saslauthd
 mech_list: plain login
-allow_plaintext: true
-auxprop_plugin: mysql
-sql_hostnames: 127.0.0.1
-sql_user: mailadmin
-sql_passwd: newpassword
-sql_database: mail
-sql_select: select password from mailbox where username = '%u' and active = '1'</screen>
+allow_plaintext: true</screen>
 
     <para>We need to add Postfix to the sasl group so it can access the
     saslauthd process we just created:</para>

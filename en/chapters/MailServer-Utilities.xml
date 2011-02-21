@@ -264,7 +264,8 @@ if (/^X-Spam-Flag: YES/)
     <para>Vacation script that we will be using requires some Perl
     modules:</para>
 
-    <programlisting>apt-get install libmail-sender-perl libemail-valid-perl libmime-perl liblog-log4perl-perl liblog-dispatch-perl libgetopt-argvfile-perl libmime-charset-perl libmime-encwords-perl</programlisting>
+    <programlisting>apt-get install libmail-sender-perl libemail-valid-perl libmime-perl liblog-log4perl-perl liblog-dispatch-perl \
+                libgetopt-argvfile-perl libmime-charset-perl libmime-encwords-perl</programlisting>
 
     <para>Create user vacation on your system. This user will handle the
     vacation script and should have minimal privileges:</para>
@@ -274,7 +275,7 @@ mkdir /var/spool/vacation</programlisting>
 
     <para>Copy the <filename>vacation.pl</filename> script (it is distributed
     with Postfix Admin) and you can find it inside the
-    <filename>VIRTUAL_VACATION</filename> folder. </para>
+    <filename>VIRTUAL_VACATION</filename> folder.</para>
 
     <programlisting>cp /var/www/postfix/VIRTUAL_VACATION/vacation.pl /var/spool/vacation/vacation.pl
 chown -R vacation:vacation /var/spool/vacation/
@@ -315,7 +316,7 @@ chmod 700 /var/spool/vacation/vacation.pl</programlisting>
     <para>You also have to edit the amavis transport to add
     <computeroutput>no_address_mappings</computeroutput> in the
     <computeroutput>receive_override_options</computeroutput> so your
-    transport for amavis should now look like this: </para>
+    transport for amavis should now look like this:</para>
 
     <screen>127.0.0.1:10025 inet    n       -       -       -       -       smtpd
       -o content_filter=
@@ -339,7 +340,7 @@ chmod 700 /var/spool/vacation/vacation.pl</programlisting>
 
     <para>Edit <filename>/var/spool/vacation/vacation.pl</filename> and change
     the configuration settings to match your system (set database type,
-    database settings, vacation domain, etc.) </para>
+    database settings, vacation domain, etc.)</para>
 
     <para>Reload Postfix and commit your changes.</para>
 
@@ -354,6 +355,52 @@ $CONF['vacation_domain'] = 'autoreply.example.com';</screen>
 
     <para>You can use Postfix Admin tu toggle vacations and change the
     vacation message.</para>
+  </section>
+
+  <section xml:id="utilities.webmail">
+    <title>Webmail</title>
+
+    <para>For webmail we are going to install <link
+    xl:href="http://roundcube.net/">RoundCube</link>. Download the latest
+    version from their site and unapck it.</para>
+
+    <programlisting>wget http://downloads.sourceforge.net/project/roundcubemail/roundcubemail/0.5.1/roundcubemail-0.5.1.tar.gz
+tar -xvzf roundcubemail-0.5.1.tar.gz
+mv roundcubemail-0.5.1 /var/www/roundcube</programlisting>
+
+    <para>temp and logs folder need to be writable by the user that runs
+    Apache (www-data).</para>
+
+    <programlisting>chown www-data:www-data /var/www/roundcube/temp
+chown www-data:www-data /var/www/roundcube/logs</programlisting>
+
+    <para>Create MySQL tables and username:</para>
+
+    <programlisting>mysql -p
+CREATE DATABASE mail_roundcube;
+CREATE USER 'roundcube'@'localhost' IDENTIFIED BY 'newpasswd';
+GRANT ALL PRIVILEGES ON mail_roundcube.* TO 'roundcube'@'localhost';
+FLUSH PRIVILEGES;
+quit</programlisting>
+
+    <para>Populate the database with tables:</para>
+
+    <programlisting>mysql -p mail_roundcube &lt; mysql.initial.sql</programlisting>
+
+    <para>Point your browser to
+    <computeroutput>http://YOUR-IP-ADDRESS/roundcube/installer</computeroutput>.</para>
+
+    <para>When prompted for configuration options enter select many identities
+    with possibility to edit all params but not email address and select Use
+    the current IMAP username and password for SMTP authentication. Fill in
+    the database and other information requested. </para>
+
+    <note>
+      <para>If you run into problems with
+      <computeroutput>suhosin.session.encrypt</computeroutput> either chage
+      the settings in <filename>/etc/php5/conf.d/suhosin.ini</filename> or
+      uninstall php5-suhosin package.</para>
+    </note>
   </section>
 
   <section xml:id="utilities.mailing-lists">
