@@ -57,8 +57,13 @@ apt-get upgrade</programlisting>
     <para>Add clamav user to the amavis group and vice versa in order for
     Clamav to have access to scan files:</para>
 
-    <screen>adduser clamav amavis
-adduser amavis clamav</screen>
+    <programlisting>adduser clamav amavis
+adduser amavis clamav</programlisting>
+
+    <para>Restart amavis and clamav-daemon.</para>
+
+    <programlisting>/etc/init.d/clamav-daemon restart
+/etc/init.d/amavis restart</programlisting>
   </section>
 
   <section xml:id="antispam.spamassassin">
@@ -302,19 +307,23 @@ $sa_kill_level_deflt = 12; # triggers spam evasive actions</screen>
     messages that are discarded can still be fetched from the system. Default
     configuration is to store them in the
     <filename>/var/lib/amavis/virusmails</filename> folder. It is possible to
-    store them in the database, for this you have the add this lines as
-    well:</para>
+    store them in the database.</para>
 
-    <screen>@lookup_sql_dsn =  ( ['DBI:mysql:database=DATABASE-NAME;host=127.0.0.1;port=3306', 'USERNAME', 'PASSWORD']);
-@storage_sql_dsn = @lookup_sql_dsn;
+    <para>For releasing quarantined mail you need to add these lines:</para>
 
-$inet_socket_port = [10024,9998];
+    <screen>$inet_socket_port = [10024,9998];
 $interface_policy{'9998'} = 'AM.PDP-INET';
 $policy_bank{'AM.PDP-INET'} = {
   protocol =&gt; 'AM.PDP',  # select Amavis policy delegation protocol
   inet_acl =&gt; [qw( 127.0.0.1 [::1] )],  # restrict access to these IP addresses
 # auth_required_release =&gt; 0,  # don't require secret_id for amavisd-release
-};
+};</screen>
+
+    <para>If you want to store everything in the database you have to add
+    these lines as well:</para>
+
+    <screen>@lookup_sql_dsn =  ( ['DBI:mysql:database=DATABASE-NAME;host=127.0.0.1;port=3306', 'USERNAME', 'PASSWORD']);
+@storage_sql_dsn = @lookup_sql_dsn;
 
 $virus_quarantine_method = 'sql:';
 $spam_quarantine_method = 'sql:';
@@ -457,9 +466,19 @@ smtpd_sender_restrictions =
   permit_tls_clientcerts
 # For other mail use amavis filtering on port 10024 (skips DKIM signing)
   check_sender_access regexp:/etc/postfix/tag_as_foreign.re</screen>
+
+        <para>Create <filename>/etc/postfix/tag_as_originating.re</filename>
+        and insert:</para>
+
+        <para><screen>/^/ FILTER smtp-amavis:[127.0.0.1]:10026</screen></para>
+
+        <para>Create <filename>/etc/postfix/tag_as_foreign.re</filename> and
+        insert:</para>
+
+        <para><screen>/^/ FILTER smtp-amavis:[127.0.0.1]:10024</screen></para>
       </section>
 
-      <section xml:id="antispam.dkim.signing.postfix">
+      <section xml:id="antispam.dkim.signing.amavis">
         <title>Amavisd-new</title>
 
         <para>We are going to use one key to sign all of our domain with the
@@ -553,7 +572,28 @@ $policy_bank{'ORIGINATING'} = {  # mail originating from our users
         <screen>v=DKIM1; p=MIGfMA0GCSqGSIbHASU3KSMA84GNAD.....B+rAJJQZggHbolduwCwID2HBR</screen>
 
         <para>If you used another selector instead of mail you have to enter
-        <computeroutput>your-selector._domainkey</computeroutput>. </para>
+        <computeroutput>your-selector._domainkey</computeroutput>.</para>
+      </section>
+
+      <section>
+        <title>Wrap it up</title>
+
+        <para>All that is left to do is to restart amavisd-new and reload
+        postfix configuration.</para>
+
+        <programlisting>/etc/init.d/amavis restart
+/etc/init.d/postfix restart</programlisting>
+
+        <para>If your DNS zone files have refreshed you will be able to
+        use</para>
+
+        <programlisting>amavisd-new testkeys</programlisting>
+
+        <para>If everything is set up properly this test should pass.</para>
+
+        <screen>TESTING: mail._domainkey.example.com      =&gt; pass</screen>
+
+        <para>Commit your changes with etckeeper.</para>
       </section>
     </section>
   </section>

@@ -263,4 +263,53 @@ morcic.RI.CARNe 161.53.1.2       2 u   58   64    3   11.796   26.527   7.751</s
       the NTP daemon again.</para>
     </caution>
   </section>
+
+  <section>
+    <title>Apache, MySQL and PHP</title>
+
+    <para>If you plan to use Postfix Admin to manage your virtual users and
+    domain, or provide webmail access to the email stored on the server you
+    will have to install a web server.</para>
+
+    <programlisting>apt-get install mysql-server mysql-client apache2 apache2-mpm-prefork apache2-utils ssl-cert \
+                libapache2-mod-php5 php5 php5-common php5-curl php5-gd php-pear php5-imagick \
+                php5-imap php5-mcrypt php5-mysql php5-pspell php5-sqlite php5-xmlrpc php5-xsl</programlisting>
+
+    <note>
+      <para>This will also install Exim as the MTA. Uninstall it after you
+      finish installing Postfix.</para>
+    </note>
+
+    <para>Default configuration of Apache sends server information in the
+    response headers that we do not want to expose to everybody. To disable
+    this open <filename>/etc/apache2/conf.d/security</filename> with nano and
+    replace:</para>
+
+    <programlisting>ServerTokens Full
+ServerSignature On</programlisting>
+
+    <para>with</para>
+
+    <para><programlisting>ServerTokens Prod
+ServerSignature Off</programlisting></para>
+
+    <para>All application on my web server use UTF-8 as a default encoding so
+    I also edit <filename>/etc/apache2/conf.d/charset</filename> and uncomment
+    the <computeroutput>AddDefaultCharset UTF-8</computeroutput> directive
+    which adds the UTF-8 as the default charset to the header for all files
+    that Apache sends to clients.</para>
+
+    <para>PHP also provides additional information in the response headers so
+    we can turn off those as well.</para>
+
+    <para>Open <filename>/etc/php5/apache2/php.ini</filename> and change
+    <computeroutput>expose_php = On</computeroutput> to
+    <computeroutput>expose_php = Off</computeroutput>.</para>
+
+    <para>Enable mod_rewrite in Apache and restart Apache for the changes to
+    take effe</para>
+
+    <programlisting>a2enmod rewrite
+invoke-rc.d apache2 restart</programlisting>
+  </section>
 </chapter>
