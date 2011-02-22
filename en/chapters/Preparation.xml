@@ -385,7 +385,7 @@ ServerSignature Off</programlisting></para>
     <para>Open <filename>/etc/php5/apache2/php.ini</filename>. Change
     <computeroutput>expose_php = On</computeroutput> to
     <computeroutput>expose_php = Off</computeroutput> and set
-    <varname>date.timezone</varname> = Europe/Zagreb (or whatefer timezone you
+    <varname>date.timezone= Europe/Zagreb</varname> (or whatever timezone you
     use). The link to a list of available time zones is located in the
     file.</para>
 
