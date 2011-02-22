@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section version="5.0" xml:id="postfix" xmlns="http://docbook.org/ns/docbook"
+<chapter version="5.0" xml:id="postfix" xmlns="http://docbook.org/ns/docbook"
          xmlns:xl="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:svg="http://www.w3.org/2000/svg"
@@ -500,7 +500,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</screen>
     selected.</para>
   </section>
 
-  <section>
+  <section xml:id="postfix.submission-port">
     <title>Submission port</title>
 
     <para>Many ISPs today block port 25 for users. To be able to send email
@@ -523,7 +523,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</screen>
     </note>
   </section>
 
-  <section>
+  <section xml:id="postfix.block-attachments">
     <title>Blocking certain attachments</title>
 
     <para>To block certain extensions of attachments (.exe, .bat, …) edit
@@ -541,7 +541,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</screen>
     want.</para>
   </section>
 
-  <section>
+  <section xml:id="postfix.max-message-size">
     <title>Maximum message size</title>
 
     <para>Default maximum size of the message is 10240000 bytes (10 MB), to
@@ -551,7 +551,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</screen>
     <screen>message_size_limit = 20480000</screen>
   </section>
 
-  <section>
+  <section xml:id="postfix.commit-changes">
     <title>Commit your changes</title>
 
     <para>If you are using etckeeper now is a good time to commit the changes
@@ -560,7 +560,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</screen>
     <programlisting>etckeeper commit "Configured Postfix"</programlisting>
   </section>
 
-  <section>
+  <section xml:id="postfix.commands">
     <title>Important commands</title>
 
     <itemizedlist>
@@ -581,12 +581,10 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</screen>
       <listitem>
         <para><command>postfix flush</command> - Flush the Mail Queue</para>
       </listitem>
-    </itemizedlist>
 
-    <itemizedlist>
       <listitem>
         <para><command>postfix check</command> - Check Installation</para>
       </listitem>
     </itemizedlist>
   </section>
-</section>
+</chapter>

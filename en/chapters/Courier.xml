@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section version="5.0" xml:id="courier" xmlns="http://docbook.org/ns/docbook"
+<chapter version="5.0" xml:id="courier" xmlns="http://docbook.org/ns/docbook"
          xmlns:xl="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:svg="http://www.w3.org/2000/svg"
@@ -128,4 +128,4 @@ TLS_TRUSTCERTS=/etc/ssl/self-signed/server.crt</screen>
 
     <programlisting>etckeeper commit "Configured Courier"</programlisting>
   </section>
-</section>
+</chapter>

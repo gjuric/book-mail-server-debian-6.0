@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section version="5.0" xml:id="utilities"
+<chapter version="5.0" xml:id="utilities"
          xmlns="http://docbook.org/ns/docbook"
          xmlns:xl="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
@@ -368,8 +368,8 @@ $CONF['vacation_domain'] = 'autoreply.example.com';</screen>
 tar -xvzf roundcubemail-0.5.1.tar.gz
 mv roundcubemail-0.5.1 /var/www/roundcube</programlisting>
 
-    <para>temp and logs folder need to be writable by the user that runs
-    Apache (www-data).</para>
+    <para><filename>temp</filename> and <filename>logs</filename> folder need
+    to be writable by the user that runs Apache (www-data).</para>
 
     <programlisting>chown www-data:www-data /var/www/roundcube/temp
 chown www-data:www-data /var/www/roundcube/logs</programlisting>
@@ -393,7 +393,7 @@ quit</programlisting>
     <para>When prompted for configuration options enter select many identities
     with possibility to edit all params but not email address and select Use
     the current IMAP username and password for SMTP authentication. Fill in
-    the database and other information requested. </para>
+    the database and other information requested.</para>
 
     <note>
       <para>If you run into problems with
@@ -402,10 +402,4 @@ quit</programlisting>
       uninstall php5-suhosin package.</para>
     </note>
   </section>
-
-  <section xml:id="utilities.mailing-lists">
-    <title>Mailing lists</title>
-
-    <para>Mailman integration.</para>
-  </section>
-</section>
+</chapter>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section version="5.0" xml:id="antispam" xmlns="http://docbook.org/ns/docbook"
+<chapter version="5.0" xml:id="antispam" xmlns="http://docbook.org/ns/docbook"
          xmlns:xl="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:svg="http://www.w3.org/2000/svg"
@@ -677,7 +677,7 @@ $policy_bank{'ORIGINATING'} = {  # mail originating from our users
         <computeroutput>your-selector._domainkey</computeroutput>.</para>
       </section>
 
-      <section>
+      <section xml:id="antispam.dkim.finish">
         <title>Wrap it up</title>
 
         <para>All that is left to do is to restart amavisd-new and reload
@@ -700,7 +700,7 @@ $policy_bank{'ORIGINATING'} = {  # mail originating from our users
     </section>
   </section>
 
-  <section>
+  <section xml:id="antispam.rbl">
     <title>RBL lists</title>
 
     <para><link xl:href="http://en.wikipedia.org/wiki/DNSBL">RBL (DNSBL)
@@ -790,4 +790,4 @@ etckeeper commit "Added greylisting to Postfix"</programlisting>
       <link xl:href="http://www.vanheusden.com/sgwi/">sgwi</link>.</para>
     </note>
   </section>
-</section>
+</chapter>

@@ -34,11 +34,11 @@
     </legalnotice>
 
     <releaseinfo>
-      This is version 0.0.1 of Building a mail server on Debian.
+      This is version 0.1.0 of Building a mail server on Debian.
     </releaseinfo>
   </info>
 
-  <preface>
+  <preface xml:id="foreword">
     <title>Foreword</title>
 
     <para>The internet is full of information on how to do just about
@@ -61,12 +61,14 @@
   </preface>
 
   <xi:include href="chapters/Introduction.xml" />
-
   <xi:include href="chapters/Preparation.xml" />
-
   <xi:include href="chapters/Security.xml" />
-
-  <xi:include href="chapters/MailServer.xml" />
-
+  <xi:include href="chapters/Postfix.xml" />
+  <xi:include href="chapters/Courier.xml" />
+  <xi:include href="chapters/Antispam.xml" />
+  <xi:include href="chapters/Utilities.xml" />
   <xi:include href="chapters/Todo.xml" />
+<!--
+  <xi:include href="chapters/MailServer.xml" />
+-->
 </book>
