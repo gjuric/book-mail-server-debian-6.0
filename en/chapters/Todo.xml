@@ -12,9 +12,14 @@
       <itemizedlist>
           <listitem>
             <para>
-                Mailgraph, Couriergraph, ... (or Munin) and pflogsumm
+                Change SQL query to fetch mailbox location (Postfix Admin settings as well)
             </para>
           </listitem>
+        <listitem>
+          <para>
+              Mailgraph, Couriergraph, ... (or Munin) and pflogsumm
+          </para>
+        </listitem>
         <listitem>
           <para>
               Fetching mail with fetchmail
