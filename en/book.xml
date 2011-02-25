@@ -5,7 +5,6 @@
       xmlns:ns4="http://www.w3.org/1998/Math/MathML"
       xmlns:ns3="http://www.w3.org/1999/xhtml"
       xmlns:ns2="http://www.w3.org/1999/xlink"
-      xmlns:xl="http://www.w3.org/1999/xlink"
       xmlns:ns="http://docbook.org/ns/docbook">
   <info>
     <title>Building a mail server on Debian 6.0</title>
@@ -17,25 +16,45 @@
 
     <copyright>
       <year>2010</year>
+
       <holder>Goran Jurić</holder>
     </copyright>
 
     <legalnotice>
       <title>Legal Notices</title>
 
-      <para>Permission is granted to copy, distribute and/or modify this
-      document under the terms of the GNU Free Documentation
-      License (GFDL), Version 1.1 or any later version published
-      by the Free Software Foundation with no Invariant Sections,
-      no Front-Cover Texts, and no Back-Cover Texts.  You can find
-      a copy of the GFDL at this
-      <link xl:href="http://www.gnu.org/copyleft/fdl.html">link</link>.
-      </para>
+      <para>This document is released under the
+      Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)
+      licence.</para>
+
+      <para>You are free to Share (copy, distribute and transmit the work) and
+      to Remix (to adapt the work) under the following conditions:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>You must attribute the work in the manner specified by the
+          author or licensor (but not in any way that suggests that they
+          endorse you or your use of the work).</para>
+        </listitem>
+
+        <listitem>
+          <para>You may not use this work for commercial purposes.</para>
+        </listitem>
+
+        <listitem>
+          <para>If you alter, transform, or build upon this work, you may
+          distribute the resulting work only under the same or similar license
+          to this one.</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Any of the above conditions can be waived if you get permission
+      from the copyright holder. The full licence can be found <link
+      ns2:href="http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode">here</link>.</para>
     </legalnotice>
 
-    <releaseinfo>
-      This is version 0.1.0 of Building a mail server on Debian.
-    </releaseinfo>
+    <releaseinfo>This is version 0.5.0 of Building a mail server on
+    Debian.</releaseinfo>
   </info>
 
   <preface xml:id="foreword">
@@ -61,14 +80,22 @@
   </preface>
 
   <xi:include href="chapters/Introduction.xml" />
+
   <xi:include href="chapters/Preparation.xml" />
+
   <xi:include href="chapters/Security.xml" />
+
   <xi:include href="chapters/Postfix.xml" />
+
   <xi:include href="chapters/Courier.xml" />
+
   <xi:include href="chapters/Antispam.xml" />
+
   <xi:include href="chapters/Utilities.xml" />
+
   <xi:include href="chapters/Todo.xml" />
-<!--
+
+  <!--
   <xi:include href="chapters/MailServer.xml" />
 -->
 </book>
