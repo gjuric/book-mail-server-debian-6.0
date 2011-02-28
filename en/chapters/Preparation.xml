@@ -97,7 +97,7 @@ apt-get upgrade</programlisting>
     automatically commit all of the changes before a new package is installed
     as well as to auto commit changes on a daily bases.</para>
 
-    <para>Since i do now want to forget to describe changes I mage to the
+    <para>Since i do now want to forget to describe changes I made to the
     files in <filename class="directory">/etc</filename> I usaully disable
     automatic commits. Edit <filename>/etc/ectkeeper/etckeeper.conf</filename>
     and uncomment out these two lines:</para>
@@ -221,7 +221,7 @@ apt-get --purge remove isc-dhcp-client isc-dhcp-common</programlisting>
     <para>First, we need to check our hostname</para>
 
     <screen>atlantis:~# <command>hostname -f</command>
-  atlantis.diabmon.com </screen>
+  atlantis.example.com </screen>
 
     <para>If hostname did not return FQDN of your server edit
     <filename>/etc/hosts</filename>. You <filename>hosts</filename> file
