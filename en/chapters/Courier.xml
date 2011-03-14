@@ -19,7 +19,7 @@
   client. And since all of the emails marked as <emphasis>Spam</emphasis> is
   moved automatically to a <filename>Junk</filename> folder my client would
   not report to me if there are any new messages in the
-  <filename>Junk</filename> folder unless I explicitly check for them. </para>
+  <filename>Junk</filename> folder unless I explicitly check for them.</para>
 
   <section xml:id="courier.installation">
     <title>Installation</title>
@@ -44,7 +44,7 @@
     <screen>authmodulelist="authmysql"</screen>
 
     <para>Empty <filename>/etc/courier/authmysqlrc</filename> and paste the
-    following (change you password.</para>
+    following (change you password).</para>
 
     <screen>MYSQL_SERVER localhost
 MYSQL_USERNAME mailadmin
@@ -64,7 +64,7 @@ MYSQL_QUOTA_FIELD concat(quota,'S')</screen>
     is because Postfix Admin stores MailDir quota as an integer, and Courier
     maildrop expects the quota value to be in the format XXXS, where XXX
     represent the number of bytes that can be stored in the Maildir, and “S”
-    stands for size. </para>
+    stands for size.</para>
 
     <para>Maildrop can also use XXXC, where “C” I guess stands for “COUNT”
     because this value stands for number of messages that MailDir can
@@ -76,7 +76,7 @@ MYSQL_QUOTA_FIELD concat(quota,'S')</screen>
 
     <para>Edit <filename>/etc/courier/imapd-ssl</filename> and change the
     values of <varname>TLS_CERTFILE</varname> and
-    <filename>TLS_TRUSTCERTS</filename> to </para>
+    <filename>TLS_TRUSTCERTS</filename> to</para>
 
     <screen>TLS_CERTFILE=/etc/ssl/self-signed/server.pem
 TLS_TRUSTCERTS=/etc/ssl/self-signed/server.crt</screen>
@@ -100,7 +100,7 @@ TLS_TRUSTCERTS=/etc/ssl/self-signed/server.crt</screen>
     will have to sign new certificates for every domain and also use a
     separate IP address for each virtual host. Information on placing
     certificates for various hosts can be found in
-    <filename>/etc/courier/imapd-ssl</filename>. </para>
+    <filename>/etc/courier/imapd-ssl</filename>.</para>
   </section>
 
   <section xml:id="courier.firewall-rules">

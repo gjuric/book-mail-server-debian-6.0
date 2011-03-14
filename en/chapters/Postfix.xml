@@ -265,7 +265,7 @@ password = newpassword
 hosts = 127.0.0.1
 dbname = mail
 table = mailbox
-query = SELECT CONCAT(domain,'/',SUBSTRING_INDEX(maildir,'@',1),'/') FROM mailbox WHERE username='%s' AND active = 1</screen>
+query = SELECT CONCAT(SUBSTRING_INDEX(username,'@',-1),'/',SUBSTRING_INDEX(username,'@',1),'/') FROM mailbox WHERE username='%s' AND active = 1</screen>
 
     <para><filename>/etc/postfix/sql/relay_domains_maps.cf</filename></para>
 
