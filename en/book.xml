@@ -16,9 +16,29 @@
 
     <copyright>
       <year>2010</year>
-
       <holder>Goran Jurić</holder>
     </copyright>
+
+    <releaseinfo>This is version 0.6.0 of Building a mail server on
+    Debian.</releaseinfo>
+
+    <revhistory>
+    <revision>
+      <revnumber>0.6.0</revnumber>
+      <date>2011-03-14</date>
+      <authorinitials>GJ</authorinitials>
+      <revremark>Added a chapter on moving Amavisd-new configuration to MySQL</revremark>
+    </revision>
+
+    <revision>
+      <revnumber>0.5.0</revnumber>
+      <date>2011-02-21</date>
+      <authorinitials>GJ</authorinitials>
+      <revremark>Moved Bayes and AWL data info MySQL</revremark>
+    </revision>
+
+    </revhistory>
+
 
     <legalnotice>
       <title>Legal Notices</title>
@@ -52,9 +72,6 @@
       from the copyright holder. The full licence can be found <link
       ns2:href="http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode">here</link>.</para>
     </legalnotice>
-
-    <releaseinfo>This is version 0.5.0 of Building a mail server on
-    Debian.</releaseinfo>
   </info>
 
   <preface xml:id="foreword">

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0" xml:id="todo"
-         xmlns="http://docbook.org/ns/docbook"
+<chapter version="5.0" xml:id="todo" xmlns="http://docbook.org/ns/docbook"
          xmlns:xlink="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:svg="http://www.w3.org/2000/svg"
@@ -8,42 +7,34 @@
          xmlns:html="http://www.w3.org/1999/xhtml"
          xmlns:db="http://docbook.org/ns/docbook">
   <title>TODO</title>
-  
-      <itemizedlist>
-          <listitem>
-            <para>
-                Change SQL query to fetch mailbox location (Postfix Admin settings as well)
-            </para>
-          </listitem>
-        <listitem>
-          <para>
-              Mailgraph, Couriergraph, ... (or Munin) and pflogsumm
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              Fetching mail with fetchmail
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              Mailing lists - Mailman
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              Setting up satellite boxes
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              DNS caching
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-              Disabling IPv6
-          </para>
-        </listitem>
-      </itemizedlist>
+
+  <itemizedlist>
+    <listitem>
+      <para>Mailgraph, Couriergraph, ... (or Munin) and pflogsumm</para>
+    </listitem>
+
+    <listitem>
+      <para>Change Postfix warning and error messages</para>
+    </listitem>
+
+    <listitem>
+      <para>Fetching mail with fetchmail</para>
+    </listitem>
+
+    <listitem>
+      <para>Mailing lists - Mailman</para>
+    </listitem>
+
+    <listitem>
+      <para>Setting up satellite boxes</para>
+    </listitem>
+
+    <listitem>
+      <para>DNS caching</para>
+    </listitem>
+
+    <listitem>
+      <para>Disabling IPv6</para>
+    </listitem>
+  </itemizedlist>
 </chapter>

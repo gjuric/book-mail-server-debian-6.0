@@ -9,5 +9,5 @@ xsltproc --stringparam section.autolabel 1 --stringparam section.label.includes.
 # Chunked
 xsltproc --stringparam section.autolabel 1 --stringparam section.label.includes.component.label 1 --stringparam  html.stylesheet 'docbook.css' --stringparam use.id.as.filename 1 --xinclude -o output/chunks/index.html  $XSL/xhtml/chunk.xsl book.xml
 # PDF
-#cd $FOP
-#$FOP/fop -c $FOP/conf/fop.xconf -xml $OUT/book.xml -xsl $XSL/fo/docbook.xsl -param body.font.family Times-Roman -param title.font.family Times-Roman -pdf $OUT/output/book.pdf
+cd $FOP
+$FOP/fop -c $FOP/conf/fop.xconf -xml $OUT/book.xml -xsl $XSL/fo/docbook.xsl -param body.font.family Times-Roman -param title.font.family Times-Roman -pdf $OUT/output/book.pdf
