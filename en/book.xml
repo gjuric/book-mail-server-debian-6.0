@@ -26,14 +26,12 @@
     <revision>
       <revnumber>0.6.0</revnumber>
       <date>2011-03-14</date>
-      <authorinitials>GJ</authorinitials>
       <revremark>Added a chapter on moving Amavisd-new configuration to MySQL</revremark>
     </revision>
 
     <revision>
       <revnumber>0.5.0</revnumber>
       <date>2011-02-21</date>
-      <authorinitials>GJ</authorinitials>
       <revremark>Moved Bayes and AWL data info MySQL</revremark>
     </revision>
 

@@ -522,7 +522,7 @@ FLUSH PRIVILEGES;</screen>
       <para>Create an <filename>amavis.sql</filename> file and paste this into
       it:</para>
 
-      <screen>-- local users
+      <programlisting role="sql">-- local users
 CREATE TABLE users (
   id         int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,  -- unique id
   priority   integer      NOT NULL DEFAULT '7',  -- sort field, 0 is low prior.
@@ -706,7 +706,7 @@ INSERT INTO policy (id, policy_name,
   (4, 'Wants viruses', 'Y','N','Y','Y', 'N','N','N','N', 'Y', 3.0, 6.9, 6.9),
   (5, 'Normal',        'N','N','N','N', 'N','N','N','N', 'Y', -999, 6.9, 9.0),
   (6, 'Trigger happy', 'N','N','N','N', 'N','N','N','N', 'Y', 3.0,   5, 5),
-  (7, 'Permissive',    'N','N','N','Y', 'N','N','N','N', 'Y', 3.0,  10, 20);</screen>
+  (7, 'Permissive',    'N','N','N','Y', 'N','N','N','N', 'Y', 3.0,  10, 20);</programlisting>
 
       <para>To run this SQL:</para>
 
@@ -806,7 +806,7 @@ INSERT INTO users VALUES ( NULL, 5, 5, '@example.com',      NULL, 'Y');</program
       time, so we are going to create a PHP script that is going to be run
       daily with CRON.</para>
 
-      <programlisting>#!/usr/bin/php
+      <programlisting role="php">#!/usr/bin/php
 &lt;?php
 
 /**
@@ -872,7 +872,8 @@ chmod 700 /etc/cron.daily/amavisd-new-cleanup</programlisting>
       <title>Utilities</title>
 
       <para>If you want a GUI for managing your Amavisd-new configuration take
-      a look at <link xl:href="http://postvisadmin.sourceforge.net/">Postvis Admin</link>.</para>
+      a look at <link xl:href="http://postvisadmin.sourceforge.net/">Postvis
+      Admin</link>.</para>
     </section>
   </section>
 
@@ -1007,14 +1008,14 @@ dkim_key('another-virtual', 'mail', '/etc/amavis/dkim/atlantis-example-com.key.p
         that will be used for mail coming on port 1026 that need to be
         signed:</para>
 
-        <screen># switch policy bank to 'ORIGINATING' for mail received on port 10026:
+        <programlisting role="perl"># switch policy bank to 'ORIGINATING' for mail received on port 10026:
 $interface_policy{'10026'} = 'ORIGINATING';
 $policy_bank{'ORIGINATING'} = {  # mail originating from our users
   originating =&gt; 1,  # indicates client is ours, allows signing
   # force MTA to convert mail to 7-bit before DKIM signing
   # to avoid later conversions which could destroy signature:
   smtpd_discard_ehlo_keywords =&gt; ['8BITMIME'],
-};</screen>
+};</programlisting>
 
         <para>Since this is the policy that is used for outgoing mail you can
         use it to change some other settings as well, but for this you will
