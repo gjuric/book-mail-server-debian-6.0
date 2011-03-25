@@ -9,8 +9,6 @@ body pre {
 
 div.note, div.warning, div.caution {
 	background-color: #E7EEF6;
-	margin:0;
-	padding: 2em;
 }
 div.note h3, div.warning h3, div.caution h3 {
 	margin:0;

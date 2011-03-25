@@ -588,7 +588,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</screen>
     </itemizedlist>
   </section>
 
-  <section>
+  <section xml:id="postfix.quota">
     <title>Quota support</title>
 
     <para>For quota support we need to use <link

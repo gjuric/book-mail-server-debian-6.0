@@ -2,9 +2,9 @@
 
 <project name="Debian Mail Server" default="dist">
 
-    <property name="builddir" value="./build" override="true" />
-    <property name="bookdir" value="./book" override="true" />
-    <property name="assetdir" value="./tools" override="true" />
+    <property name="builddir" value="build" override="true" />
+    <property name="bookdir" value="book" override="true" />
+    <property name="assetdir" value="tools" override="true" />
     
 
     <!-- ============================================  -->
@@ -24,9 +24,10 @@
         <echo msg="Copying files to build directory..." />
 
         <echo msg="Copying images to the build dir" />
-        <copy todir="${builddir}" >
-          <fileset dir=".">
-            <include name="${assetdir}/images/*.*" />
+        <mkdir dir="${builddir}/images" />
+        <copy todir="${builddir}/images" >
+          <fileset dir="${assetdir}/images">
+            <include name="**.*" />
           </fileset>
         </copy>
 
@@ -51,16 +52,30 @@
             <property name="builddir" value="${builddir}" override="true" />
         </phingcall>
         <echo msg="Processing Docbook" />
-        <exec command="xsltproc  --xinclude -o ${builddir}/index.html  ${assetdir}/onepage.xsl ${bookdir}/book.xml" dir="./" checkreturn="true" />
+        <exec command="xsltproc  --xinclude -o ../${builddir}/index.html  ../${assetdir}/onepage.xsl ../${bookdir}/book.xml" dir="${assetdir}" checkreturn="true" />
     </target>
 
     <!-- ============================================  -->
-    <!-- Target: Build                               -->
+    <!-- Target: Build chunked version of the book     -->
     <!-- ============================================  -->
-    <target name="build">
+    <target name="chunked">
+        <property name="builddir" value="${builddir}/chunked" override="true" />
+        <phingcall target="prepare">
+            <property name="builddir" value="${builddir}" override="true" />
+        </phingcall>
+        <echo msg="Processing Docbook" />
+        <exec command="xsltproc  --xinclude -o ../${builddir}/index.html  ../${assetdir}/chunks.xsl ../${bookdir}/book.xml" dir="${assetdir}" checkreturn="true" />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: Dist                                  -->
+    <!-- ============================================  -->
+    <target name="dist">
         <phingcall target="onepage">
             <property name="builddir" value="${builddir}/onepage" override="false" />
         </phingcall>
-
+        <phingcall target="chunked">
+            <property name="builddir" value="${builddir}/chunked" override="false" />
+        </phingcall>
     </target>
 </project>
