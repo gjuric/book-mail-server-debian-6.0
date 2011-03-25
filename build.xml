@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Debian Mail Server" default="dist">
+
+    <property name="builddir" value="./build" override="true" />
+    <property name="bookdir" value="./book" override="true" />
+    <property name="assetdir" value="./tools" override="true" />
+    
+
+    <!-- ============================================  -->
+    <!-- Target: prepare                               -->
+    <!-- ============================================  -->
+    <target name="prepare">
+        <echo msg="Making build directory" />
+        <mkdir dir="${builddir}" />
+
+        <fileset dir="${builddir}" id="deleteFiles">
+            <include name="**/*" />
+        </fileset>
+        <delete>
+            <fileset refid="deleteFiles" />
+        </delete>
+
+        <echo msg="Copying files to build directory..." />
+
+        <echo msg="Copying images to the build dir" />
+        <copy todir="${builddir}" >
+          <fileset dir=".">
+            <include name="${assetdir}/images/*.*" />
+          </fileset>
+        </copy>
+
+        <echo msg="Copying Javascript to the build dir" />
+        <copy file="${assetdir}/js/highlight.pack.js" tofile="${builddir}/js/highlight.js" overwrite="true"/>
+
+        <echo msg="Concatenating CSS files" />
+        <mkdir dir="${builddir}/css" />
+        <append destFile="${builddir}/css/main.css">
+            <fileset dir="${assetdir}/css" >
+              <include name="**" />
+            </fileset>
+        </append>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: Build one page version of the book    -->
+    <!-- ============================================  -->
+    <target name="onepage">
+        <property name="builddir" value="${builddir}/onepage" override="true" />
+        <phingcall target="prepare">
+            <property name="builddir" value="${builddir}" override="true" />
+        </phingcall>
+        <echo msg="Processing Docbook" />
+        <exec command="xsltproc  --xinclude -o ${builddir}/index.html  ${assetdir}/onepage.xsl ${bookdir}/book.xml" dir="./" checkreturn="true" />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: Build                               -->
+    <!-- ============================================  -->
+    <target name="build">
+        <phingcall target="onepage">
+            <property name="builddir" value="${builddir}/onepage" override="false" />
+        </phingcall>
+
+    </target>
+</project>

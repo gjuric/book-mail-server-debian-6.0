@@ -806,59 +806,7 @@ INSERT INTO users VALUES ( NULL, 5, 5, '@example.com',      NULL, 'Y');</program
       time, so we are going to create a PHP script that is going to be run
       daily with CRON.</para>
 
-      <programlisting role="php">#!/usr/bin/php
-&lt;?php
-
-/**
- * Amavisd-new cleanup script
- * 
- * Based on the Amavisd-new documentation shipped with amavisd-new package in
- * Debian 6.0 (Squeeze). Version of Amavisd-new 2.6.4.
- *
- * @author Goran Juric
-**/
-
-$host = 'localhost';
-$user = 'amavis';
-$password = 'new_passwd';
-$database = 'mail_amavis';
-$keep_days = 14;
-
-// Calculate the timestamp
-$prune_older_then = time() - ($keep_days * 24 * 60 * 60);
-
-// Connect to the database
-$link = mysql_connect($host, $user, $password);
-if (!$link) {
-    die('Could not connect: ' . mysql_error());
-}
-$db = mysql_select_db($database, $link);
-if (!$db) {
-    die ("Can't use $database : " . mysql_error());
-}
-
-// Delete old msgs records based on timestamps only (for time_iso see next),
-// and delete leftover msgs records from aborted mail checking operations
-mysql_query("DELETE FROM msgs WHERE time_num &lt; $prune_older_then ;", $link) or die(mysql_error());;
-mysql_query("DELETE FROM msgs WHERE time_num &lt; 60*60 AND content IS NULL;", $link) or die(mysql_error());;
-
-// Delete unreferenced e-mail addresses
-mysql_query("DELETE FROM maddr
-  WHERE NOT EXISTS (SELECT 1 FROM msgs    WHERE sid=id)
-    AND NOT EXISTS (SELECT 1 FROM msgrcpt WHERE rid=id);", $link) or die(mysql_error());;
-
-// When a FOREIGN KEY ... ON DELETE CASCADE is not used, tables msgrcpt
-// and quarantine need to be purged explicitly, e.g.:
-mysql_query("DELETE FROM quarantine
-  WHERE NOT EXISTS (SELECT 1 FROM msgs WHERE mail_id=quarantine.mail_id);", $link) or die(mysql_error());;
-mysql_query("DELETE FROM msgrcpt
-  WHERE NOT EXISTS (SELECT 1 FROM msgs WHERE mail_id=msgrcpt.mail_id);", $link) or die(mysql_error());;
-
-// Optimize tables
-mysql_query("OPTIMIZE TABLE msgs, msgrcpt, quarantine, maddr;", $link) or die(mysql_error());;
-
-// Close the database
-mysql_close($link);</programlisting>
+      <xi:include href="../listings/antispam-amavis-maintenance-script.xml" />
 
       <para>Save this file to
       <filename>/etc/cron.daily/amavisd-new-cleanup</filename> (change the
