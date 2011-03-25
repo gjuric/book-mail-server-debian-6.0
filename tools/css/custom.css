@@ -7,11 +7,8 @@ body pre {
 	overflow: auto;
 }
 
-div.note, div.warning, div.caution {
+div.note, div.warning, div.caution, div.tip, div.important {
 	background-color: #E7EEF6;
-}
-div.note h3, div.warning h3, div.caution h3 {
-	margin:0;
 }
 table, th, td {
 	border:none;

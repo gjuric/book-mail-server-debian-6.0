@@ -514,199 +514,15 @@ etckeeper commit "Configured amavisd-new"</programlisting>
       <para>We are going to setup both sets of tables in the same database
       named mail_amavis. Enter mysql and run:</para>
 
-      <screen>CREATE DATABASE mail_amavis;
+      <programlisting role="sql">CREATE DATABASE mail_amavis;
 CREATE USER 'amavis'@'localhost' IDENTIFIED BY 'new_password';
 GRANT ALL PRIVILEGES ON `mail_amavis` . * TO 'amavis'@'localhost';
-FLUSH PRIVILEGES;</screen>
+FLUSH PRIVILEGES;</programlisting>
 
       <para>Create an <filename>amavis.sql</filename> file and paste this into
       it:</para>
 
-      <programlisting role="sql">-- local users
-CREATE TABLE users (
-  id         int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,  -- unique id
-  priority   integer      NOT NULL DEFAULT '7',  -- sort field, 0 is low prior.
-  policy_id  integer unsigned NOT NULL DEFAULT '1',  -- JOINs with policy.id
-  email      varbinary(255) NOT NULL UNIQUE,
-  fullname   varchar(255) DEFAULT NULL,    -- not used by amavisd-new
-  local      char(1)      -- Y/N  (optional field, see note further down)
-);
-
--- any e-mail address (non- rfc2822-quoted), external or local,
--- used as senders in wblist
-CREATE TABLE mailaddr (
-  id         int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  priority   integer      NOT NULL DEFAULT '7',  -- 0 is low priority
-  email      varbinary(255) NOT NULL UNIQUE
-);
-
--- per-recipient whitelist and/or blacklist,
--- puts sender and recipient in relation wb  (white or blacklisted sender)
-CREATE TABLE wblist (
-  rid        integer unsigned NOT NULL,  -- recipient: users.id
-  sid        integer unsigned NOT NULL,  -- sender: mailaddr.id
-  wb         varchar(10)  NOT NULL,  -- W or Y / B or N / space=neutral / score
-  PRIMARY KEY (rid,sid)
-);
-
-CREATE TABLE policy (
-  id  int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                    -- 'id' this is the _only_ required field
-  policy_name      varchar(32),     -- not used by amavisd-new, a comment
-
-  virus_lover          char(1) default NULL,     -- Y/N
-  spam_lover           char(1) default NULL,     -- Y/N
-  banned_files_lover   char(1) default NULL,     -- Y/N
-  bad_header_lover     char(1) default NULL,     -- Y/N
-
-  bypass_virus_checks  char(1) default NULL,     -- Y/N
-  bypass_spam_checks   char(1) default NULL,     -- Y/N
-  bypass_banned_checks char(1) default NULL,     -- Y/N
-  bypass_header_checks char(1) default NULL,     -- Y/N
-
-  spam_modifies_subj   char(1) default NULL,     -- Y/N
-
-  virus_quarantine_to      varchar(64) default NULL,
-  spam_quarantine_to       varchar(64) default NULL,
-  banned_quarantine_to     varchar(64) default NULL,
-  bad_header_quarantine_to varchar(64) default NULL,
-  clean_quarantine_to      varchar(64) default NULL,
-  other_quarantine_to      varchar(64) default NULL,
-
-  spam_tag_level  float default NULL, -- higher score inserts spam info headers
-  spam_tag2_level float default NULL, -- inserts 'declared spam' header fields
-  spam_kill_level float default NULL, -- higher score triggers evasive actions
-                                      -- e.g. reject/drop, quarantine, ...
-                                     -- (subject to final_spam_destiny setting)
-  spam_dsn_cutoff_level        float default NULL,
-  spam_quarantine_cutoff_level float default NULL,
-
-  addr_extension_virus      varchar(64) default NULL,
-  addr_extension_spam       varchar(64) default NULL,
-  addr_extension_banned     varchar(64) default NULL,
-  addr_extension_bad_header varchar(64) default NULL,
-
-  warnvirusrecip      char(1)     default NULL, -- Y/N
-  warnbannedrecip     char(1)     default NULL, -- Y/N
-  warnbadhrecip       char(1)     default NULL, -- Y/N
-  newvirus_admin      varchar(64) default NULL,
-  virus_admin         varchar(64) default NULL,
-  banned_admin        varchar(64) default NULL,
-  bad_header_admin    varchar(64) default NULL,
-  spam_admin          varchar(64) default NULL,
-  spam_subject_tag    varchar(64) default NULL,
-  spam_subject_tag2   varchar(64) default NULL,
-  message_size_limit  integer     default NULL, -- max size in bytes, 0 disable
-  banned_rulenames    varchar(64) default NULL  -- comma-separated list of ...
-        -- names mapped through %banned_rules to actual banned_filename tables
-);
-
--- R/W part of the dataset (optional)
---   May reside in the same or in a separate database as lookups database;
---   REQUIRES SUPPORT FOR TRANSACTIONS; specified in @storage_sql_dsn
---
---  Wayne Smith adds: When using MySQL with InnoDB one might want to
---  increase buffer size for both pool and log, and might also want
---  to change flush settings for a little better performance. Example:
---    innodb_buffer_pool_size = 384M
---    innodb_log_buffer_size = 8M
---    innodb_flush_log_at_trx_commit = 0
---  The big performance increase is the first two, the third just helps with
---  lowering disk activity. Consider also adjusting the key_buffer_size.
-
--- provide unique id for each e-mail address, avoids storing copies
-CREATE TABLE maddr (
-  partition_tag integer   DEFAULT 0,   -- see $sql_partition_tag
-  id         bigint unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  email      varbinary(255) NOT NULL,  -- full mail address
-  domain     varchar(255)   NOT NULL,  -- only domain part of the email address
-                                       -- with subdomain fields in reverse
-  CONSTRAINT part_email UNIQUE (partition_tag,email)
-) ENGINE=InnoDB;
-
--- information pertaining to each processed message as a whole;
--- NOTE: records with NULL msgs.content should be ignored by utilities,
---   as such records correspond to messages just being processes, or were lost
--- NOTE: instead of a character field time_iso, one might prefer:
---   time_iso TIMESTAMP NOT NULL DEFAULT 0,
---   but the following MUST then be set in amavisd.conf: $timestamp_fmt_mysql=1
-CREATE TABLE msgs (
-  partition_tag integer    DEFAULT 0,   -- see $sql_partition_tag
-  mail_id    varbinary(12) NOT NULL PRIMARY KEY,  -- long-term unique mail id
-  secret_id  varbinary(12)   DEFAULT '',  -- authorizes release of mail_id
-  am_id      varchar(20)   NOT NULL,    -- id used in the log
-  time_num   integer unsigned NOT NULL, -- rx_time: seconds since Unix epoch
-  time_iso   char(16)      NOT NULL,    -- rx_time: ISO8601 UTC ascii time
-  sid        bigint unsigned NOT NULL, -- sender: maddr.id
-  policy     varchar(255)  DEFAULT '',  -- policy bank path (like macro %p)
-  client_addr varchar(255) DEFAULT '',  -- SMTP client IP address (IPv4 or v6)
-  size       integer unsigned NOT NULL, -- message size in bytes
-  content    binary(1),                 -- content type: V/B/S/s/M/H/O/C:
-    -- virus/banned/spam(kill)/spammy(tag2)/bad-mime/bad-header/oversized/clean
-    -- is NULL on partially processed mail
-    -- use binary instead of char for case sensitivity ('S' != 's')
-  quar_type  binary(1),                 -- quarantined as: ' '/F/Z/B/Q/M/L
-                                        --  none/file/zipfile/bsmtp/sql/
-                                        --  /mailbox(smtp)/mailbox(lmtp)
-  quar_loc   varbinary(255) DEFAULT '', -- quarantine location (e.g. file)
-  dsn_sent   char(1),                   -- was DSN sent? Y/N/q (q=quenched)
-  spam_level float,                     -- SA spam level (no boosts)
-  message_id varchar(255)  DEFAULT '',  -- mail Message-ID header field
-  from_addr  varchar(255)  DEFAULT '',  -- mail From header field,    UTF8
-  subject    varchar(255)  DEFAULT '',  -- mail Subject header field, UTF8
-  host       varchar(255)  NOT NULL,    -- hostname where amavisd is running
-  FOREIGN KEY (sid) REFERENCES maddr(id) ON DELETE RESTRICT
-) ENGINE=InnoDB;
-CREATE INDEX msgs_idx_sid      ON msgs (sid);
-CREATE INDEX msgs_idx_mess_id  ON msgs (message_id); -- useful with pen pals
-CREATE INDEX msgs_idx_time_num ON msgs (time_num);
--- alternatively when purging based on time_iso (instead of msgs_idx_time_num):
--- CREATE INDEX msgs_idx_time_iso ON msgs (time_iso);
-
--- per-recipient information related to each processed message;
--- NOTE: records in msgrcpt without corresponding msgs.mail_id record are
---  orphaned and should be ignored and eventually deleted by external utilities
-CREATE TABLE msgrcpt (
-  partition_tag integer    DEFAULT 0,    -- see $sql_partition_tag
-  mail_id    varbinary(12) NOT NULL,     -- (must allow duplicates)
-  rid        bigint unsigned NOT NULL,   -- recipient: maddr.id (dupl. allowed)
-  ds         char(1)       NOT NULL,     -- delivery status: P/R/B/D/T
-                                         -- pass/reject/bounce/discard/tempfail
-  rs         char(1)       NOT NULL,     -- release status: initialized to ' '
-  bl         char(1)       DEFAULT ' ',  -- sender blacklisted by this recip
-  wl         char(1)       DEFAULT ' ',  -- sender whitelisted by this recip
-  bspam_level float,                     -- spam level + per-recip boost
-  smtp_resp  varchar(255)  DEFAULT '',   -- SMTP response given to MTA
-  FOREIGN KEY (rid)     REFERENCES maddr(id)     ON DELETE RESTRICT,
-  FOREIGN KEY (mail_id) REFERENCES msgs(mail_id) ON DELETE CASCADE
-) ENGINE=InnoDB;
-CREATE INDEX msgrcpt_idx_mail_id  ON msgrcpt (mail_id);
-CREATE INDEX msgrcpt_idx_rid      ON msgrcpt (rid);
-
--- mail quarantine in SQL, enabled by $*_quarantine_method='sql:'
--- NOTE: records in quarantine without corresponding msgs.mail_id record are
---  orphaned and should be ignored and eventually deleted by external utilities
-CREATE TABLE quarantine (
-  partition_tag integer    DEFAULT 0,    -- see $sql_partition_tag
-  mail_id    varbinary(12) NOT NULL,     -- long-term unique mail id
-  chunk_ind  integer unsigned NOT NULL,  -- chunk number, starting with 1
-  mail_text  blob          NOT NULL,     -- store mail as chunks of octets
-  PRIMARY KEY (mail_id,chunk_ind),
-  FOREIGN KEY (mail_id) REFERENCES msgs(mail_id) ON DELETE CASCADE
-) ENGINE=InnoDB;
-
-INSERT INTO policy (id, policy_name,
-  virus_lover, spam_lover, banned_files_lover, bad_header_lover,
-  bypass_virus_checks, bypass_spam_checks,
-  bypass_banned_checks, bypass_header_checks, spam_modifies_subj,
-  spam_tag_level, spam_tag2_level, spam_kill_level) VALUES
-  (1, 'Non-paying',    'N','N','N','N', 'Y','Y','Y','N', 'Y', 3.0,   7, 10),
-  (2, 'Uncensored',    'Y','Y','Y','Y', 'N','N','N','N', 'N', 3.0, 999, 999),
-  (3, 'Wants all spam','N','Y','N','N', 'N','N','N','N', 'Y', 3.0, 999, 999),
-  (4, 'Wants viruses', 'Y','N','Y','Y', 'N','N','N','N', 'Y', 3.0, 6.9, 6.9),
-  (5, 'Normal',        'N','N','N','N', 'N','N','N','N', 'Y', -999, 6.9, 9.0),
-  (6, 'Trigger happy', 'N','N','N','N', 'N','N','N','N', 'Y', 3.0,   5, 5),
-  (7, 'Permissive',    'N','N','N','Y', 'N','N','N','N', 'Y', 3.0,  10, 20);</programlisting>
+      <xi:include href="../listings/antispam-amavis-sql.xml" />
 
       <para>To run this SQL:</para>
 
@@ -774,12 +590,12 @@ INSERT INTO users VALUES ( NULL, 5, 5, '@example.com',      NULL, 'Y');</program
       to create the database for amavis, at the end we also inserted some
       policies, and the policy with an ID 5 was inserted like this:</para>
 
-      <para><screen>INSERT INTO policy (id, policy_name,
+      <programlisting role="sql">INSERT INTO policy (id, policy_name,
   virus_lover, spam_lover, banned_files_lover, bad_header_lover,
   bypass_virus_checks, bypass_spam_checks,
   bypass_banned_checks, bypass_header_checks, spam_modifies_subj,
   spam_tag_level, spam_tag2_level, spam_kill_level) VALUES
-  (5, 'Normal',        'N','N','N','N', 'N','N','N','N', 'Y', -999, 6.9, 9);</screen></para>
+  (5, 'Normal',        'N','N','N','N', 'N','N','N','N', 'Y', -999, 6.9, 9);</programlisting>
 
       <para>We will skeep through most of the options (you have amavisd-new
       documentation if you want to go into detail) but we will look at the
@@ -796,7 +612,7 @@ INSERT INTO users VALUES ( NULL, 5, 5, '@example.com',      NULL, 'Y');</program
       you can add a catchall user to the users table that will use the policy
       with ID 5.</para>
 
-      <screen>INSERT INTO users VALUES (NULL, 0, 5, '@.',             NULL, 'Y');</screen>
+      <programlisting role="sql">INSERT INTO users VALUES (NULL, 0, 5, '@.',             NULL, 'Y');</programlisting>
     </section>
 
     <section xml:id="antispam.amavis.maintenance">
@@ -927,23 +743,23 @@ score DKIM_SIGNED    0</screen>
         <para>Open <filename>/etc/amavisd.conf/50-user</filename> and
         replace</para>
 
-        <screen>$inet_socket_port = [10024,9998];</screen>
+        <programlisting role="perl">$inet_socket_port = [10024,9998];</programlisting>
 
         <para>with</para>
 
-        <screen>$inet_socket_port = [10024,10026,9998];</screen>
+        <programlisting role="perl">$inet_socket_port = [10024,10026,9998];</programlisting>
 
         <para>You also need to enable the dkim signing, so add</para>
 
-        <screen>$enable_dkim_signing = 1;  # loads DKIM signing code</screen>
+        <programlisting role="perl">$enable_dkim_signing = 1;  # loads DKIM signing code</programlisting>
 
         <para>and add the key for all of the domains you want to sign.</para>
 
-        <screen># Set keys
+        <programlisting role="perl"># Set keys
 dkim_key('example.com', 'mail', '/etc/amavis/dkim/atlantis-example-com.key.pem');
 dkim_key('some-other-virtual.com', 'mail', '/etc/amavis/dkim/atlantis-example-com.key.pem');
 dkim_key('another-virtual', 'mail', '/etc/amavis/dkim/atlantis-example-com.key.pem');
-....</screen>
+....</programlisting>
 
         <para>If you want to generate a specific private key for every domain
         you just have to edit the path to the key for the domain you want to
