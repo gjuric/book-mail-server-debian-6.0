@@ -1,0 +1,26 @@
+<htmlcode>
+<link type="text/css" rel="stylesheet" href="sunburst.css"></link>
+<link rel="stylesheet" type="text/css" href="css/sausage.reset.css"></link>
+<link rel="stylesheet" type="text/css" href="css/sausage.couchdb.css"></link>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/highlight.js"></script>
+<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="js/jquery.sausage.js"></script>
+<script type="text/javascript">
+//  hljs.initHighlightingOnLoad();
+  $(document).ready(function() {
+    $('pre.bash').each(function(i, e) {hljs.highlightBlock(e, '    ')});
+    $('pre.php').each(function(i, e) {hljs.highlightBlock(e, '    ')});
+    $('pre.perl').each(function(i, e) {hljs.highlightBlock(e, '    ')});
+    $('pre.sql').each(function(i, e) {hljs.highlightBlock(e, '    ')});
+  });
+  $(document).ready(function() {
+      $(window).sausage({
+          content: function (i, $page) {
+              return '<span class="sausage-span">' + $page.attr('title') + '</span>';
+          },
+          page: '.chapter',
+      });
+   });
+</script>
+</htmlcode>

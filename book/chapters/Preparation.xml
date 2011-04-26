@@ -337,7 +337,7 @@ morcic.RI.CARNe 161.53.1.2       2 u   58   64    3   11.796   26.527   7.751</s
     reachable.</para>
 
     <caution>
-      <para>If your clock was way of from the current time NTP will not sync
+      <para>If your clock was way off from the current time NTP will not sync
       your servers time. In that case stop the NTP daemon. Set the time and
       date manually (or you can install and use the ntpdate utility) and run
       the NTP daemon again.</para>

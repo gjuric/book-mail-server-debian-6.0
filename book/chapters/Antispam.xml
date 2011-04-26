@@ -555,7 +555,9 @@ FLUSH PRIVILEGES;</programlisting>
       of the recipients domaint. We can do this by rewriting the query that
       amavis uses to check if the email address is local to the system:</para>
 
-      <para><screen>$sql_select_policy = 'SELECT "Y" AS local, 1 AS id;</screen></para>
+      <para>
+        <screen>$sql_select_policy = 'SELECT "Y" AS local, 1 AS id;</screen>
+      </para>
 
       <para>But, this is not the recommended way. I didn't even test this, so
       your milage may vary. The recommended way is to just insert every domain
@@ -563,20 +565,24 @@ FLUSH PRIVILEGES;</programlisting>
 
       <para>For example:</para>
 
-      <para><programlisting>mysql&gt; USE mail_amavis;
+      <para>
+        <programlisting>mysql&gt; USE mail_amavis;
 Database changed
-INSERT INTO users VALUES ( NULL, 5, 5, '@example.com',      NULL, 'Y');</programlisting></para>
+INSERT INTO users VALUES ( NULL, 5, 5, '@example.com',      NULL, 'Y');</programlisting>
+      </para>
 
       <para>To explain what this does, first lets take a look at the users
       table now:</para>
 
-      <para><screen>mysql&gt; select * from users;
+      <para>
+        <screen>mysql&gt; select * from users;
 +----+----------+-----------+--------------+----------+-------+
 | id | priority | policy_id | email        | fullname | local |
 +----+----------+-----------+--------------+----------+-------+
 |  1 |        5 |         5 | @example.com | NULL     | Y     |
 +----+----------+-----------+--------------+----------+-------+
-</screen></para>
+</screen>
+      </para>
 
       <para>This raw in the table will match all email directed to any email
       address @example.com domain (that is because the local is set to Y). If
@@ -838,6 +844,15 @@ $policy_bank{'ORIGINATING'} = {  # mail originating from our users
         <para>If everything is set up properly this test should pass.</para>
 
         <screen>TESTING: mail._domainkey.example.com      =&gt; pass</screen>
+
+        <para>If you want to do further testing, send an email to a gmail.com
+        account. Once inside gmail open the email you have sent, and select
+        "Show original". There should be a line like this:</para>
+
+        <screen>Authentication-Results: mx.google.com; spf=pass (google.com: domain of gog@examlple.com designates IP-ADDRESS as permitted sender) smtp.mail=gog@example.com; dkim=pass header.i=@example.com</screen>
+
+        <para>Notice the <code>dkim=pass</code> part. If it's there,
+        everything is working fine.</para>
 
         <para>Commit your changes with etckeeper.</para>
       </section>

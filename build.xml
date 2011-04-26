@@ -51,6 +51,13 @@
         <phingcall target="prepare">
             <property name="builddir" value="${builddir}" override="true" />
         </phingcall>
+
+        <echo msg="Copying Sausage.js to the build dir" />
+        <copy file="${assetdir}/sausage/jquery.ui.widget.js" tofile="${builddir}/js/jquery.ui.widget.js" overwrite="true"/>
+        <copy file="${assetdir}/sausage/jquery.sausage.js" tofile="${builddir}/js/jquery.sausage.js" overwrite="true"/>
+        <copy file="${assetdir}/sausage/sausage.reset.css" tofile="${builddir}/css/sausage.reset.css" overwrite="true"/>
+        <copy file="${assetdir}/sausage/sausage.couchdb.css" tofile="${builddir}/css/sausage.couchdb.css" overwrite="true"/>
+        
         <echo msg="Processing Docbook" />
         <exec command="xsltproc  --xinclude -o ../${builddir}/index.html  ../${assetdir}/onepage.xsl ../${bookdir}/book.xml" dir="${assetdir}" checkreturn="true" />
     </target>

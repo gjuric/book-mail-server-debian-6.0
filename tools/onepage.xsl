@@ -20,7 +20,7 @@
 
 <!-- Insert Syntax highlighting script and CSS into the <head> of the document -->
 <xsl:template name="user.header.content">
-   <xsl:variable name="codefile" select="document('html-header-insert.xml',/)"/>
+   <xsl:variable name="codefile" select="document('html-header-insert-onepage.xml',/)"/>
    <xsl:copy-of select="$codefile/htmlcode/node()"/>
 </xsl:template>
 
