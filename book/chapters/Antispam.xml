@@ -950,7 +950,7 @@ etckeeper commit "Added greylisting to Postfix"</programlisting>
     </note>
   </section>
 
-  <section>
+  <section xml:id="antispam.spf">
     <title>SPF</title>
 
     <para>Sender Policy Framework is designed to help you avoid the mail you

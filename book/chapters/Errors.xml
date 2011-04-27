@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0" xml:id="errors"
-         xmlns="http://docbook.org/ns/docbook"
+<chapter version="5.0" xml:id="errors" xmlns="http://docbook.org/ns/docbook"
          xmlns:xl="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:svg="http://www.w3.org/2000/svg"
@@ -36,7 +35,7 @@ Apr 27 12:53:51 atlantis postfix/smtpd[11752]: _sasl_plugin_load failed on sasl_
     options so BIND9 does not resolve IPV6 (unless you have IPV6 connectivity,
     but in that case you shouldn't see this message aniway). Your OPTIONS line
     should look like this: <computeroutput>OPTIONS="-u bind
-    -4"</computeroutput> . </para>
+    -4"</computeroutput> .</para>
   </section>
 
   <section>
@@ -50,5 +49,18 @@ Apr 27 12:53:51 atlantis postfix/smtpd[11752]: _sasl_plugin_load failed on sasl_
     <para>Create the missing file with:</para>
 
     <programlisting>touch /etc/bind/managed-keys.bind</programlisting>
+  </section>
+
+  <section>
+    <title>Filesystem notification initialization error -- contact your mail
+    administrator (check for configuration errors with the FAM/Gamin library)
+    </title>
+
+    <para>Thunderbird displays this error if you haven't installed the FAM
+    (File Alteration Monitor). Previous version of Debian installed fam
+    automatically. If you didn't follow this tutorial all you need to do
+    is:</para>
+
+    <programlisting>apt-get install fam</programlisting>
   </section>
 </chapter>

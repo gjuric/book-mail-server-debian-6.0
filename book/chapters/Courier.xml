@@ -24,12 +24,12 @@
   <section xml:id="courier.installation">
     <title>Installation</title>
 
-    <programlisting>apt-get install courier-authdaemon courier-authlib-mysql courier-pop courier-pop-ssl courier-imap courier-imap-ssl</programlisting>
+    <programlisting>apt-get install courier-authdaemon courier-authlib-mysql courier-pop courier-pop-ssl courier-imap courier-imap-ssl fam</programlisting>
 
     <para>If you do not want to use POP you can skip installing packages that
     provide POP and install only</para>
 
-    <programlisting>apt-get install courier-authdaemon courier-authlib-mysql courier-imap courier-imap-ssl</programlisting>
+    <programlisting>apt-get install courier-authdaemon courier-authlib-mysql courier-imap courier-imap-ssl fam</programlisting>
 
     <para>When asked if you would like to create directories for web-based
     administration, answer <userinput>No</userinput>.</para>
