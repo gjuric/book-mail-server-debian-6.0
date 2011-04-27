@@ -949,4 +949,31 @@ etckeeper commit "Added greylisting to Postfix"</programlisting>
       <link xl:href="http://www.vanheusden.com/sgwi/">sgwi</link>.</para>
     </note>
   </section>
+
+  <section>
+    <title>SPF</title>
+
+    <para>Sender Policy Framework is designed to help you avoid the mail you
+    sent out to be marked as spam.</para>
+
+    <para>SPF has a simple concept. You crate a TXT DNS record on you domain
+    in which you specify all of the servers that are allowed to send email in
+    your name (with your email address as the origin). The servers that
+    receive mail can check the DNS record of your domain and if the mail is
+    coming from the server that is not specified in the DNS record the chances
+    are good that somebody is spoofing your email address.</para>
+
+    <para>A samepl DNS record can look like this:</para>
+
+    <screen>example.net.  TXT  "v=spf1 mx a:pluto.example.net include:aspmx.googlemail.com -all"</screen>
+
+    <para>This record states that all mail coming from your domain can come
+    from three sources: IP addresses that are registered as MX servers for
+    your domain, server with an A record pluto.example.net and all servers
+    that are considered valid by gmail.com service.</para>
+
+    <para>You can find more information about SPF on <link
+    xl:href="http://www.openspf.org/">http://www.openspf.org/</link>
+    .</para>
+  </section>
 </chapter>

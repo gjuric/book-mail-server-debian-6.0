@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter version="5.0" xml:id="preparation"
          xmlns="http://docbook.org/ns/docbook"
-         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xl="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:mml="http://www.w3.org/1998/Math/MathML"
@@ -13,7 +13,7 @@
     <title>Debian installation</title>
 
     <para>Download Debian 6.0 (32/64-bit PC Network installer) from <uri
-    xlink:href="http://www.debian.org/" xlink:type="simple">
+    xl:href="http://www.debian.org/" xl:type="simple">
     www.debian.org</uri> and burn the image to a compact disc, or mount it as
     a CD image in your virtualisation software.</para>
 
@@ -286,6 +286,56 @@ apt-get --purge remove isc-dhcp-client isc-dhcp-common</programlisting>
 
     <para>If they do not match you will probably have to ask your ISP to
     change this for you.</para>
+
+    <section>
+      <title>Caching nameserver</title>
+
+      <para>RBL lists that we are going to setup later as one of our anti-spam
+      measures rely on the DNS service for it's operation. To speed things up
+      a little bit, and avoid hitting remote DNS servers for repeated requests
+      we are going to install BIND9 and use it as our caching DNS
+      server.</para>
+
+      <programlisting>apt-get install bind9 dnsutils</programlisting>
+
+      <para>Edit the <systemitem>/etc/bind/named.conf.options</systemitem>
+      file, uncomment the forwarders section and set it to use your ISP's DNS
+      servers (you can probably find them in the
+      <systemitem>/etc/resolv.conf</systemitem>). </para>
+
+      <screen>forwarders {
+   DNS1-IP-ADDRESS;
+   DNS2-IP-ADDRESS;
+};</screen>
+
+      <para>If you want caching for this server only, under forwarders section
+      add:</para>
+
+      <screen>listen-on { 127.0.0.1; }
+allow-transfer  { none; }
+allow-query     { 127.0.0.1; };</screen>
+
+      <para>You also need to comment out the <computeroutput>listen-on-v6 {
+      any; };</computeroutput> line.</para>
+
+      <para>Edit <systemitem>/etc/resolv.conf</systemitem> and add
+      <computeroutput>nameserver 127.0.0.1</computeroutput> at the top of your
+      nameservers list.</para>
+
+      <para>Restart BIND9 with <computeroutput>/etc/init.d/bind9
+      restart</computeroutput> and you are done. You can check if it's working
+      by using <computeroutput>dig</computeroutput> to check for a remote
+      domain record and monitor the <computeroutput>Query
+      time</computeroutput> in the output which should on the second request
+      return an "1 msec", because it should be fetched from the cache.</para>
+
+      <warning>
+        <para>If you are on a VPS with a very, very limited ammount of RAM
+        available to you you might want to examine the <link 
+        xl:href="http://www.zytrax.com/books/dns/ch7/hkpng.html#max-cache-size">max-cache-size</link>
+        directive beacuse DNS cache is located in RAM.</para>
+      </warning>
+    </section>
   </section>
 
   <section xml:id="preparation.ntp">
