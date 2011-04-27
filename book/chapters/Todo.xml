@@ -14,10 +14,6 @@
     </listitem>
 
     <listitem>
-      <para>SPF</para>
-    </listitem>
-
-    <listitem>
       <para>Change Postfix warning and error messages</para>
     </listitem>
 
@@ -31,10 +27,6 @@
 
     <listitem>
       <para>Setting up satellite boxes</para>
-    </listitem>
-
-    <listitem>
-      <para>DNS caching</para>
     </listitem>
 
     <listitem>
