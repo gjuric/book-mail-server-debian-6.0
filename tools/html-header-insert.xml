@@ -1,5 +1,4 @@
 <htmlcode>
-<link type="text/css" rel="stylesheet" href="sunburst.css"></link>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="js/highlight.js"></script>
 <script type="text/javascript">
@@ -10,5 +9,9 @@
     $('pre.perl').each(function(i, e) {hljs.highlightBlock(e, '    ')});
     $('pre.sql').each(function(i, e) {hljs.highlightBlock(e, '    ')});
   });
+  var _gaq=[["_setAccount","UA-4307075-1"],["_trackPageview"]];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+  g.src="//www.google-analytics.com/ga.js";
+  s.parentNode.insertBefore(g,s)}(document,"script"));
 </script>
 </htmlcode>

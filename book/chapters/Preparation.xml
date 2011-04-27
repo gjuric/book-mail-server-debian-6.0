@@ -13,9 +13,9 @@
     <title>Debian installation</title>
 
     <para>Download Debian 6.0 (32/64-bit PC Network installer) from <uri
-    xl:href="http://www.debian.org/" xl:type="simple">
-    www.debian.org</uri> and burn the image to a compact disc, or mount it as
-    a CD image in your virtualisation software.</para>
+    xl:href="http://www.debian.org/" xl:type="simple"> www.debian.org</uri>
+    and burn the image to a compact disc, or mount it as a CD image in your
+    virtualisation software.</para>
 
     <para>Boot your computer and select Install (or Install 64 if you want the
     64-bit version). Choose your Language, Country and Keymap. If your
@@ -288,7 +288,7 @@ apt-get --purge remove isc-dhcp-client isc-dhcp-common</programlisting>
     change this for you.</para>
 
     <section>
-      <title>Caching nameserver</title>
+      <title>Caching only nameserver</title>
 
       <para>RBL lists that we are going to setup later as one of our anti-spam
       measures rely on the DNS service for it's operation. To speed things up
@@ -301,7 +301,7 @@ apt-get --purge remove isc-dhcp-client isc-dhcp-common</programlisting>
       <para>Edit the <systemitem>/etc/bind/named.conf.options</systemitem>
       file, uncomment the forwarders section and set it to use your ISP's DNS
       servers (you can probably find them in the
-      <systemitem>/etc/resolv.conf</systemitem>). </para>
+      <systemitem>/etc/resolv.conf</systemitem>).</para>
 
       <screen>forwarders {
    DNS1-IP-ADDRESS;
@@ -328,10 +328,14 @@ allow-query     { 127.0.0.1; };</screen>
       domain record and monitor the <computeroutput>Query
       time</computeroutput> in the output which should on the second request
       return an "1 msec", because it should be fetched from the cache.</para>
+      
+      <para>If you are not using DNSSEC or IPV6 take a look at the <link xl:href="#errors">Errors
+          section</link> to fix a couple of minor misconfigurations in the 
+          default installation.</para>
 
       <warning>
         <para>If you are on a VPS with a very, very limited ammount of RAM
-        available to you you might want to examine the <link 
+        available to you you might want to examine the <link
         xl:href="http://www.zytrax.com/books/dns/ch7/hkpng.html#max-cache-size">max-cache-size</link>
         directive beacuse DNS cache is located in RAM.</para>
       </warning>

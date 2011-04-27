@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xml:id="errors"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:mml="http://www.w3.org/1998/Math/MathML"
+         xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns:db="http://docbook.org/ns/docbook">
+  <title>Errors</title>
+
+  <para>This is the list of all the errors I have encountered in the log files
+  after the setup.</para>
+
+  <section>
+    <title>"auxpropfunc error no mechanism available"</title>
+
+    <para>Found in <systemitem>/var/log/auth.log</systemitem></para>
+
+    <screen>Apr 27 12:53:51 atlantis postfix/smtpd[11752]: sql_select option missing
+Apr 27 12:53:51 atlantis postfix/smtpd[11752]: auxpropfunc error no mechanism available
+Apr 27 12:53:51 atlantis postfix/smtpd[11752]: _sasl_plugin_load failed on sasl_auxprop_plug_init for plugin: sql</screen>
+
+    <para>Solution is to uninstall the libsasl2-modules-sql package:</para>
+
+    <programlisting>apt-get --purge remove libsasl2-modules-sql</programlisting>
+  </section>
+
+  <section>
+    <title>error (network unreachable) resolving 'www.example.com/A/IN':
+    ::::#53</title>
+
+    <screen>Apr 27 13:22:15 atlantis named[985]: error (network unreachable) resolving 'www.SOME-DOMAIN.com/A/IN': :::#53</screen>
+
+    <para>Edit <systemitem>/etc/default/bind9</systemitem> and add "-4" to the
+    options so BIND9 does not resolve IPV6 (unless you have IPV6 connectivity,
+    but in that case you shouldn't see this message aniway). Your OPTIONS line
+    should look like this: <computeroutput>OPTIONS="-u bind
+    -4"</computeroutput> . </para>
+  </section>
+
+  <section>
+    <title>managed-keys-zone ./IN: loading from master file managed-keys.bind
+    failed: file not found</title>
+
+    <para>Found in <systemitem>/var/log/syslog</systemitem></para>
+
+    <screen>Apr 27 13:26:58 atlantis named[2190]: managed-keys-zone ./IN: loading from master file managed-keys.bind failed: file not found</screen>
+
+    <para>Create the missing file with:</para>
+
+    <programlisting>touch /etc/bind/managed-keys.bind</programlisting>
+  </section>
+</chapter>

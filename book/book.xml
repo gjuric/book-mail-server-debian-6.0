@@ -24,6 +24,11 @@
 
     <revhistory>
     <revision>
+      <revnumber>0.7.0</revnumber>
+      <date>2011-04-27</date>
+      <revremark>Added "caching DNS server", "SPF" and "Errors" chapters</revremark>
+    </revision>
+    <revision>
       <revnumber>0.6.0</revnumber>
       <date>2011-03-14</date>
       <revremark>Added a chapter on moving Amavisd-new configuration to MySQL</revremark>
@@ -107,6 +112,8 @@
   <xi:include href="chapters/Antispam.xml" />
 
   <xi:include href="chapters/Utilities.xml" />
+
+  <xi:include href="chapters/Errors.xml" />
 
   <xi:include href="chapters/Todo.xml" />
 
