@@ -13,6 +13,7 @@
     $('pre.php').each(function(i, e) {hljs.highlightBlock(e, '    ')});
     $('pre.perl').each(function(i, e) {hljs.highlightBlock(e, '    ')});
     $('pre.sql').each(function(i, e) {hljs.highlightBlock(e, '    ')});
+    $('pre.xml').each(function(i, e) {hljs.highlightBlock(e, '    ')});
   });
   $(document).ready(function() {
       $(window).sausage({

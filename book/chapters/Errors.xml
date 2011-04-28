@@ -79,12 +79,12 @@ Apr 27 12:53:51 atlantis postfix/smtpd[11752]: _sasl_plugin_load failed on sasl_
 
     <para>If you do not like getting this error by OSSEC edit
     <systemitem>/var/ossec/rules/local_rules.xml</systemitem> and add this
-    blok inside &lt;group name="local,syslog"&gt; ... &lt;/group&gt;
-    block:</para>
+    blok inside <computeroutput>&lt;group name="local,syslog"&gt; ...
+    &lt;/group&gt;</computeroutput> block:</para>
 
-    <programlisting> &lt;rule id="100050" level="2"&gt;
+    <programlisting role="xml"> &lt;rule id="100050" level="2"&gt;
    &lt;if_sid&gt;1002&lt;/if_sid&gt;
-   &lt;match&gt;NOTICE: reconnecting in response to: err=2006, HY000, DBD::mysql::st execute failed: MySQL server has gone aw$
+   &lt;match&gt;NOTICE: reconnecting in response to: err=2006, HY000, DBD::mysql::st execute failed: MySQL server has gone away at (eval 97) line 166&lt;/match&gt;
    &lt;description&gt;Ignore Amavis complaining about MySQL going away&lt;/description&gt;
  &lt;/rule&gt;</programlisting>
   </section>

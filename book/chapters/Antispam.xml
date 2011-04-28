@@ -141,13 +141,13 @@ etckeeper commit "Removed spamassassin from rcX.d"</programlisting>
       <para>Because SpamAssassin is run by amavisd-new you have to run the
       sa-learn utility as the amavis user.</para>
 
-      <programlisting>su amavis sa-learn --no-sync --spam /home/vmail/example.com/demo/.Junk/cur</programlisting>
+      <programlisting>su amavis -c 'sa-learn --no-sync --spam /home/vmail/example.com/demo/.Junk/cur'</programlisting>
 
       <para>To learn what is not spam run sa-learn in the folder that only
       contains your non-spam mail (in this case, sa-learn examines the
       <filename>Inbox</filename> folder).</para>
 
-      <programlisting>su amavis sa-learn --no-sync --ham /home/vmail/example.com/demo/cur</programlisting>
+      <programlisting>su amavis -c 'sa-learn --no-sync --ham /home/vmail/example.com/demo/cur'</programlisting>
 
       <para>Bayes filtering will be used once you train SpamAssassin on more
       than 200 spam <emphasis>and</emphasis> ham messages.</para>
@@ -973,7 +973,6 @@ etckeeper commit "Added greylisting to Postfix"</programlisting>
     that are considered valid by gmail.com service.</para>
 
     <para>You can find more information about SPF on <link
-    xl:href="http://www.openspf.org/">http://www.openspf.org/</link>
-    .</para>
+    xl:href="http://www.openspf.org/">http://www.openspf.org/</link> .</para>
   </section>
 </chapter>

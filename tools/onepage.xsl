@@ -17,6 +17,9 @@
 <xsl:template match="programlisting[@role = 'sql']" mode="class.value">
   <xsl:value-of select="'code sql'"/>
 </xsl:template>
+<xsl:template match="programlisting[@role = 'xml']" mode="class.value">
+  <xsl:value-of select="'code xml'"/>
+</xsl:template>
 
 <!-- Insert Syntax highlighting script and CSS into the <head> of the document -->
 <xsl:template name="user.header.content">

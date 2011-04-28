@@ -8,6 +8,7 @@
     $('pre.php').each(function(i, e) {hljs.highlightBlock(e, '    ')});
     $('pre.perl').each(function(i, e) {hljs.highlightBlock(e, '    ')});
     $('pre.sql').each(function(i, e) {hljs.highlightBlock(e, '    ')});
+    $('pre.xml').each(function(i, e) {hljs.highlightBlock(e, '    ')});
   });
   var _gaq=[["_setAccount","UA-4307075-1"],["_trackPageview"]];
   (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
