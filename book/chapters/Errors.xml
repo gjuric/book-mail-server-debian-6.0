@@ -53,8 +53,8 @@ Apr 27 12:53:51 atlantis postfix/smtpd[11752]: _sasl_plugin_load failed on sasl_
 
   <section>
     <title>Filesystem notification initialization error -- contact your mail
-    administrator (check for configuration errors with the FAM/Gamin library)
-    </title>
+    administrator (check for configuration errors with the FAM/Gamin
+    library)</title>
 
     <para>Thunderbird displays this error if you haven't installed the FAM
     (File Alteration Monitor). Previous version of Debian installed fam
@@ -62,5 +62,30 @@ Apr 27 12:53:51 atlantis postfix/smtpd[11752]: _sasl_plugin_load failed on sasl_
     is:</para>
 
     <programlisting>apt-get install fam</programlisting>
+  </section>
+
+  <section>
+    <title>amavis[1414]: (01414-07) NOTICE: reconnecting in response to:
+    err=2006, HY000, DBD::mysql::st execute failed: MySQL server has gone away
+    at (eval 114) line 166, &lt;GEN156&gt; line 5</title>
+
+    <para>Found in /var/log/syslog</para>
+
+    <screen>Apr 28 10:43:07 atlantis amavis[1414]: (01414-07) NOTICE: reconnecting in response to: err=2006, HY000, DBD::mysql::st execute failed: MySQL server has gone away at (eval 114) line 166, &lt;GEN156&gt; line 5</screen>
+
+    <para>This is not an error. Amavis is run as a daemon and sometimes MySQL
+    server closes the connection that Amavis had opened if it is not used in a
+    while.</para>
+
+    <para>If you do not like getting this error by OSSEC edit
+    <systemitem>/var/ossec/rules/local_rules.xml</systemitem> and add this
+    blok inside &lt;group name="local,syslog"&gt; ... &lt;/group&gt;
+    block:</para>
+
+    <programlisting> &lt;rule id="100050" level="2"&gt;
+   &lt;if_sid&gt;1002&lt;/if_sid&gt;
+   &lt;match&gt;NOTICE: reconnecting in response to: err=2006, HY000, DBD::mysql::st execute failed: MySQL server has gone aw$
+   &lt;description&gt;Ignore Amavis complaining about MySQL going away&lt;/description&gt;
+ &lt;/rule&gt;</programlisting>
   </section>
 </chapter>
