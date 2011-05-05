@@ -416,7 +416,7 @@ allow_plaintext: true</screen>
     <para>If you do not get “Success.” as a response, check that you have a
     symbolic link in <filename>/var/run/</filename> named
     <filename>saslauthd</filename> and that it points to
-    <filename>/var/spool/postfix/var/run/saslautdh</filename>.</para>
+    <filename>/var/spool/postfix/var/run/saslauthd</filename>.</para>
 
     <para>We have to change permissions to these two files as well:</para>
 
@@ -509,7 +509,7 @@ smtpd_tls_key_file = $smtpd_tls_cert_file</screen>
     allow traffic to port 587.</para>
 
     <para>Open <filename>/etc/postfix/master.cf</filename> and uncomment the
-    folloging lines:</para>
+    following lines:</para>
 
     <screen>submission inet n       -       -       -       -       smtpd
   -o smtpd_tls_security_level=encrypt
