@@ -71,7 +71,7 @@
             <property name="builddir" value="${builddir}" override="true" />
         </phingcall>
         <echo msg="Processing Docbook" />
-        <exec command="xsltproc  --xinclude -o ../${builddir}/index.html  ../${assetdir}/chunks.xsl ../${bookdir}/book.xml" dir="${assetdir}" checkreturn="true" />
+        <exec command="xsltproc  --stringparam chunker.output.encoding UTF-8 --xinclude -o ../${builddir}/index.html  ../${assetdir}/chunks.xsl ../${bookdir}/book.xml" dir="${assetdir}" checkreturn="true" />
     </target>
 
     <!-- ============================================  -->
